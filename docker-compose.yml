@@ -7,7 +7,7 @@ services:
       - "8080:80"
     volumes:
       - .:/app/
-    links:
+    depends_on:
       - php
     networks:
       - pg-network
@@ -37,8 +37,8 @@ services:
     image: dpage/pgadmin4:latest
     container_name: pg-admin3
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5050:80"
     networks:
