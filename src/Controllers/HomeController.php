@@ -13,7 +13,8 @@ final class HomeController extends Controller
     public function index(Request $request, array $params): Response
     {
         return $this->view('home/index', [
-            'title' => 'VetClinic',
-        ]);
+            'title' => 'VetClinic — System zarządzania kliniką weterynaryjną',
+            'bodyClass' => 'lp',
+        ], 'base');
     }
 }
