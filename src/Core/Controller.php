@@ -7,10 +7,13 @@ namespace App\Core;
 abstract class Controller
 {
     protected View $view;
+    protected Session $session;
 
     public function __construct()
     {
         $this->view = new View(APP_ROOT . '/src/Views');
+        $this->session = new Session();
+        $this->session->start();
     }
 
     protected function view(string $template, array $data = [], ?string $layout = null): Response
