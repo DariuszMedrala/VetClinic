@@ -12,12 +12,12 @@ use App\Services\AuthService;
 
 final class AuthController extends Controller
 {
-    private AuthService $auth;
+    private AuthService $authService;
 
     public function __construct()
     {
         parent::__construct();
-        $this->auth = new AuthService();
+        $this->authService = new AuthService();
     }
 
     public function showLogin(Request $request, array $params): Response
@@ -36,7 +36,7 @@ final class AuthController extends Controller
 
         $email = trim((string) $request->input('email', ''));
         $password = (string) $request->input('haslo', '');
-        $user = $this->auth->attempt($email, $password);
+        $user = $this->authService->attempt($email, $password);
 
         if ($user === null) {
             return $this->view('auth/login', [
@@ -87,7 +87,7 @@ final class AuthController extends Controller
             ], 'base')->status(422);
         }
 
-        $user = $this->auth->register($firstName, $lastName, $email, $password, $role);
+        $user = $this->authService->register($firstName, $lastName, $email, $password, $role);
 
         $this->session->set('user', [
             'id' => $user->id,
@@ -137,7 +137,7 @@ final class AuthController extends Controller
             $errors[] = 'Musisz zaakceptować regulamin.';
         }
 
-        if ($errors === [] && $this->auth->emailTaken($email)) {
+        if ($errors === [] && $this->authService->emailTaken($email)) {
             $errors[] = 'Konto z tym adresem e-mail już istnieje.';
         }
 
