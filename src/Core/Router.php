@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use Closure;
+
 final class Router
 {
     private array $routes = [];
 
-    public function get(string $path, callable|array $handler): void
+    public function get(string $path, Closure|array $handler): Route
     {
-        $this->add('GET', $path, $handler);
+        return $this->add('GET', $path, $handler);
     }
 
-    public function post(string $path, callable|array $handler): void
+    public function post(string $path, Closure|array $handler): Route
     {
-        $this->add('POST', $path, $handler);
+        return $this->add('POST', $path, $handler);
     }
 
-    private function add(string $method, string $path, callable|array $handler): void
+    private function add(string $method, string $path, Closure|array $handler): Route
     {
-        $this->routes[] = [
-            'method' => $method,
-            'pattern' => $this->compile($path),
-            'handler' => $handler,
-        ];
+        $route = new Route($method, $this->compile($path), $handler);
+        $this->routes[] = $route;
+
+        return $route;
     }
 
     private function compile(string $path): string
@@ -38,21 +39,29 @@ final class Router
     public function dispatch(Request $request): Response
     {
         foreach ($this->routes as $route) {
-            if ($route['method'] !== $request->method()) {
+            if ($route->method !== $request->method()) {
                 continue;
             }
 
-            if (preg_match($route['pattern'], $request->path(), $matches)) {
+            if (preg_match($route->pattern, $request->path(), $matches)) {
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-                return $this->run($route['handler'], $request, $params);
+                foreach ($route->stack() as $middleware) {
+                    $result = $middleware->handle($request);
+
+                    if ($result instanceof Response) {
+                        return $result;
+                    }
+                }
+
+                return $this->run($route->handler, $request, $params);
             }
         }
 
         return (new Response())->status(404)->html('404 — Nie znaleziono strony');
     }
 
-    private function run(callable|array $handler, Request $request, array $params): Response
+    private function run(Closure|array $handler, Request $request, array $params): Response
     {
         if (is_array($handler)) {
             [$class, $method] = $handler;

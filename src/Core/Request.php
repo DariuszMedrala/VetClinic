@@ -6,17 +6,13 @@ namespace App\Core;
 
 final class Request
 {
-    private string $method;
-    private string $path;
-    private array $query;
-    private array $body;
-
-    public function __construct(string $method, string $path, array $query, array $body)
-    {
-        $this->method = $method;
-        $this->path = $path;
-        $this->query = $query;
-        $this->body = $body;
+    public function __construct(
+        private string $method,
+        private string $path,
+        private array $query,
+        private array $body,
+        private bool $wantsJson = false,
+    ) {
     }
 
     public static function capture(): self
@@ -25,7 +21,18 @@ final class Request
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         $path = rtrim(parse_url($uri, PHP_URL_PATH) ?: '/', '/') ?: '/';
 
-        return new self($method, $path, $_GET, self::parseBody());
+        return new self($method, $path, $_GET, self::parseBody(), self::expectsJson());
+    }
+
+    private static function expectsJson(): bool
+    {
+        $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+        $requestedWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+        return str_contains($accept, 'application/json')
+            || strtolower($requestedWith) === 'xmlhttprequest'
+            || str_contains($contentType, 'application/json');
     }
 
     private static function parseBody(): array
@@ -64,5 +71,10 @@ final class Request
     public function all(): array
     {
         return $this->body;
+    }
+
+    public function wantsJson(): bool
+    {
+        return $this->wantsJson;
     }
 }
