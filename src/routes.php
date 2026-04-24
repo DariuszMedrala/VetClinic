@@ -6,6 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
 use App\Core\Router;
+use App\Middleware\AuthMiddleware;
 
 /** @var Router $router */
 
@@ -15,6 +16,6 @@ $router->get('/login', [AuthController::class, 'showLogin']);
 $router->post('/login', [AuthController::class, 'login']);
 $router->get('/register', [AuthController::class, 'showRegister']);
 $router->post('/register', [AuthController::class, 'register']);
-$router->post('/logout', [AuthController::class, 'logout']);
+$router->post('/logout', [AuthController::class, 'logout'])->middleware(new AuthMiddleware());
 
-$router->get('/dashboard', [DashboardController::class, 'index']);
+$router->get('/dashboard', [DashboardController::class, 'index'])->middleware(new AuthMiddleware());

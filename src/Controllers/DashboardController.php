@@ -12,15 +12,9 @@ final class DashboardController extends Controller
 {
     public function index(Request $request, array $params): Response
     {
-        $user = $this->session->get('user');
-
-        if ($user === null) {
-            return $this->redirect('/login');
-        }
-
         return $this->view('dashboard/index', [
             'title' => 'VetClinic — Pulpit',
-            'user' => $user,
+            'user' => $this->auth->user(),
         ], 'base');
     }
 }
