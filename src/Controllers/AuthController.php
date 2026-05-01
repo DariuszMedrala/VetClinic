@@ -51,7 +51,7 @@ final class AuthController extends Controller
             'role' => $user->role,
         ]);
 
-        return $this->redirect('/dashboard');
+        return $this->redirect($this->homeFor($user->role));
     }
 
     public function showRegister(Request $request, array $params): Response
@@ -95,7 +95,7 @@ final class AuthController extends Controller
             'role' => $user->role,
         ]);
 
-        return $this->redirect('/dashboard');
+        return $this->redirect($this->homeFor($user->role));
     }
 
     public function logout(Request $request, array $params): Response
@@ -107,6 +107,11 @@ final class AuthController extends Controller
         $this->session->remove('user');
 
         return $this->redirect('/');
+    }
+
+    private function homeFor(string $role): string
+    {
+        return in_array($role, ['vet', 'admin'], true) ? '/pulpit' : '/dashboard';
     }
 
     private function validateRegistration(string $firstName, string $lastName, string $email, string $password, string $passwordConfirm, string $role, bool $accepted): array
