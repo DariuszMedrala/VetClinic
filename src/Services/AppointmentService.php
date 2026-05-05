@@ -20,6 +20,20 @@ final class AppointmentService
         return $this->appointments->upcoming();
     }
 
+    public function forWeek(string $from, string $to): array
+    {
+        return $this->appointments->forWeek($from, $to);
+    }
+
+    public function create(int $petId, int $vetId, string $startsAt, string $endsAt, string $reason): array
+    {
+        return match ($this->appointments->create($petId, $vetId, $startsAt, $endsAt, $reason)) {
+            AppointmentRepository::CREATED => ['ok' => true, 'status' => 201, 'message' => 'Wizyta została dodana do harmonogramu.'],
+            AppointmentRepository::CONFLICT => ['ok' => false, 'status' => 409, 'message' => 'Lekarz ma już wizytę w tym terminie (kolizja harmonogramu).'],
+            default => ['ok' => false, 'status' => 500, 'message' => 'Nie udało się dodać wizyty.'],
+        };
+    }
+
     public function cancel(int $id): array
     {
         return match ($this->appointments->cancel($id)) {

@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Core\Database;
 use App\Models\Appointment;
 use PDO;
+use PDOException;
 use Throwable;
 
 final class AppointmentRepository
@@ -14,12 +15,58 @@ final class AppointmentRepository
     public const CANCELLED = 'cancelled';
     public const NOT_FOUND = 'not_found';
     public const INVALID = 'invalid';
+    public const CREATED = 'created';
+    public const CONFLICT = 'conflict';
 
     private PDO $db;
 
     public function __construct()
     {
         $this->db = Database::connection();
+    }
+
+    public function forWeek(string $from, string $to): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT appointment_id, starts_at, ends_at, status, reason,
+                    vet_id, vet_name, room, pet_id, pet_name, species,
+                    client_name, client_phone
+             FROM vw_vet_weekly_schedule
+             WHERE status <> 'cancelled'
+               AND starts_at >= :from AND starts_at < :to
+             ORDER BY starts_at"
+        );
+        $stmt->execute(['from' => $from, 'to' => $to]);
+
+        return array_map(
+            static fn (array $row): Appointment => Appointment::fromRow($row),
+            $stmt->fetchAll()
+        );
+    }
+
+    public function create(int $petId, int $vetId, string $startsAt, string $endsAt, string $reason): string
+    {
+        try {
+            $stmt = $this->db->prepare(
+                "INSERT INTO appointments (pet_id, vet_id, starts_at, ends_at, reason, status)
+                 VALUES (:pet, :vet, :starts, :ends, :reason, 'scheduled')"
+            );
+            $stmt->execute([
+                'pet' => $petId,
+                'vet' => $vetId,
+                'starts' => $startsAt,
+                'ends' => $endsAt,
+                'reason' => $reason,
+            ]);
+
+            return self::CREATED;
+        } catch (PDOException $exception) {
+            if ($exception->getCode() === 'P0001') {
+                return self::CONFLICT;
+            }
+
+            throw $exception;
+        }
     }
 
     public function upcoming(int $limit = 20): array
