@@ -47,6 +47,7 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
         <table class="schedule">
           <thead>
             <tr>
+              <th>Dzień</th>
               <th>Godzina</th>
               <th>Pacjent</th>
               <th>Właściciel</th>
@@ -57,6 +58,7 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
           <tbody>
 <?php foreach ($appointments as $a): ?>
             <tr data-row="<?= e((string) $a->id) ?>">
+              <td><span class="sched-time"><b><?= e($a->weekdayShort()) ?></b>&nbsp;<?= e($a->dateShort()) ?></span></td>
               <td><span class="sched-time"><?= e($a->time()) ?> <span class="badge <?= e($a->badgeClass()) ?>"><?= e($a->statusLabel()) ?></span></span></td>
               <td><span class="patient"><span class="patient__avatar"><?= $paw ?></span><span class="patient__name"><?= e($a->petName) ?> (<?= e($a->species) ?>)</span></span></td>
               <td><?= e($a->clientName) ?></td>
@@ -77,7 +79,7 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
 <?php foreach ($appointments as $a): ?>
           <article class="sched-card" data-row="<?= e((string) $a->id) ?>">
             <div class="sched-card__top">
-              <div class="sched-card__time"><small>GODZINA</small><b><?= e($a->time()) ?></b></div>
+              <div class="sched-card__time"><small><?= e($a->weekdayShort()) ?> <?= e($a->dateShort()) ?></small><b><?= e($a->time()) ?></b></div>
               <div class="sched-card__info">
                 <div class="sched-card__head">
                   <span class="sched-card__name"><?= e($a->petName) ?> (<?= e($a->species) ?>)</span>

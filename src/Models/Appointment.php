@@ -54,6 +54,25 @@ final class Appointment
         return $this->startsAt->format('Y-m-d');
     }
 
+    public function dateShort(): string
+    {
+        return $this->startsAt->format('d.m');
+    }
+
+    public function weekdayShort(): string
+    {
+        return match ($this->startsAt->format('N')) {
+            '1' => 'pon',
+            '2' => 'wt',
+            '3' => 'śr',
+            '4' => 'czw',
+            '5' => 'pt',
+            '6' => 'sob',
+            '7' => 'ndz',
+            default => '',
+        };
+    }
+
     public function isCancellable(): bool
     {
         return in_array($this->status, ['scheduled', 'confirmed'], true);
