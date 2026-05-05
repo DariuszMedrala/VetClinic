@@ -44,15 +44,18 @@ final class CalendarController extends Controller
             ];
         }
 
+        $appointments = $this->appointments->forWeek(
+            $monday->format('Y-m-d 00:00:00'),
+            $monday->modify('+7 days')->format('Y-m-d 00:00:00')
+        );
+
         return $this->view('staff/kalendarz', [
             'title' => 'VetClinic — Kalendarz',
             'user' => $this->auth->user(),
             'active' => 'kalendarz',
             'days' => $days,
-            'appointments' => $this->appointments->forWeek(
-                $monday->format('Y-m-d 00:00:00'),
-                $monday->modify('+7 days')->format('Y-m-d 00:00:00')
-            ),
+            'appointments' => $appointments,
+            'layout' => $this->layout($appointments),
             'weekLabel' => $monday->format('d.m') . ' – ' . $sunday->format('d.m.Y'),
             'prevWeek' => $monday->modify('-7 days')->format('Y-m-d'),
             'nextWeek' => $monday->modify('+7 days')->format('Y-m-d'),
@@ -94,6 +97,69 @@ final class CalendarController extends Controller
         );
 
         return $this->json(['ok' => $result['ok'], 'message' => $result['message']], $result['status']);
+    }
+
+    private function layout(array $appointments): array
+    {
+        $byDay = [];
+        foreach ($appointments as $appointment) {
+            $byDay[$appointment->day()][] = $appointment;
+        }
+
+        $result = [];
+        foreach ($byDay as $dayAppointments) {
+            usort($dayAppointments, static fn ($a, $b): int => $a->startsAt <=> $b->startsAt);
+
+            $cluster = [];
+            $clusterEnd = 0;
+            foreach ($dayAppointments as $appointment) {
+                if ($cluster !== [] && $appointment->startsAt->getTimestamp() >= $clusterEnd) {
+                    $result += $this->assignLanes($cluster);
+                    $cluster = [];
+                    $clusterEnd = 0;
+                }
+
+                $cluster[] = $appointment;
+                $clusterEnd = max($clusterEnd, $appointment->endsAt->getTimestamp());
+            }
+
+            if ($cluster !== []) {
+                $result += $this->assignLanes($cluster);
+            }
+        }
+
+        return $result;
+    }
+
+    private function assignLanes(array $cluster): array
+    {
+        $laneEnds = [];
+        $assignment = [];
+
+        foreach ($cluster as $appointment) {
+            $lane = null;
+            foreach ($laneEnds as $index => $end) {
+                if ($appointment->startsAt->getTimestamp() >= $end) {
+                    $lane = $index;
+                    break;
+                }
+            }
+
+            if ($lane === null) {
+                $lane = count($laneEnds);
+            }
+
+            $laneEnds[$lane] = $appointment->endsAt->getTimestamp();
+            $assignment[$appointment->id] = $lane;
+        }
+
+        $lanes = count($laneEnds);
+        $result = [];
+        foreach ($assignment as $id => $lane) {
+            $result[$id] = ['lane' => $lane, 'lanes' => $lanes];
+        }
+
+        return $result;
     }
 
     private function mondayOf(mixed $week): DateTimeImmutable

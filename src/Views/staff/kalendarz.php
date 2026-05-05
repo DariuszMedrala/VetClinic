@@ -16,56 +16,73 @@ $eventColor = static fn (string $status): string => match ($status) {
             <a class="btn btn--soft btn--sm" href="/kalendarz?week=<?= e($nextWeek) ?>">Następny →</a>
           </span>
         </div>
+      </section>
 
-        <form class="auth__form" id="new-appointment-form" style="max-width:none;box-shadow:none;padding:0;">
+      <section class="panel">
+        <div class="panel__head">
+          <h2 class="panel__title">Nowa wizyta</h2>
+        </div>
+
+        <form id="new-appointment-form" style="padding:0 30px 30px;">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
-          <h3 class="panel__title" style="margin-bottom:16px;">Nowa wizyta</h3>
 
           <div class="field-2">
             <div class="field">
               <div class="field__row"><label class="field__label" for="pet_id">Pacjent</label></div>
-              <select class="input" id="pet_id" name="pet_id" required>
-                <option value="">— wybierz —</option>
+              <div class="input-wrap">
+                <select class="input" id="pet_id" name="pet_id" required>
+                  <option value="">— wybierz —</option>
 <?php foreach ($pets as $pet): ?>
-                <option value="<?= e((string) $pet['id']) ?>"><?= e($pet['label']) ?></option>
+                  <option value="<?= e((string) $pet['id']) ?>"><?= e($pet['label']) ?></option>
 <?php endforeach; ?>
-              </select>
+                </select>
+              </div>
             </div>
             <div class="field">
               <div class="field__row"><label class="field__label" for="vet_id">Lekarz</label></div>
-              <select class="input" id="vet_id" name="vet_id" required>
-                <option value="">— wybierz —</option>
+              <div class="input-wrap">
+                <select class="input" id="vet_id" name="vet_id" required>
+                  <option value="">— wybierz —</option>
 <?php foreach ($vets as $vet): ?>
-                <option value="<?= e((string) $vet['id']) ?>"><?= e($vet['name']) ?></option>
+                  <option value="<?= e((string) $vet['id']) ?>"><?= e($vet['name']) ?></option>
 <?php endforeach; ?>
-              </select>
+                </select>
+              </div>
             </div>
           </div>
 
           <div class="field-2">
             <div class="field">
               <div class="field__row"><label class="field__label" for="date">Data</label></div>
-              <input class="input" type="date" id="date" name="date" value="<?= e($defaultDate) ?>" required>
+              <div class="input-wrap">
+                <input class="input" type="date" id="date" name="date" value="<?= e($defaultDate) ?>" required>
+              </div>
             </div>
             <div class="field">
               <div class="field__row"><label class="field__label" for="time">Godzina</label></div>
-              <input class="input" type="time" id="time" name="time" value="09:00" step="900" required>
+              <div class="input-wrap">
+                <input class="input" type="time" id="time" name="time" value="09:00" step="900" required>
+              </div>
             </div>
           </div>
 
           <div class="field-2">
             <div class="field">
               <div class="field__row"><label class="field__label" for="duration">Czas trwania</label></div>
-              <select class="input" id="duration" name="duration">
-                <option value="30">30 minut</option>
-                <option value="45">45 minut</option>
-                <option value="60" selected>60 minut</option>
-                <option value="90">90 minut</option>
-              </select>
+              <div class="input-wrap">
+                <select class="input" id="duration" name="duration">
+                  <option value="30">30 minut</option>
+                  <option value="45">45 minut</option>
+                  <option value="60" selected>60 minut</option>
+                  <option value="90">90 minut</option>
+                </select>
+              </div>
             </div>
             <div class="field">
               <div class="field__row"><label class="field__label" for="reason">Powód</label></div>
-              <input class="input" type="text" id="reason" name="reason" placeholder="np. Szczepienie" maxlength="255" required>
+              <div class="input-wrap">
+                <input class="input" type="text" id="reason" name="reason" placeholder="np. Szczepienie" maxlength="255" required>
+              </div>
             </div>
           </div>
 
@@ -103,10 +120,15 @@ $eventColor = static fn (string $status): string => match ($status) {
     $rowEnd = (int) $a->endsAt->format('G') - 7 + ((int) $a->endsAt->format('i') > 0 ? 1 : 0);
     if ($rowEnd <= $rowStart) { $rowEnd = $rowStart + 1; }
     if ($rowEnd > 11) { $rowEnd = 11; }
+    $lay = $layout[$a->id] ?? ['lane' => 0, 'lanes' => 1];
+    $style = "grid-column:$col;grid-row:$rowStart/$rowEnd";
+    if ($lay['lanes'] > 1) {
+        $style .= ";width:calc(100% / {$lay['lanes']});transform:translateX(calc(100% * {$lay['lane']}));margin-left:0;margin-right:0";
+    }
 ?>
-          <div class="event <?= e($eventColor($a->status)) ?>" style="grid-column:<?= $col ?>;grid-row:<?= $rowStart ?>/<?= $rowEnd ?>">
+          <div class="event <?= e($eventColor($a->status)) ?>" style="<?= e($style) ?>">
             <div class="event__title"><?= e($a->petName) ?> (<?= e($a->species) ?>)</div>
-            <div class="event__sub"><?= e($a->time()) ?> · <?= e($a->reason) ?></div>
+            <div class="event__sub"><?= e($a->time()) ?> · <?= e($a->vetName) ?></div>
           </div>
 <?php endforeach; ?>
         </div>
@@ -119,7 +141,7 @@ $eventColor = static fn (string $status): string => match ($status) {
 <?php foreach ($appointments as $a): ?>
         <article class="sched-card">
           <div class="sched-card__top">
-            <div class="sched-card__time"><small><?= e($a->startsAt->format('d.m')) ?></small><b><?= e($a->time()) ?></b></div>
+            <div class="sched-card__time"><small><?= e($a->weekdayShort()) ?> <?= e($a->dateShort()) ?></small><b><?= e($a->time()) ?></b></div>
             <div class="sched-card__info">
               <div class="sched-card__head">
                 <span class="sched-card__name"><?= e($a->petName) ?> (<?= e($a->species) ?>)</span>
