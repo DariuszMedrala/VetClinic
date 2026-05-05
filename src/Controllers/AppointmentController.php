@@ -28,6 +28,7 @@ final class AppointmentController extends Controller
         return $this->view('staff/pulpit', [
             'title' => 'VetClinic — Pulpit',
             'user' => $this->auth->user(),
+            'active' => 'pulpit',
             'appointments' => $this->appointments->upcoming(),
             'stats' => $this->stats->forDashboard(),
         ], 'app');
