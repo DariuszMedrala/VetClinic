@@ -6,6 +6,9 @@ $roleLabel = match ($user['role'] ?? '') {
     default => '',
 };
 $initials = strtoupper(mb_substr($user['name'] ?? 'VC', 0, 2));
+$active = $active ?? '';
+$navClass = static fn (string $key): string => 'nav-item' . ($active === $key ? ' nav-item--active' : '');
+$tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active === $key ? ' bottom-nav__item--active' : '');
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -29,11 +32,11 @@ $initials = strtoupper(mb_substr($user['name'] ?? 'VC', 0, 2));
     </div>
 
     <nav class="sidebar__nav">
-      <a class="nav-item nav-item--active" href="/pulpit">
+      <a class="<?= $navClass('pulpit') ?>" href="/pulpit">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
         Pulpit
       </a>
-      <a class="nav-item" href="#">
+      <a class="<?= $navClass('kalendarz') ?>" href="/kalendarz">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M3 9h18M8 2v4M16 2v4"></path></svg>
         Kalendarz
       </a>
@@ -89,11 +92,11 @@ $initials = strtoupper(mb_substr($user['name'] ?? 'VC', 0, 2));
   </div>
 
   <nav class="bottom-nav">
-    <a class="bottom-nav__item bottom-nav__item--active" href="/pulpit">
+    <a class="<?= $tabClass('pulpit') ?>" href="/pulpit">
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg></span>
       Start
     </a>
-    <a class="bottom-nav__item" href="#">
+    <a class="<?= $tabClass('kalendarz') ?>" href="/kalendarz">
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M3 9h18M8 2v4M16 2v4"></path></svg></span>
       Kalendarz
     </a>
