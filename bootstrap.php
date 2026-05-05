@@ -6,6 +6,8 @@ use App\Core\Autoloader;
 use App\Core\Router;
 use App\Core\Session;
 
+date_default_timezone_set('Europe/Warsaw');
+
 require APP_ROOT . '/src/Core/Autoloader.php';
 
 (new Autoloader('App', APP_ROOT . '/src'))->register();
