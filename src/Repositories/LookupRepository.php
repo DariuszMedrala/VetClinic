@@ -28,6 +28,11 @@ final class LookupRepository
         return $this->db->query($sql)->fetchAll();
     }
 
+    public function species(): array
+    {
+        return $this->db->query('SELECT id, name FROM species ORDER BY name')->fetchAll();
+    }
+
     public function pets(): array
     {
         $sql = "SELECT p.id,

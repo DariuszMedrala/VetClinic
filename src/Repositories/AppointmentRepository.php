@@ -44,6 +44,27 @@ final class AppointmentRepository
         );
     }
 
+    public function historyForPet(int $petId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT a.id, a.starts_at, a.status, a.reason,
+                    vp.title || ' ' || vu.first_name || ' ' || vu.last_name AS vet_name,
+                    COALESCE(string_agg(pr.name, ', ' ORDER BY pr.name), '—') AS procedures,
+                    COUNT(ap.procedure_id) AS procedure_count
+             FROM appointments a
+             JOIN vet_profiles vp ON vp.user_id = a.vet_id
+             JOIN users vu ON vu.id = vp.user_id
+             LEFT JOIN appointment_procedures ap ON ap.appointment_id = a.id
+             LEFT JOIN procedures pr ON pr.id = ap.procedure_id
+             WHERE a.pet_id = :id
+             GROUP BY a.id, vp.title, vu.first_name, vu.last_name
+             ORDER BY a.starts_at DESC"
+        );
+        $stmt->execute(['id' => $petId]);
+
+        return $stmt->fetchAll();
+    }
+
     public function create(int $petId, int $vetId, string $startsAt, string $endsAt, string $reason): string
     {
         try {

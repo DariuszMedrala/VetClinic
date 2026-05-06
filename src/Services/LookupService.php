@@ -24,4 +24,9 @@ final class LookupService
     {
         return $this->lookups->pets();
     }
+
+    public function species(): array
+    {
+        return $this->lookups->species();
+    }
 }
