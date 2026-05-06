@@ -7,6 +7,7 @@ use App\Controllers\AuthController;
 use App\Controllers\CalendarController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
+use App\Controllers\PatientController;
 use App\Core\Router;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\RoleMiddleware;
@@ -33,4 +34,19 @@ $router->post('/appointments', [CalendarController::class, 'store'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
 $router->post('/appointments/{id}/cancel', [AppointmentController::class, 'cancel'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->get('/pacjenci', [PatientController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->get('/pacjenci/{id}', [PatientController::class, 'show'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->post('/pacjenci', [PatientController::class, 'store'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->post('/pacjenci/{id}/update', [PatientController::class, 'update'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->post('/pacjenci/{id}/delete', [PatientController::class, 'destroy'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
