@@ -7,6 +7,7 @@ use App\Controllers\AuthController;
 use App\Controllers\CalendarController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
+use App\Controllers\InvoiceController;
 use App\Controllers\PatientController;
 use App\Core\Router;
 use App\Middleware\AuthMiddleware;
@@ -49,4 +50,13 @@ $router->post('/pacjenci/{id}/update', [PatientController::class, 'update'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
 $router->post('/pacjenci/{id}/delete', [PatientController::class, 'destroy'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->get('/platnosci', [InvoiceController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->get('/platnosci/{id}', [InvoiceController::class, 'show'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+
+$router->post('/platnosci/{id}/pay', [InvoiceController::class, 'pay'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
