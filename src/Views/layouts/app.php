@@ -44,7 +44,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
         <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="2"></circle><circle cx="10.5" cy="6" r="2"></circle><circle cx="15.5" cy="6" r="2"></circle><circle cx="19" cy="10.5" r="2"></circle><path d="M12.5 12c-2.2 0-4 1.7-4.7 3.4-.6 1.5-2 2.3-2 3.8 0 1.4 1.2 2.3 2.6 2.1 1.2-.2 2.6-.7 4.1-.7s2.9.5 4.1.7c1.4.2 2.6-.7 2.6-2.1 0-1.5-1.4-2.3-2-3.8C16.5 13.7 14.7 12 12.5 12z"></path></svg>
         Klienci i zwierzęta
       </a>
-      <a class="nav-item" href="#">
+      <a class="<?= $navClass('platnosci') ?>" href="/platnosci">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle><path d="M6 9v6M18 9v6"></path></svg>
         Płatności
       </a>
@@ -104,7 +104,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="1.8"></circle><circle cx="10.5" cy="6.5" r="1.8"></circle><circle cx="15.5" cy="6.5" r="1.8"></circle><circle cx="19" cy="10.5" r="1.8"></circle><path d="M12.5 12c-2 0-3.6 1.5-4.2 3-.5 1.3-1.8 2-1.8 3.4 0 1.2 1 2 2.3 1.8 1-.2 2.3-.6 3.7-.6s2.7.4 3.7.6c1.3.2 2.3-.6 2.3-1.8 0-1.4-1.3-2.1-1.8-3.4-.6-1.5-2.2-3-4.2-3z"></path></svg></span>
       Klienci
     </a>
-    <a class="bottom-nav__item" href="#">
+    <a class="<?= $tabClass('platnosci') ?>" href="/platnosci">
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle></svg></span>
       Płatności
     </a>
