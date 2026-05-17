@@ -37,6 +37,25 @@ final class PetRepository
         );
     }
 
+    public function forClient(int $clientId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT ' . self::COLUMNS . '
+             FROM pets p
+             JOIN species s ON s.id = p.species_id
+             JOIN clients c ON c.user_id = p.client_id
+             JOIN users cu ON cu.id = c.user_id
+             WHERE p.client_id = :id
+             ORDER BY p.name'
+        );
+        $stmt->execute(['id' => $clientId]);
+
+        return array_map(
+            static fn (array $row): Pet => Pet::fromRow($row),
+            $stmt->fetchAll()
+        );
+    }
+
     public function find(int $id): ?Pet
     {
         $stmt = $this->db->prepare(

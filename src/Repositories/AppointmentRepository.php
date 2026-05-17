@@ -44,6 +44,26 @@ final class AppointmentRepository
         );
     }
 
+    public function upcomingForClient(int $clientId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT appointment_id, starts_at, ends_at, status, reason,
+                    vet_id, vet_name, room, pet_id, pet_name, species,
+                    client_name, client_phone
+             FROM vw_vet_weekly_schedule
+             WHERE client_id = :id
+               AND status IN ('scheduled', 'confirmed', 'in_progress')
+               AND starts_at >= date_trunc('day', now())
+             ORDER BY starts_at"
+        );
+        $stmt->execute(['id' => $clientId]);
+
+        return array_map(
+            static fn (array $row): Appointment => Appointment::fromRow($row),
+            $stmt->fetchAll()
+        );
+    }
+
     public function historyForPet(int $petId): array
     {
         $stmt = $this->db->prepare(

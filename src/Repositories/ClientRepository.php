@@ -17,6 +17,20 @@ final class ClientRepository
         $this->db = Database::connection();
     }
 
+    public function find(int $userId): ?Client
+    {
+        $stmt = $this->db->prepare(
+            'SELECT u.id AS user_id, u.first_name, u.last_name, u.email, c.phone, c.loyalty_points
+             FROM clients c
+             JOIN users u ON u.id = c.user_id
+             WHERE c.user_id = :id'
+        );
+        $stmt->execute(['id' => $userId]);
+        $row = $stmt->fetch();
+
+        return $row ? Client::fromRow($row) : null;
+    }
+
     public function all(): array
     {
         $sql = 'SELECT u.id AS user_id, u.first_name, u.last_name, u.email, c.phone, c.loyalty_points

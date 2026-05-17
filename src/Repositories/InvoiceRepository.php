@@ -48,6 +48,17 @@ final class InvoiceRepository
         );
     }
 
+    public function forClient(int $clientId): array
+    {
+        $stmt = $this->db->prepare('SELECT ' . self::COLUMNS . ' ' . self::JOINS . ' WHERE c.user_id = :id ORDER BY i.issued_at DESC');
+        $stmt->execute(['id' => $clientId]);
+
+        return array_map(
+            static fn (array $row): Invoice => Invoice::fromRow($row),
+            $stmt->fetchAll()
+        );
+    }
+
     public function find(int $id): ?Invoice
     {
         $stmt = $this->db->prepare('SELECT ' . self::COLUMNS . ' ' . self::JOINS . ' WHERE i.id = :id');
