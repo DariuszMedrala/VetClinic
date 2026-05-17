@@ -23,7 +23,8 @@ $router->get('/register', [AuthController::class, 'showRegister']);
 $router->post('/register', [AuthController::class, 'register']);
 $router->post('/logout', [AuthController::class, 'logout'])->middleware(new AuthMiddleware());
 
-$router->get('/dashboard', [DashboardController::class, 'index'])->middleware(new AuthMiddleware());
+$router->get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
 
 $router->get('/pulpit', [AppointmentController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
