@@ -24,7 +24,13 @@ foreach ($vaccinations as $v) {
 
       <div class="profile-grid" data-csrf="<?= e(Csrf::token()) ?>">
         <section class="panel profile-card">
-          <img class="profile-card__photo" src="/assets/img/pet-avatar.svg" alt="<?= e($pet->name) ?>">
+<?php if ($pet->photoPath !== null): ?>
+          <img class="profile-card__photo" src="<?= e($pet->photoPath) ?>" alt="<?= e($pet->name) ?>" style="object-fit:cover;">
+<?php else: ?>
+          <span class="profile-card__photo" style="display:grid;place-items:center;background:#eaf7f4;">
+            <svg width="58" height="58" viewBox="0 0 24 24" fill="#117a6d" aria-hidden="true"><circle cx="6" cy="10" r="2"></circle><circle cx="10.5" cy="6" r="2"></circle><circle cx="15.5" cy="6" r="2"></circle><circle cx="19" cy="10.5" r="2"></circle><path d="M12.5 12c-2.2 0-4 1.7-4.7 3.4-.6 1.5-2 2.3-2 3.8 0 1.4 1.2 2.3 2.6 2.1 1.2-.2 2.6-.7 4.1-.7s2.9.5 4.1.7c1.4.2 2.6-.7 2.6-2.1 0-1.5-1.4-2.3-2-3.8C16.5 13.7 14.7 12 12.5 12z"></path></svg>
+          </span>
+<?php endif; ?>
           <div class="profile-card__main">
             <div class="profile-card__top">
               <div>
@@ -54,7 +60,7 @@ foreach ($vaccinations as $v) {
 
       <section class="panel" id="edit-panel" style="display:none;">
         <div class="panel__head"><h2 class="panel__title">Edytuj profil</h2></div>
-        <form id="edit-pet-form" data-id="<?= e((string) $pet->id) ?>" style="padding:0 30px 30px;">
+        <form id="edit-pet-form" enctype="multipart/form-data" data-id="<?= e((string) $pet->id) ?>" style="padding:0 30px 30px;">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
 
           <div class="field-2">
@@ -100,6 +106,14 @@ foreach ($vaccinations as $v) {
               <div class="field__row"><label class="field__label" for="e_weight">Waga (kg)</label></div>
               <div class="input-wrap"><input class="input" type="number" id="e_weight" name="weight" step="0.1" min="0" value="<?= e($pet->weightKg ?? '') ?>"></div>
             </div>
+          </div>
+
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="e_photo">Nowe zdjęcie</label></div>
+            <div class="input-wrap">
+              <input class="input" type="file" id="e_photo" name="photo" accept="image/*">
+            </div>
+            <p style="color:var(--ink-400);font-size:13px;margin-top:6px;">Zostaw puste, aby zachować obecne zdjęcie.</p>
           </div>
 
           <div class="details__alert js-result" style="display:none;margin-bottom:16px;"></div>

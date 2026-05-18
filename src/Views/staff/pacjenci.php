@@ -6,7 +6,7 @@ use App\Core\Csrf;
           <h2 class="panel__title">Dodaj zwierzę</h2>
         </div>
 
-        <form id="add-pet-form" style="padding:0 30px 30px;">
+        <form id="add-pet-form" enctype="multipart/form-data" style="padding:0 30px 30px;">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
 
           <div class="field-2">
@@ -68,10 +68,18 @@ use App\Core\Csrf;
             </div>
           </div>
 
-          <div class="field">
-            <div class="field__row"><label class="field__label" for="weight">Waga (kg)</label></div>
-            <div class="input-wrap">
-              <input class="input" type="number" id="weight" name="weight" step="0.1" min="0" placeholder="np. 12.5">
+          <div class="field-2">
+            <div class="field">
+              <div class="field__row"><label class="field__label" for="weight">Waga (kg)</label></div>
+              <div class="input-wrap">
+                <input class="input" type="number" id="weight" name="weight" step="0.1" min="0" placeholder="np. 12.5">
+              </div>
+            </div>
+            <div class="field">
+              <div class="field__row"><label class="field__label" for="photo">Zdjęcie</label></div>
+              <div class="input-wrap">
+                <input class="input" type="file" id="photo" name="photo" accept="image/*">
+              </div>
             </div>
           </div>
 

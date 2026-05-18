@@ -19,11 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const submit = form.querySelector('button[type="submit"]');
-      const payload = Object.fromEntries(new FormData(form).entries());
       submit.disabled = true;
 
       try {
-        const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+          body: new FormData(form),
+        });
         const data = await response.json();
 
         if (response.ok && data.ok) {
