@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-label="Makieta pulpitu VetClinic" font-family="Arial, Helvetica, sans-serif">
+  <rect width="800" height="640" rx="26" fill="#eef1fa"/>
+  <rect x="0.5" y="0.5" width="799" height="639" rx="26" fill="none" stroke="#e2e7f1"/>
+
+  <path d="M0 26 a26 26 0 0 1 26 -26 h184 v640 h-184 a26 26 0 0 1 -26 -26 z" fill="#e9edf9"/>
+  <line x1="210" y1="0" x2="210" y2="640" stroke="#e2e7f1"/>
+
+  <rect x="22" y="26" width="40" height="40" rx="11" fill="#0e7065"/>
+  <g fill="#ffffff"><circle cx="36" cy="42" r="3"/><circle cx="44" cy="38" r="3"/><circle cx="52" cy="42" r="3"/><path d="M44 46c-4 0-7 3-8 6-1 2-3 3-3 5 0 2 2 3 4 3 2-.3 4-1 7-1s5 .7 7 1c2 0 4-1 4-3 0-2-2-3-3-5-1-3-4-6-8-6z"/></g>
+  <text x="72" y="54" fill="#0e7065" font-size="22" font-weight="800">VetClinic</text>
+
+  <rect x="20" y="100" width="170" height="44" rx="12" fill="#2fa395"/>
+  <rect x="36" y="115" width="16" height="14" rx="3" fill="#ffffff"/>
+  <text x="62" y="127" fill="#ffffff" font-size="15" font-weight="700">Pulpit</text>
+  <g fill="#46505e" font-size="15" font-weight="600">
+    <rect x="36" y="161" width="16" height="14" rx="3" fill="none" stroke="#8a94a3" stroke-width="2"/>
+    <text x="62" y="173">Kalendarz</text>
+    <rect x="36" y="207" width="16" height="14" rx="3" fill="none" stroke="#8a94a3" stroke-width="2"/>
+    <text x="62" y="219">Klienci</text>
+    <rect x="36" y="253" width="16" height="14" rx="3" fill="none" stroke="#8a94a3" stroke-width="2"/>
+    <text x="62" y="265">Płatności</text>
+  </g>
+  <line x1="20" y1="560" x2="190" y2="560" stroke="#d7ddee"/>
+  <text x="36" y="590" fill="#5b6675" font-size="14" font-weight="600">Wyloguj się</text>
+
+  <text x="234" y="52" fill="#0e1b2a" font-size="23" font-weight="800">Pulpit recepcji</text>
+  <text x="234" y="76" fill="#8a94a3" font-size="14">Poniedziałek, 16 czerwca 2026</text>
+  <rect x="648" y="32" width="116" height="34" rx="17" fill="#ffffff" stroke="#e2e7f1"/>
+  <text x="668" y="54" fill="#25313f" font-size="13" font-weight="700">Anna K.</text>
+  <circle cx="748" cy="49" r="12" fill="#0e7065"/><text x="748" y="53" fill="#ffffff" font-size="9" font-weight="800" text-anchor="middle">AK</text>
+
+  <rect x="234" y="100" width="166" height="92" rx="16" fill="#ffffff" stroke="#e2e7f1"/>
+  <circle cx="264" cy="146" r="16" fill="#eef3fc"/>
+  <text x="288" y="140" fill="#46505e" font-size="11">Dzisiejsze wizyty</text>
+  <text x="288" y="172" fill="#0e7065" font-size="26" font-weight="800">12</text>
+
+  <rect x="414" y="100" width="166" height="92" rx="16" fill="#ffffff" stroke="#e2e7f1"/>
+  <circle cx="444" cy="146" r="16" fill="#eef3fc"/>
+  <text x="468" y="140" fill="#46505e" font-size="11">Oczekujące faktury</text>
+  <text x="468" y="172" fill="#2563eb" font-size="26" font-weight="800">5</text>
+
+  <rect x="594" y="100" width="170" height="92" rx="16" fill="#fdeef0" stroke="#f4c6c9"/>
+  <circle cx="624" cy="146" r="16" fill="#c8202b"/>
+  <path d="M624 139 l7 13 h-14 z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+  <text x="648" y="138" fill="#b21f29" font-size="12" font-weight="800">Alerty systemowe</text>
+  <text x="648" y="158" fill="#b21f29" font-size="11">3 zaległe</text>
+  <text x="648" y="174" fill="#b21f29" font-size="11">szczepienia</text>
+
+  <rect x="234" y="212" width="530" height="398" rx="16" fill="#ffffff" stroke="#e2e7f1"/>
+  <text x="258" y="250" fill="#0e1b2a" font-size="18" font-weight="800">Dzisiejszy harmonogram</text>
+  <text x="740" y="249" fill="#8a94a3" font-size="12" text-anchor="end">4 wizyty</text>
+  <g fill="#8a94a3" font-size="11" font-weight="700">
+    <text x="258" y="288">GODZ.</text><text x="332" y="288">PACJENT</text><text x="500" y="288">LEKARZ</text><text x="740" y="288" text-anchor="end">STATUS</text>
+  </g>
+  <line x1="258" y1="300" x2="740" y2="300" stroke="#e2e7f1"/>
+
+  <g font-size="13">
+    <text x="258" y="343" fill="#25313f" font-weight="700">09:00</text>
+    <circle cx="316" cy="338" r="11" fill="#d4efe9"/>
+    <text x="332" y="343" fill="#25313f" font-weight="600">Luna (Golden R.)</text>
+    <text x="500" y="343" fill="#46505e">dr Nowak</text>
+    <rect x="626" y="327" width="112" height="22" rx="11" fill="#dce7f8"/>
+    <text x="682" y="342" fill="#2563eb" font-size="9.5" font-weight="800" letter-spacing="0.5" text-anchor="middle">POTWIERDZONA</text>
+    <line x1="258" y1="363" x2="740" y2="363" stroke="#eef1fa"/>
+
+    <text x="258" y="401" fill="#25313f" font-weight="700">10:30</text>
+    <circle cx="316" cy="396" r="11" fill="#eef3fc"/>
+    <text x="332" y="401" fill="#25313f" font-weight="600">Max (Kot)</text>
+    <text x="500" y="401" fill="#46505e">dr Wiśniewska</text>
+    <rect x="630" y="385" width="108" height="22" rx="11" fill="#fbe7a6"/>
+    <text x="684" y="400" fill="#7a5a00" font-size="9.5" font-weight="800" letter-spacing="0.5" text-anchor="middle">ZAPLANOWANA</text>
+    <line x1="258" y1="421" x2="740" y2="421" stroke="#eef1fa"/>
+
+    <text x="258" y="459" fill="#25313f" font-weight="700">12:00</text>
+    <circle cx="316" cy="454" r="11" fill="#f2e6bf"/>
+    <text x="332" y="459" fill="#25313f" font-weight="600">Coco (Pudel)</text>
+    <text x="500" y="459" fill="#46505e">dr Lewandowski</text>
+    <rect x="644" y="443" width="94" height="22" rx="11" fill="#cfe0fb"/>
+    <text x="691" y="458" fill="#1d4ed8" font-size="9.5" font-weight="800" letter-spacing="0.5" text-anchor="middle">W TRAKCIE</text>
+    <line x1="258" y1="479" x2="740" y2="479" stroke="#eef1fa"/>
+
+    <text x="258" y="517" fill="#25313f" font-weight="700">08:30</text>
+    <circle cx="316" cy="512" r="11" fill="#d4efe9"/>
+    <text x="332" y="517" fill="#25313f" font-weight="600">Reksio (Buldog)</text>
+    <text x="500" y="517" fill="#46505e">dr Nowak</text>
+    <rect x="630" y="501" width="108" height="22" rx="11" fill="#fbe7a6"/>
+    <text x="684" y="516" fill="#7a5a00" font-size="9.5" font-weight="800" letter-spacing="0.5" text-anchor="middle">ZAPLANOWANA</text>
+  </g>
+
+  <rect x="258" y="556" width="150" height="34" rx="10" fill="#2fa395"/>
+  <text x="333" y="578" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">+ Nowa wizyta</text>
+</svg>

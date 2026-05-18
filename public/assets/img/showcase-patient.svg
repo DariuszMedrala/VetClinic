@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550" role="img" aria-label="Makieta karty pacjenta" font-family="Arial, Helvetica, sans-serif">
+  <rect width="800" height="550" rx="22" fill="#eef1fa"/>
+  <rect x="0.5" y="0.5" width="799" height="549" rx="22" fill="none" stroke="#e2e7f1"/>
+
+  <rect x="32" y="32" width="468" height="160" rx="16" fill="#ffffff" stroke="#e2e7f1"/>
+  <rect x="52" y="52" width="96" height="96" rx="16" fill="#eaf7f4"/>
+  <g transform="translate(100 96)" fill="#117a6d">
+    <circle cx="-20" cy="-6" r="6.5"/><circle cx="-6" cy="-15" r="6.5"/><circle cx="10" cy="-15" r="6.5"/><circle cx="22" cy="-4" r="6.5"/>
+    <path d="M1 0c-8 0-15 7-18 13-2 6-7 8-7 14 0 4 4 7 8 6 5-1 10-3 17-3s12 2 17 3c4 1 8-2 8-6 0-6-5-8-7-14-3-6-10-13-18-13z"/>
+  </g>
+  <text x="168" y="86" fill="#0e1b2a" font-size="28" font-weight="800">Luna</text>
+  <text x="168" y="112" fill="#46505e" font-size="14">Golden Retriever • 4 lata / Samica</text>
+  <text x="168" y="150" fill="#8a94a3" font-size="12">Właściciel</text>
+  <text x="168" y="168" fill="#25313f" font-size="13.5" font-weight="700">Robert Lis</text>
+  <text x="340" y="150" fill="#8a94a3" font-size="12">Waga</text>
+  <text x="340" y="168" fill="#25313f" font-size="13.5" font-weight="700">29,5 kg</text>
+  <rect x="318" y="52" width="106" height="30" rx="9" fill="#ffffff" stroke="#2fa395"/>
+  <text x="371" y="71" fill="#0e7065" font-size="11.5" font-weight="700" text-anchor="middle">Edytuj profil</text>
+  <rect x="432" y="52" width="52" height="30" rx="9" fill="#c8202b"/>
+  <text x="458" y="71" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">Usuń</text>
+
+  <rect x="516" y="32" width="252" height="160" rx="16" fill="#ffffff" stroke="#e2e7f1"/>
+  <text x="540" y="66" fill="#0e1b2a" font-size="16" font-weight="800">Przegląd zdrowia</text>
+  <text x="540" y="100" fill="#5b6675" font-size="13.5">Szczepienia</text>
+  <rect x="650" y="86" width="98" height="22" rx="11" fill="#fbe3e4"/>
+  <text x="699" y="101" fill="#c8202b" font-size="9.5" font-weight="800" letter-spacing="0.5" text-anchor="middle">1 ZALEGŁE</text>
+  <text x="540" y="134" fill="#5b6675" font-size="13.5">Punkty lojalności</text>
+  <rect x="668" y="120" width="80" height="22" rx="11" fill="#2563eb"/>
+  <text x="708" y="135" fill="#ffffff" font-size="9.5" font-weight="800" letter-spacing="0.5" text-anchor="middle">150 PKT</text>
+  <text x="540" y="168" fill="#5b6675" font-size="13.5">Wizyty w historii</text>
+  <rect x="708" y="154" width="40" height="22" rx="11" fill="#d4efe9"/>
+  <text x="728" y="169" fill="#0e7065" font-size="10" font-weight="800" text-anchor="middle">8</text>
+
+  <rect x="32" y="210" width="736" height="308" rx="16" fill="#ffffff" stroke="#e2e7f1"/>
+  <text x="56" y="248" fill="#0e1b2a" font-size="17" font-weight="800">Szczepienia</text>
+  <g fill="#8a94a3" font-size="11" font-weight="700">
+    <text x="56" y="284">SZCZEPIONKA</text><text x="330" y="284">PODANO</text><text x="468" y="284">WAŻNE DO</text><text x="650" y="284">STATUS</text>
+  </g>
+  <line x1="56" y1="296" x2="744" y2="296" stroke="#e2e7f1"/>
+
+  <g font-size="14">
+    <text x="56" y="328" fill="#25313f" font-weight="600">Wścieklizna (roczna)</text>
+    <text x="330" y="328" fill="#5b6675">15.05.2023</text>
+    <text x="468" y="328" fill="#c8202b" font-weight="600">15.05.2024</text>
+    <rect x="650" y="312" width="98" height="24" rx="12" fill="#fbe3e4"/>
+    <text x="699" y="328" fill="#c8202b" font-size="10" font-weight="800" letter-spacing="0.5" text-anchor="middle">ZALEGŁE</text>
+    <line x1="56" y1="350" x2="744" y2="350" stroke="#eef1fa"/>
+
+    <text x="56" y="382" fill="#25313f" font-weight="600">DHPP (Nosówka / Parwowiroza)</text>
+    <text x="330" y="382" fill="#5b6675">10.12.2024</text>
+    <text x="468" y="382" fill="#5b6675">10.12.2025</text>
+    <rect x="650" y="366" width="98" height="24" rx="12" fill="#d4efe9"/>
+    <text x="699" y="382" fill="#0e7065" font-size="10" font-weight="800" letter-spacing="0.5" text-anchor="middle">AKTUALNE</text>
+    <line x1="56" y1="404" x2="744" y2="404" stroke="#eef1fa"/>
+
+    <text x="56" y="436" fill="#25313f" font-weight="600">Bordetella (Kaszel kennelowy)</text>
+    <text x="330" y="436" fill="#5b6675">22.11.2024</text>
+    <text x="468" y="436" fill="#5b6675">22.11.2025</text>
+    <rect x="650" y="420" width="98" height="24" rx="12" fill="#d4efe9"/>
+    <text x="699" y="436" fill="#0e7065" font-size="10" font-weight="800" letter-spacing="0.5" text-anchor="middle">AKTUALNE</text>
+    <line x1="56" y1="458" x2="744" y2="458" stroke="#eef1fa"/>
+
+    <text x="56" y="490" fill="#25313f" font-weight="600">Leptospiroza</text>
+    <text x="330" y="490" fill="#5b6675">15.01.2025</text>
+    <text x="468" y="490" fill="#5b6675">15.01.2026</text>
+    <rect x="650" y="474" width="98" height="24" rx="12" fill="#d4efe9"/>
+    <text x="699" y="490" fill="#0e7065" font-size="10" font-weight="800" letter-spacing="0.5" text-anchor="middle">AKTUALNE</text>
+  </g>
+</svg>
