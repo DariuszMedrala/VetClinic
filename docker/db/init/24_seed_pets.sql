@@ -7,4 +7,5 @@ INSERT INTO pets (client_id, species_id, name, breed, sex, birth_date, weight_kg
 ((SELECT id FROM users WHERE email = 'sara.jankowska@example.pl'), (SELECT id FROM species WHERE name = 'Pies'), 'Tofik', 'Beagle', 'male', '2023-01-30', 12.40),
 ((SELECT id FROM users WHERE email = 'sara.jankowska@example.pl'), (SELECT id FROM species WHERE name = 'Kot'), 'Pusia', 'Brytyjski krótkowłosy', 'female', '2021-07-22', 5.30),
 ((SELECT id FROM users WHERE email = 'm.zielinski@example.pl'), (SELECT id FROM species WHERE name = 'Papuga'), 'Gucio', 'Nimfa', 'male', '2022-05-18', 0.10),
-((SELECT id FROM users WHERE email = 'm.zielinski@example.pl'), (SELECT id FROM species WHERE name = 'Chomik'), 'Filip', 'Syryjski', 'male', '2024-03-03', 0.15);
+((SELECT id FROM users WHERE email = 'm.zielinski@example.pl'), (SELECT id FROM species WHERE name = 'Chomik'), 'Filip', 'Syryjski', 'male', '2024-03-03', 0.15),
+((SELECT id FROM users WHERE email = 't.mazur@example.pl'), (SELECT id FROM species WHERE name = 'Pies'), 'Burek', 'Kundelek', 'male', '2020-03-15', 18.00);

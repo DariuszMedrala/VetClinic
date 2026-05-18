@@ -8,4 +8,5 @@ INSERT INTO appointments (pet_id, vet_id, starts_at, ends_at, reason, status, no
 ((SELECT id FROM pets WHERE name = 'Pusia'), (SELECT id FROM users WHERE email = 't.lewandowski@vetclinic.pl'), '2026-06-17 14:00+02', '2026-06-17 14:30+02', 'Przegląd ogólny', 'scheduled', NULL),
 ((SELECT id FROM pets WHERE name = 'Gucio'), (SELECT id FROM users WHERE email = 'p.nowak@vetclinic.pl'), '2026-06-18 10:00+02', '2026-06-18 10:30+02', 'Konsultacja', 'scheduled', NULL),
 ((SELECT id FROM pets WHERE name = 'Filip'), (SELECT id FROM users WHERE email = 'm.wisniewska@vetclinic.pl'), '2026-06-18 13:00+02', '2026-06-18 13:30+02', 'Badanie krwi', 'cancelled', 'Odwołane przez klienta.'),
-((SELECT id FROM pets WHERE name = 'Luna'), (SELECT id FROM users WHERE email = 't.lewandowski@vetclinic.pl'), '2026-06-19 11:00+02', '2026-06-19 12:00+02', 'USG jamy brzusznej', 'scheduled', NULL);
+((SELECT id FROM pets WHERE name = 'Luna'), (SELECT id FROM users WHERE email = 't.lewandowski@vetclinic.pl'), '2026-06-19 11:00+02', '2026-06-19 12:00+02', 'USG jamy brzusznej', 'scheduled', NULL),
+((SELECT id FROM pets WHERE name = 'Burek'), (SELECT id FROM users WHERE email = 'a.zajac@vetclinic.pl'), '2026-06-18 10:00+02', '2026-06-18 10:30+02', 'Pierwsza wizyta', 'confirmed', NULL);
