@@ -34,6 +34,11 @@ final class Auth
         return $this->user()['role'] ?? null;
     }
 
+    public function clinicId(): ?int
+    {
+        return $this->user()['clinic_id'] ?? null;
+    }
+
     public function hasRole(string ...$roles): bool
     {
         $role = $this->role();

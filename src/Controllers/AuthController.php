@@ -8,16 +8,20 @@ use App\Core\Controller;
 use App\Core\Csrf;
 use App\Core\Request;
 use App\Core\Response;
+use App\Models\User;
 use App\Services\AuthService;
+use App\Services\ClinicService;
 
 final class AuthController extends Controller
 {
     private AuthService $authService;
+    private ClinicService $clinics;
 
     public function __construct()
     {
         parent::__construct();
         $this->authService = new AuthService();
+        $this->clinics = new ClinicService();
     }
 
     public function showLogin(Request $request, array $params): Response
@@ -45,11 +49,7 @@ final class AuthController extends Controller
             ], 'base')->status(401);
         }
 
-        $this->session->set('user', [
-            'id' => $user->id,
-            'name' => $user->fullName(),
-            'role' => $user->role,
-        ]);
+        $this->storeSession($user);
 
         return $this->redirect($this->homeFor($user->role));
     }
@@ -60,6 +60,7 @@ final class AuthController extends Controller
             'title' => 'VetClinic — Rejestracja',
             'errors' => [],
             'old' => [],
+            'clinics' => $this->clinics->all(),
         ], 'base');
     }
 
@@ -74,26 +75,26 @@ final class AuthController extends Controller
         $email = trim((string) $request->input('email', ''));
         $password = (string) $request->input('haslo', '');
         $passwordConfirm = (string) $request->input('haslo2', '');
-        $role = (string) $request->input('rola', 'lekarz');
+        $role = (string) $request->input('rola', 'klient');
+        $clinicId = (int) $request->input('klinika_id', 0);
+        $clinicName = trim((string) $request->input('klinika_nazwa', ''));
+        $clinicAddress = trim((string) $request->input('klinika_adres', ''));
         $accepted = $request->input('regulamin') !== null;
 
-        $errors = $this->validateRegistration($firstName, $lastName, $email, $password, $passwordConfirm, $role, $accepted);
+        $errors = $this->validateRegistration($firstName, $lastName, $email, $password, $passwordConfirm, $role, $clinicId, $clinicName, $clinicAddress, $accepted);
 
         if ($errors !== []) {
             return $this->view('auth/register', [
                 'title' => 'VetClinic — Rejestracja',
                 'errors' => $errors,
-                'old' => ['imie' => $firstName, 'nazwisko' => $lastName, 'email' => $email, 'rola' => $role],
+                'old' => ['imie' => $firstName, 'nazwisko' => $lastName, 'email' => $email, 'rola' => $role, 'klinika_id' => $clinicId, 'klinika_nazwa' => $clinicName, 'klinika_adres' => $clinicAddress],
+                'clinics' => $this->clinics->all(),
             ], 'base')->status(422);
         }
 
-        $user = $this->authService->register($firstName, $lastName, $email, $password, $role);
+        $user = $this->authService->register($firstName, $lastName, $email, $password, $role, $clinicId, $clinicName, $clinicAddress);
 
-        $this->session->set('user', [
-            'id' => $user->id,
-            'name' => $user->fullName(),
-            'role' => $user->role,
-        ]);
+        $this->storeSession($user);
 
         return $this->redirect($this->homeFor($user->role));
     }
@@ -109,12 +110,22 @@ final class AuthController extends Controller
         return $this->redirect('/');
     }
 
+    private function storeSession(User $user): void
+    {
+        $this->session->set('user', [
+            'id' => $user->id,
+            'name' => $user->fullName(),
+            'role' => $user->role,
+            'clinic_id' => $user->clinicId,
+        ]);
+    }
+
     private function homeFor(string $role): string
     {
         return in_array($role, ['vet', 'admin'], true) ? '/pulpit' : '/dashboard';
     }
 
-    private function validateRegistration(string $firstName, string $lastName, string $email, string $password, string $passwordConfirm, string $role, bool $accepted): array
+    private function validateRegistration(string $firstName, string $lastName, string $email, string $password, string $passwordConfirm, string $role, int $clinicId, string $clinicName, string $clinicAddress, bool $accepted): array
     {
         $errors = [];
 
@@ -134,8 +145,14 @@ final class AuthController extends Controller
             $errors[] = 'Hasła nie są identyczne.';
         }
 
-        if (!in_array($role, ['lekarz', 'recepcja'], true)) {
+        if (!in_array($role, ['lekarz', 'recepcja', 'klient'], true)) {
             $errors[] = 'Wybierz prawidłową rolę.';
+        } elseif ($role === 'recepcja') {
+            if ($clinicName === '' || $clinicAddress === '') {
+                $errors[] = 'Podaj nazwę i adres kliniki.';
+            }
+        } elseif ($clinicId <= 0 || !$this->clinics->exists($clinicId)) {
+            $errors[] = 'Wybierz klinikę z listy.';
         }
 
         if (!$accepted) {

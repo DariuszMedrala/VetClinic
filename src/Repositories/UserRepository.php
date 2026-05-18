@@ -20,7 +20,7 @@ final class UserRepository
     public function findByEmail(string $email): ?User
     {
         $stmt = $this->db->prepare(
-            'SELECT id, email, password_hash, first_name, last_name, role
+            'SELECT id, email, password_hash, first_name, last_name, role, clinic_id
              FROM users
              WHERE email = :email AND is_active = TRUE'
         );
@@ -38,11 +38,11 @@ final class UserRepository
         return (bool) $stmt->fetchColumn();
     }
 
-    public function create(string $email, string $passwordHash, string $firstName, string $lastName, string $role): int
+    public function create(string $email, string $passwordHash, string $firstName, string $lastName, string $role, int $clinicId): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO users (email, password_hash, first_name, last_name, role)
-             VALUES (:email, :hash, :first, :last, CAST(:role AS user_role))
+            'INSERT INTO users (email, password_hash, first_name, last_name, role, clinic_id)
+             VALUES (:email, :hash, :first, :last, CAST(:role AS user_role), :clinic)
              RETURNING id'
         );
         $stmt->execute([
@@ -51,6 +51,7 @@ final class UserRepository
             'first' => $firstName,
             'last' => $lastName,
             'role' => $role,
+            'clinic' => $clinicId,
         ]);
 
         return (int) $stmt->fetchColumn();
@@ -62,5 +63,13 @@ final class UserRepository
             'INSERT INTO vet_profiles (user_id, license_number) VALUES (:id, :license)'
         );
         $stmt->execute(['id' => $userId, 'license' => $licenseNumber]);
+    }
+
+    public function createClientProfile(int $userId, ?string $phone): void
+    {
+        $stmt = $this->db->prepare(
+            'INSERT INTO clients (user_id, phone) VALUES (:id, :phone)'
+        );
+        $stmt->execute(['id' => $userId, 'phone' => $phone]);
     }
 }

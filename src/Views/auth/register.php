@@ -1,4 +1,4 @@
-<?php $old = $old ?? []; $role = $old['rola'] ?? 'lekarz'; ?>
+<?php $old = $old ?? []; $clinics = $clinics ?? []; $role = $old['rola'] ?? 'klient'; ?>
   <main class="auth">
 
     <section class="auth__brand">
@@ -9,8 +9,8 @@
       </div>
       <h1 class="auth__brand-name">VetClinic</h1>
       <p class="auth__tagline">Dołącz do zespołu i zarządzaj opieką nad pacjentami w&nbsp;jednym miejscu.</p>
-      <div class="auth__art img-ph" role="img" aria-label="Ilustracja: zespół kliniki">
-        ilustracja_powitalna.png<br>„Zdrowe zwierzęta, szczęśliwe życie"
+      <div class="auth__art" style="overflow:hidden;">
+        <img src="/assets/img/happy_pets.webp" alt="Pies i kot pod opieką VetClinic" style="width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit;">
       </div>
     </section>
 
@@ -26,7 +26,7 @@
         </div>
 
         <h2 class="auth__title">Załóż konto</h2>
-        <p class="auth__subtitle">Utwórz konto pracownika, aby uzyskać dostęp do pulpitu kliniki.</p>
+        <p class="auth__subtitle">Wybierz rolę i klinikę, aby uzyskać dostęp do systemu.</p>
 
 <?php if (!empty($errors)): ?>
         <div class="details__alert" style="flex-direction:column;align-items:flex-start;gap:6px;margin-bottom:18px;">
@@ -83,8 +83,13 @@
         </div>
 
         <div class="field">
-          <div class="field__row"><label class="field__label">Rola w klinice</label></div>
-          <div class="role-options">
+          <div class="field__row"><label class="field__label">Rola</label></div>
+          <div class="role-options" id="rola-options">
+            <label class="role-option">
+              <input type="radio" name="rola" value="klient"<?= $role === 'klient' ? ' checked' : '' ?>>
+              <span class="role-option__radio"></span>
+              Klient
+            </label>
             <label class="role-option">
               <input type="radio" name="rola" value="lekarz"<?= $role === 'lekarz' ? ' checked' : '' ?>>
               <span class="role-option__radio"></span>
@@ -95,6 +100,35 @@
               <span class="role-option__radio"></span>
               Recepcja
             </label>
+          </div>
+        </div>
+
+        <div id="clinic-pick" style="<?= $role === 'recepcja' ? 'display:none' : '' ?>">
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="klinika_id">Klinika</label></div>
+            <div class="input-wrap">
+              <select class="input" id="klinika_id" name="klinika_id">
+                <option value="">— wybierz klinikę —</option>
+<?php foreach ($clinics as $clinic): ?>
+                <option value="<?= e((string) $clinic['id']) ?>"<?= (int) ($old['klinika_id'] ?? 0) === (int) $clinic['id'] ? ' selected' : '' ?>><?= e($clinic['name']) ?> — <?= e($clinic['address']) ?></option>
+<?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="clinic-new" style="<?= $role === 'recepcja' ? '' : 'display:none' ?>">
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="klinika_nazwa">Nazwa kliniki</label></div>
+            <div class="input-wrap">
+              <input class="input" type="text" id="klinika_nazwa" name="klinika_nazwa" maxlength="150" placeholder="np. Przychodnia Centrum" value="<?= e($old['klinika_nazwa'] ?? '') ?>">
+            </div>
+          </div>
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="klinika_adres">Adres kliniki</label></div>
+            <div class="input-wrap">
+              <input class="input" type="text" id="klinika_adres" name="klinika_adres" maxlength="255" placeholder="np. ul. Główna 1, Warszawa" value="<?= e($old['klinika_adres'] ?? '') ?>">
+            </div>
           </div>
         </div>
 
@@ -128,3 +162,4 @@
     </section>
 
   </main>
+  <script src="/assets/js/register.js"></script>

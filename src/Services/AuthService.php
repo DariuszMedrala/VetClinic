@@ -6,16 +6,19 @@ namespace App\Services;
 
 use App\Core\Database;
 use App\Models\User;
+use App\Repositories\ClinicRepository;
 use App\Repositories\UserRepository;
 use Throwable;
 
 final class AuthService
 {
     private UserRepository $users;
+    private ClinicRepository $clinics;
 
     public function __construct()
     {
         $this->users = new UserRepository();
+        $this->clinics = new ClinicRepository();
     }
 
     public function attempt(string $email, string $password): ?User
@@ -34,20 +37,34 @@ final class AuthService
         return $this->users->emailExists($email);
     }
 
-    public function register(string $firstName, string $lastName, string $email, string $password, string $formRole): User
+    public function register(string $firstName, string $lastName, string $email, string $password, string $formRole, ?int $clinicId, ?string $clinicName, ?string $clinicAddress): User
     {
-        $role = $formRole === 'lekarz' ? 'vet' : 'admin';
+        $role = match ($formRole) {
+            'lekarz' => 'vet',
+            'klient' => 'client',
+            default => 'admin',
+        };
         $hash = password_hash($password, PASSWORD_BCRYPT);
 
         $pdo = Database::connection();
         $pdo->beginTransaction();
 
         try {
-            $id = $this->users->create($email, $hash, $firstName, $lastName, $role);
+            if ($role === 'admin') {
+                $clinic = $this->clinics->create((string) $clinicName, (string) $clinicAddress);
+            } else {
+                $clinic = (int) $clinicId;
+            }
+
+            $id = $this->users->create($email, $hash, $firstName, $lastName, $role, $clinic);
 
             if ($role === 'vet') {
                 $license = 'LIC-' . strtoupper(bin2hex(random_bytes(3)));
                 $this->users->createVetProfile($id, $license);
+            }
+
+            if ($role === 'client') {
+                $this->users->createClientProfile($id, null);
             }
 
             $pdo->commit();
@@ -56,6 +73,6 @@ final class AuthService
             throw $exception;
         }
 
-        return new User($id, $email, $firstName, $lastName, $role, $hash);
+        return new User($id, $email, $firstName, $lastName, $role, $hash, $clinic);
     }
 }

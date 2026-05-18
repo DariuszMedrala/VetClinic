@@ -13,6 +13,7 @@ final class User
         public readonly string $lastName,
         public readonly string $role,
         public readonly string $passwordHash,
+        public readonly int $clinicId,
     ) {
     }
 
@@ -25,6 +26,7 @@ final class User
             (string) $row['last_name'],
             (string) $row['role'],
             (string) $row['password_hash'],
+            (int) $row['clinic_id'],
         );
     }
 
