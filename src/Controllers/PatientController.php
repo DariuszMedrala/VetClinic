@@ -10,17 +10,20 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Services\LookupService;
 use App\Services\PatientService;
+use App\Services\PhotoUploadService;
 
 final class PatientController extends Controller
 {
     private PatientService $patients;
     private LookupService $lookups;
+    private PhotoUploadService $photos;
 
     public function __construct()
     {
         parent::__construct();
         $this->patients = new PatientService();
         $this->lookups = new LookupService();
+        $this->photos = new PhotoUploadService();
     }
 
     public function index(Request $request, array $params): Response
@@ -75,7 +78,13 @@ final class PatientController extends Controller
             return $this->json(['ok' => false, 'message' => 'Wybrany właściciel nie należy do Twojej kliniki.'], 422);
         }
 
-        $id = $this->patients->create($clientId, $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg']);
+        $photo = $this->photos->store($request->file('photo'));
+
+        if (!$photo['ok']) {
+            return $this->json(['ok' => false, 'message' => $photo['error']], 422);
+        }
+
+        $id = $this->patients->create($clientId, $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg'], $photo['path']);
 
         return $this->json(['ok' => true, 'id' => $id, 'message' => 'Dodano zwierzę.'], 201);
     }
@@ -94,7 +103,13 @@ final class PatientController extends Controller
             return $this->json(['ok' => false, 'message' => implode(' ', $errors)], 422);
         }
 
-        $updated = $this->patients->update($id, (int) $this->auth->clinicId(), $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg']);
+        $photo = $this->photos->store($request->file('photo'));
+
+        if (!$photo['ok']) {
+            return $this->json(['ok' => false, 'message' => $photo['error']], 422);
+        }
+
+        $updated = $this->patients->update($id, (int) $this->auth->clinicId(), $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg'], $photo['path']);
 
         if (!$updated) {
             return $this->json(['ok' => false, 'message' => 'Nie znaleziono zwierzęcia.'], 404);

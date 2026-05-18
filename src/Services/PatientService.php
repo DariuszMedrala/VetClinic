@@ -51,14 +51,14 @@ final class PatientService
         ];
     }
 
-    public function create(int $clientId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): int
+    public function create(int $clientId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg, ?string $photoPath): int
     {
-        return $this->pets->create($clientId, $speciesId, $name, $breed, $sex, $birthDate, $weightKg);
+        return $this->pets->create($clientId, $speciesId, $name, $breed, $sex, $birthDate, $weightKg, $photoPath);
     }
 
-    public function update(int $id, int $clinicId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): bool
+    public function update(int $id, int $clinicId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg, ?string $photoPath): bool
     {
-        return $this->pets->update($id, $clinicId, $speciesId, $name, $breed, $sex, $birthDate, $weightKg);
+        return $this->pets->update($id, $clinicId, $speciesId, $name, $breed, $sex, $birthDate, $weightKg, $photoPath);
     }
 
     public function delete(int $id, int $clinicId): bool

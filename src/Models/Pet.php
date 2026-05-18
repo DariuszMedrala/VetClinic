@@ -21,6 +21,7 @@ final class Pet
         public readonly string $ownerName,
         public readonly ?string $ownerPhone,
         public readonly int $loyaltyPoints,
+        public readonly ?string $photoPath,
     ) {
     }
 
@@ -39,6 +40,7 @@ final class Pet
             (string) $row['owner_name'],
             $row['owner_phone'] !== null ? (string) $row['owner_phone'] : null,
             (int) $row['loyalty_points'],
+            $row['photo_path'] !== null ? (string) $row['photo_path'] : null,
         );
     }
 

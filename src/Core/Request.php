@@ -12,6 +12,7 @@ final class Request
         private array $query,
         private array $body,
         private bool $wantsJson = false,
+        private array $files = [],
     ) {
     }
 
@@ -21,7 +22,7 @@ final class Request
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         $path = rtrim(parse_url($uri, PHP_URL_PATH) ?: '/', '/') ?: '/';
 
-        return new self($method, $path, $_GET, self::parseBody(), self::expectsJson());
+        return new self($method, $path, $_GET, self::parseBody(), self::expectsJson(), $_FILES);
     }
 
     private static function expectsJson(): bool
@@ -76,5 +77,12 @@ final class Request
     public function wantsJson(): bool
     {
         return $this->wantsJson;
+    }
+
+    public function file(string $key): ?array
+    {
+        $file = $this->files[$key] ?? null;
+
+        return is_array($file) ? $file : null;
     }
 }

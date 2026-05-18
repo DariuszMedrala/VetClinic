@@ -11,7 +11,7 @@ use PDO;
 final class PetRepository
 {
     private const COLUMNS = 'p.id, p.client_id, p.species_id, s.name AS species,
-                p.name, p.breed, p.sex, p.birth_date, p.weight_kg,
+                p.name, p.breed, p.sex, p.birth_date, p.weight_kg, p.photo_path,
                 cu.first_name || \' \' || cu.last_name AS owner_name,
                 c.phone AS owner_phone, c.loyalty_points';
 
@@ -89,11 +89,11 @@ final class PetRepository
         return $stmt->fetchAll();
     }
 
-    public function create(int $clientId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): int
+    public function create(int $clientId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg, ?string $photoPath): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO pets (client_id, species_id, name, breed, sex, birth_date, weight_kg)
-             VALUES (:client, :species, :name, :breed, CAST(:sex AS animal_sex), :birth, :weight)
+            'INSERT INTO pets (client_id, species_id, name, breed, sex, birth_date, weight_kg, photo_path)
+             VALUES (:client, :species, :name, :breed, CAST(:sex AS animal_sex), :birth, :weight, :photo)
              RETURNING id'
         );
         $stmt->execute([
@@ -104,17 +104,19 @@ final class PetRepository
             'sex' => $sex,
             'birth' => $birthDate,
             'weight' => $weightKg,
+            'photo' => $photoPath,
         ]);
 
         return (int) $stmt->fetchColumn();
     }
 
-    public function update(int $id, int $clinicId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): bool
+    public function update(int $id, int $clinicId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg, ?string $photoPath): bool
     {
         $stmt = $this->db->prepare(
             'UPDATE pets
              SET species_id = :species, name = :name, breed = :breed,
-                 sex = CAST(:sex AS animal_sex), birth_date = :birth, weight_kg = :weight
+                 sex = CAST(:sex AS animal_sex), birth_date = :birth, weight_kg = :weight,
+                 photo_path = COALESCE(:photo, photo_path)
              WHERE id = :id AND client_id IN (
                  SELECT c.user_id FROM clients c JOIN users u ON u.id = c.user_id WHERE u.clinic_id = :c
              )'
@@ -128,6 +130,7 @@ final class PetRepository
             'sex' => $sex,
             'birth' => $birthDate,
             'weight' => $weightKg,
+            'photo' => $photoPath,
         ]);
 
         return $stmt->rowCount() > 0;
