@@ -31,17 +31,20 @@ final class ClientRepository
         return $row ? Client::fromRow($row) : null;
     }
 
-    public function all(): array
+    public function all(int $clinicId): array
     {
-        $sql = 'SELECT u.id AS user_id, u.first_name, u.last_name, u.email, c.phone, c.loyalty_points
-                FROM clients c
-                JOIN users u ON u.id = c.user_id
-                WHERE u.is_active = TRUE
-                ORDER BY u.last_name, u.first_name';
+        $stmt = $this->db->prepare(
+            'SELECT u.id AS user_id, u.first_name, u.last_name, u.email, c.phone, c.loyalty_points
+             FROM clients c
+             JOIN users u ON u.id = c.user_id
+             WHERE u.is_active = TRUE AND u.clinic_id = :c
+             ORDER BY u.last_name, u.first_name'
+        );
+        $stmt->execute(['c' => $clinicId]);
 
         return array_map(
             static fn (array $row): Client => Client::fromRow($row),
-            $this->db->query($sql)->fetchAll()
+            $stmt->fetchAll()
         );
     }
 }

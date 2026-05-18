@@ -44,7 +44,9 @@ final class CalendarController extends Controller
             ];
         }
 
+        $clinicId = (int) $this->auth->clinicId();
         $appointments = $this->appointments->forWeek(
+            $clinicId,
             $monday->format('Y-m-d 00:00:00'),
             $monday->modify('+7 days')->format('Y-m-d 00:00:00')
         );
@@ -60,8 +62,8 @@ final class CalendarController extends Controller
             'prevWeek' => $monday->modify('-7 days')->format('Y-m-d'),
             'nextWeek' => $monday->modify('+7 days')->format('Y-m-d'),
             'todayWeek' => (new DateTimeImmutable('today'))->modify('monday this week')->format('Y-m-d'),
-            'vets' => $this->lookups->vets(),
-            'pets' => $this->lookups->pets(),
+            'vets' => $this->lookups->vets($clinicId),
+            'pets' => $this->lookups->pets($clinicId),
             'defaultDate' => $today,
         ], 'app');
     }
@@ -83,6 +85,12 @@ final class CalendarController extends Controller
 
         if ($errors !== []) {
             return $this->json(['ok' => false, 'message' => implode(' ', $errors)], 422);
+        }
+
+        $clinicId = (int) $this->auth->clinicId();
+
+        if (!$this->lookups->petInClinic($petId, $clinicId) || !$this->lookups->vetInClinic($vetId, $clinicId)) {
+            return $this->json(['ok' => false, 'message' => 'Wybrany pacjent lub lekarz nie należy do Twojej kliniki.'], 422);
         }
 
         $start = new DateTimeImmutable($date . ' ' . $time);

@@ -35,7 +35,9 @@
         Zaufały nam kliniki w całej Polsce
       </div>
     </div>
-    <div class="lp-hero__art img-ph" role="img" aria-label="Zrzut ekranu pulpitu VetClinic">zrzut_pulpitu.png</div>
+    <div class="lp-hero__art" style="overflow:hidden;">
+      <img src="/assets/img/hero-dashboard.svg" alt="Pulpit VetClinic" style="width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit;">
+    </div>
   </section>
 
   <section class="lp-stats">
@@ -94,11 +96,15 @@
         </div>
       </div>
     </div>
-    <div class="lp-showcase__art img-ph" role="img" aria-label="Zrzut ekranu karty pacjenta">zrzut_karty_pacjenta.png</div>
+    <div class="lp-showcase__art" style="overflow:hidden;">
+      <img src="/assets/img/showcase-patient.svg" alt="Karta pacjenta" style="width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit;">
+    </div>
   </section>
 
   <section class="lp-showcase lp-showcase--alt" id="platnosci">
-    <div class="lp-showcase__art img-ph" role="img" aria-label="Zrzut ekranu rozliczeń">zrzut_platnosci.png</div>
+    <div class="lp-showcase__art" style="overflow:hidden;">
+      <img src="/assets/img/showcase-payments.svg" alt="Rozliczenia VetClinic" style="width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit;">
+    </div>
     <div>
       <p class="lp-section__eyebrow">Płatności</p>
       <h2 class="lp-section__title" style="font-size:36px">Rozliczenia bez papierologii</h2>

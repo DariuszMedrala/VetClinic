@@ -24,7 +24,7 @@ foreach ($vaccinations as $v) {
 
       <div class="profile-grid" data-csrf="<?= e(Csrf::token()) ?>">
         <section class="panel profile-card">
-          <span class="profile-card__photo img-ph" style="font-size:11px"><?= e($pet->name) ?></span>
+          <img class="profile-card__photo" src="/assets/img/pet-avatar.svg" alt="<?= e($pet->name) ?>">
           <div class="profile-card__main">
             <div class="profile-card__top">
               <div>

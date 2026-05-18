@@ -38,13 +38,14 @@ final class InvoiceRepository
         $this->db = Database::connection();
     }
 
-    public function all(): array
+    public function all(int $clinicId): array
     {
-        $sql = 'SELECT ' . self::COLUMNS . ' ' . self::JOINS . ' ORDER BY i.issued_at DESC';
+        $stmt = $this->db->prepare('SELECT ' . self::COLUMNS . ' ' . self::JOINS . ' WHERE cu.clinic_id = :c ORDER BY i.issued_at DESC');
+        $stmt->execute(['c' => $clinicId]);
 
         return array_map(
             static fn (array $row): Invoice => Invoice::fromRow($row),
-            $this->db->query($sql)->fetchAll()
+            $stmt->fetchAll()
         );
     }
 
@@ -59,10 +60,10 @@ final class InvoiceRepository
         );
     }
 
-    public function find(int $id): ?Invoice
+    public function find(int $id, int $clinicId): ?Invoice
     {
-        $stmt = $this->db->prepare('SELECT ' . self::COLUMNS . ' ' . self::JOINS . ' WHERE i.id = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt = $this->db->prepare('SELECT ' . self::COLUMNS . ' ' . self::JOINS . ' WHERE i.id = :id AND cu.clinic_id = :c');
+        $stmt->execute(['id' => $id, 'c' => $clinicId]);
         $row = $stmt->fetch();
 
         return $row ? Invoice::fromRow($row) : null;
@@ -83,10 +84,17 @@ final class InvoiceRepository
         return $stmt->fetchAll();
     }
 
-    public function pay(int $id, string $method): string
+    public function pay(int $id, int $clinicId, string $method): string
     {
-        $stmt = $this->db->prepare('SELECT status FROM invoices WHERE id = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt = $this->db->prepare(
+            'SELECT i.status FROM invoices i
+             JOIN appointments a ON a.id = i.appointment_id
+             JOIN pets p ON p.id = a.pet_id
+             JOIN clients c ON c.user_id = p.client_id
+             JOIN users u ON u.id = c.user_id
+             WHERE i.id = :id AND u.clinic_id = :c'
+        );
+        $stmt->execute(['id' => $id, 'c' => $clinicId]);
         $status = $stmt->fetchColumn();
 
         if ($status === false) {

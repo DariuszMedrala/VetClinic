@@ -15,14 +15,14 @@ final class AppointmentService
         $this->appointments = new AppointmentRepository();
     }
 
-    public function upcoming(): array
+    public function upcoming(int $clinicId): array
     {
-        return $this->appointments->upcoming();
+        return $this->appointments->upcoming($clinicId);
     }
 
-    public function forWeek(string $from, string $to): array
+    public function forWeek(int $clinicId, string $from, string $to): array
     {
-        return $this->appointments->forWeek($from, $to);
+        return $this->appointments->forWeek($clinicId, $from, $to);
     }
 
     public function create(int $petId, int $vetId, string $startsAt, string $endsAt, string $reason): array
@@ -34,9 +34,9 @@ final class AppointmentService
         };
     }
 
-    public function cancel(int $id): array
+    public function cancel(int $id, int $clinicId): array
     {
-        return match ($this->appointments->cancel($id)) {
+        return match ($this->appointments->cancel($id, $clinicId)) {
             AppointmentRepository::CANCELLED => ['ok' => true, 'status' => 200, 'message' => 'Wizyta została anulowana.'],
             AppointmentRepository::INVALID => ['ok' => false, 'status' => 409, 'message' => 'Tej wizyty nie można już anulować.'],
             default => ['ok' => false, 'status' => 404, 'message' => 'Nie znaleziono wizyty.'],

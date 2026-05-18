@@ -26,13 +26,13 @@ final class InvoiceController extends Controller
             'title' => 'VetClinic — Płatności',
             'user' => $this->auth->user(),
             'active' => 'platnosci',
-            'invoices' => $this->invoices->all(),
+            'invoices' => $this->invoices->all((int) $this->auth->clinicId()),
         ], 'app');
     }
 
     public function show(Request $request, array $params): Response
     {
-        $detail = $this->invoices->detail((int) ($params['id'] ?? 0));
+        $detail = $this->invoices->detail((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
 
         if ($detail === null) {
             return $this->redirect('/platnosci');
@@ -59,7 +59,7 @@ final class InvoiceController extends Controller
             return $this->json(['ok' => false, 'message' => 'Wybierz metodę płatności.'], 422);
         }
 
-        $result = $this->invoices->pay((int) ($params['id'] ?? 0), $method);
+        $result = $this->invoices->pay((int) ($params['id'] ?? 0), (int) $this->auth->clinicId(), $method);
 
         return $this->json(['ok' => $result['ok'], 'message' => $result['message']], $result['status']);
     }

@@ -29,14 +29,14 @@ final class PatientController extends Controller
             'title' => 'VetClinic — Klienci i zwierzęta',
             'user' => $this->auth->user(),
             'active' => 'pacjenci',
-            'groups' => $this->patients->clientsWithPets(),
+            'groups' => $this->patients->clientsWithPets((int) $this->auth->clinicId()),
             'species' => $this->lookups->species(),
         ], 'app');
     }
 
     public function show(Request $request, array $params): Response
     {
-        $card = $this->patients->petCard((int) ($params['id'] ?? 0));
+        $card = $this->patients->petCard((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
 
         if ($card === null) {
             return $this->redirect('/pacjenci');
@@ -71,6 +71,10 @@ final class PatientController extends Controller
             return $this->json(['ok' => false, 'message' => implode(' ', $errors)], 422);
         }
 
+        if (!$this->lookups->clientInClinic($clientId, (int) $this->auth->clinicId())) {
+            return $this->json(['ok' => false, 'message' => 'Wybrany właściciel nie należy do Twojej kliniki.'], 422);
+        }
+
         $id = $this->patients->create($clientId, $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg']);
 
         return $this->json(['ok' => true, 'id' => $id, 'message' => 'Dodano zwierzę.'], 201);
@@ -90,7 +94,7 @@ final class PatientController extends Controller
             return $this->json(['ok' => false, 'message' => implode(' ', $errors)], 422);
         }
 
-        $updated = $this->patients->update($id, $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg']);
+        $updated = $this->patients->update($id, (int) $this->auth->clinicId(), $data['speciesId'], $data['name'], $data['breed'], $data['sex'], $data['birthDate'], $data['weightKg']);
 
         if (!$updated) {
             return $this->json(['ok' => false, 'message' => 'Nie znaleziono zwierzęcia.'], 404);
@@ -105,7 +109,7 @@ final class PatientController extends Controller
             return $this->json(['ok' => false, 'message' => 'Nieprawidłowy token CSRF.'], 419);
         }
 
-        $deleted = $this->patients->delete((int) ($params['id'] ?? 0));
+        $deleted = $this->patients->delete((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
 
         if (!$deleted) {
             return $this->json(['ok' => false, 'message' => 'Nie znaleziono zwierzęcia.'], 404);

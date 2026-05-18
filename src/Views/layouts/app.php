@@ -72,7 +72,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
             <span class="user__name"><?= e($user['name'] ?? '') ?></span><br>
             <span class="user__role"><?= e($roleLabel) ?></span>
           </span>
-          <span class="user__avatar img-ph img-ph--circle"><?= e($initials) ?></span>
+          <span class="user__avatar" style="background:#117a6d;color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;"><?= e($initials) ?></span>
         </div>
       </div>
     </header>
@@ -82,7 +82,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
         <span class="mobile-header__brand">VetClinic</span>
       </div>
       <div class="mobile-header__actions">
-        <span class="user__avatar img-ph img-ph--circle" style="font-size:8px"><?= e($initials) ?></span>
+        <span class="user__avatar" style="background:#117a6d;color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;"><?= e($initials) ?></span>
       </div>
     </header>
 

@@ -15,12 +15,12 @@ final class StatsService
         $this->stats = new StatsRepository();
     }
 
-    public function forDashboard(): array
+    public function forDashboard(int $clinicId): array
     {
         return [
-            'appointmentsToday' => $this->stats->appointmentsToday(),
-            'pendingInvoices' => $this->stats->pendingInvoices(),
-            'overdueVaccinations' => $this->stats->overdueVaccinations(),
+            'appointmentsToday' => $this->stats->appointmentsToday($clinicId),
+            'pendingInvoices' => $this->stats->pendingInvoices($clinicId),
+            'overdueVaccinations' => $this->stats->overdueVaccinations($clinicId),
         ];
     }
 }

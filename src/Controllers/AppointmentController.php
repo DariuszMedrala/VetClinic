@@ -25,12 +25,14 @@ final class AppointmentController extends Controller
 
     public function index(Request $request, array $params): Response
     {
+        $clinicId = (int) $this->auth->clinicId();
+
         return $this->view('staff/pulpit', [
             'title' => 'VetClinic — Pulpit',
             'user' => $this->auth->user(),
             'active' => 'pulpit',
-            'appointments' => $this->appointments->upcoming(),
-            'stats' => $this->stats->forDashboard(),
+            'appointments' => $this->appointments->upcoming($clinicId),
+            'stats' => $this->stats->forDashboard($clinicId),
         ], 'app');
     }
 
@@ -41,7 +43,7 @@ final class AppointmentController extends Controller
         }
 
         $id = (int) ($params['id'] ?? 0);
-        $result = $this->appointments->cancel($id);
+        $result = $this->appointments->cancel($id, (int) $this->auth->clinicId());
 
         return $this->json(['ok' => $result['ok'], 'message' => $result['message']], $result['status']);
     }

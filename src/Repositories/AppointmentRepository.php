@@ -25,18 +25,19 @@ final class AppointmentRepository
         $this->db = Database::connection();
     }
 
-    public function forWeek(string $from, string $to): array
+    public function forWeek(int $clinicId, string $from, string $to): array
     {
         $stmt = $this->db->prepare(
             "SELECT appointment_id, starts_at, ends_at, status, reason,
                     vet_id, vet_name, room, pet_id, pet_name, species,
                     client_name, client_phone
              FROM vw_vet_weekly_schedule
-             WHERE status <> 'cancelled'
+             WHERE clinic_id = :clinic
+               AND status <> 'cancelled'
                AND starts_at >= :from AND starts_at < :to
              ORDER BY starts_at"
         );
-        $stmt->execute(['from' => $from, 'to' => $to]);
+        $stmt->execute(['clinic' => $clinicId, 'from' => $from, 'to' => $to]);
 
         return array_map(
             static fn (array $row): Appointment => Appointment::fromRow($row),
@@ -110,18 +111,20 @@ final class AppointmentRepository
         }
     }
 
-    public function upcoming(int $limit = 20): array
+    public function upcoming(int $clinicId, int $limit = 20): array
     {
         $stmt = $this->db->prepare(
             "SELECT appointment_id, starts_at, ends_at, status, reason,
                     vet_id, vet_name, room, pet_id, pet_name, species,
                     client_name, client_phone
              FROM vw_vet_weekly_schedule
-             WHERE status IN ('scheduled', 'confirmed', 'in_progress')
+             WHERE clinic_id = :clinic
+               AND status IN ('scheduled', 'confirmed', 'in_progress')
                AND starts_at >= date_trunc('day', now())
              ORDER BY starts_at
              LIMIT :limit"
         );
+        $stmt->bindValue(':clinic', $clinicId, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -131,15 +134,20 @@ final class AppointmentRepository
         );
     }
 
-    public function cancel(int $id): string
+    public function cancel(int $id, int $clinicId): string
     {
         $this->db->beginTransaction();
 
         try {
             $this->db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
 
-            $stmt = $this->db->prepare('SELECT status FROM appointments WHERE id = :id FOR UPDATE');
-            $stmt->execute(['id' => $id]);
+            $stmt = $this->db->prepare(
+                'SELECT a.status FROM appointments a
+                 JOIN users vu ON vu.id = a.vet_id
+                 WHERE a.id = :id AND vu.clinic_id = :c
+                 FOR UPDATE OF a'
+            );
+            $stmt->execute(['id' => $id, 'c' => $clinicId]);
             $status = $stmt->fetchColumn();
 
             if ($status === false) {

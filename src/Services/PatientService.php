@@ -21,24 +21,24 @@ final class PatientService
         $this->appointments = new AppointmentRepository();
     }
 
-    public function clientsWithPets(): array
+    public function clientsWithPets(int $clinicId): array
     {
         $grouped = [];
-        foreach ($this->pets->all() as $pet) {
+        foreach ($this->pets->all($clinicId) as $pet) {
             $grouped[$pet->clientId][] = $pet;
         }
 
         $result = [];
-        foreach ($this->clients->all() as $client) {
+        foreach ($this->clients->all($clinicId) as $client) {
             $result[] = ['client' => $client, 'pets' => $grouped[$client->userId] ?? []];
         }
 
         return $result;
     }
 
-    public function petCard(int $id): ?array
+    public function petCard(int $id, int $clinicId): ?array
     {
-        $pet = $this->pets->find($id);
+        $pet = $this->pets->find($id, $clinicId);
 
         if ($pet === null) {
             return null;
@@ -56,13 +56,13 @@ final class PatientService
         return $this->pets->create($clientId, $speciesId, $name, $breed, $sex, $birthDate, $weightKg);
     }
 
-    public function update(int $id, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): bool
+    public function update(int $id, int $clinicId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): bool
     {
-        return $this->pets->update($id, $speciesId, $name, $breed, $sex, $birthDate, $weightKg);
+        return $this->pets->update($id, $clinicId, $speciesId, $name, $breed, $sex, $birthDate, $weightKg);
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id, int $clinicId): bool
     {
-        return $this->pets->delete($id);
+        return $this->pets->delete($id, $clinicId);
     }
 }

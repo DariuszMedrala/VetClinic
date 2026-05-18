@@ -16,26 +16,40 @@ final class StatsRepository
         $this->db = Database::connection();
     }
 
-    public function appointmentsToday(): int
+    public function appointmentsToday(int $clinicId): int
     {
         return $this->count(
-            "SELECT count(*) FROM appointments
-             WHERE starts_at::date = CURRENT_DATE AND status <> 'cancelled'"
+            "SELECT count(*) FROM appointments a
+             JOIN users vu ON vu.id = a.vet_id
+             WHERE vu.clinic_id = :c AND a.starts_at::date = CURRENT_DATE AND a.status <> 'cancelled'",
+            $clinicId
         );
     }
 
-    public function pendingInvoices(): int
+    public function pendingInvoices(int $clinicId): int
     {
-        return $this->count("SELECT count(*) FROM invoices WHERE status = 'pending'");
+        return $this->count(
+            "SELECT count(*) FROM invoices i
+             JOIN appointments a ON a.id = i.appointment_id
+             JOIN users vu ON vu.id = a.vet_id
+             WHERE vu.clinic_id = :c AND i.status = 'pending'",
+            $clinicId
+        );
     }
 
-    public function overdueVaccinations(): int
+    public function overdueVaccinations(int $clinicId): int
     {
-        return $this->count("SELECT count(*) FROM vw_pet_vaccination_status WHERE status = 'overdue'");
+        return $this->count(
+            "SELECT count(*) FROM vw_pet_vaccination_status WHERE clinic_id = :c AND status = 'overdue'",
+            $clinicId
+        );
     }
 
-    private function count(string $sql): int
+    private function count(string $sql, int $clinicId): int
     {
-        return (int) $this->db->query($sql)->fetchColumn();
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['c' => $clinicId]);
+
+        return (int) $stmt->fetchColumn();
     }
 }

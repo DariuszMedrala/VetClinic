@@ -15,8 +15,8 @@
       <h1 class="auth__brand-name">VetClinic</h1>
       <p class="auth__tagline">Troskliwa opieka nad każdym pacjentem, dopracowana z&nbsp;profesjonalną precyzją.</p>
 
-      <div class="auth__art img-ph" role="img" aria-label="Ilustracja: pies i kot na stole zabiegowym">
-        ilustracja_powitalna.png<br>„Zdrowe zwierzęta, szczęśliwe życie"
+      <div class="auth__art" style="overflow:hidden;">
+        <img src="/assets/img/happy_pets.webp" alt="Pies i kot pod opieką VetClinic" style="width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit;">
       </div>
     </section>
 

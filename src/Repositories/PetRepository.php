@@ -22,18 +22,22 @@ final class PetRepository
         $this->db = Database::connection();
     }
 
-    public function all(): array
+    public function all(int $clinicId): array
     {
-        $sql = 'SELECT ' . self::COLUMNS . '
-                FROM pets p
-                JOIN species s ON s.id = p.species_id
-                JOIN clients c ON c.user_id = p.client_id
-                JOIN users cu ON cu.id = c.user_id
-                ORDER BY cu.last_name, p.name';
+        $stmt = $this->db->prepare(
+            'SELECT ' . self::COLUMNS . '
+             FROM pets p
+             JOIN species s ON s.id = p.species_id
+             JOIN clients c ON c.user_id = p.client_id
+             JOIN users cu ON cu.id = c.user_id
+             WHERE cu.clinic_id = :c
+             ORDER BY cu.last_name, p.name'
+        );
+        $stmt->execute(['c' => $clinicId]);
 
         return array_map(
             static fn (array $row): Pet => Pet::fromRow($row),
-            $this->db->query($sql)->fetchAll()
+            $stmt->fetchAll()
         );
     }
 
@@ -56,7 +60,7 @@ final class PetRepository
         );
     }
 
-    public function find(int $id): ?Pet
+    public function find(int $id, int $clinicId): ?Pet
     {
         $stmt = $this->db->prepare(
             'SELECT ' . self::COLUMNS . '
@@ -64,9 +68,9 @@ final class PetRepository
              JOIN species s ON s.id = p.species_id
              JOIN clients c ON c.user_id = p.client_id
              JOIN users cu ON cu.id = c.user_id
-             WHERE p.id = :id'
+             WHERE p.id = :id AND cu.clinic_id = :c'
         );
-        $stmt->execute(['id' => $id]);
+        $stmt->execute(['id' => $id, 'c' => $clinicId]);
         $row = $stmt->fetch();
 
         return $row ? Pet::fromRow($row) : null;
@@ -105,16 +109,19 @@ final class PetRepository
         return (int) $stmt->fetchColumn();
     }
 
-    public function update(int $id, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): bool
+    public function update(int $id, int $clinicId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg): bool
     {
         $stmt = $this->db->prepare(
             'UPDATE pets
              SET species_id = :species, name = :name, breed = :breed,
                  sex = CAST(:sex AS animal_sex), birth_date = :birth, weight_kg = :weight
-             WHERE id = :id'
+             WHERE id = :id AND client_id IN (
+                 SELECT c.user_id FROM clients c JOIN users u ON u.id = c.user_id WHERE u.clinic_id = :c
+             )'
         );
         $stmt->execute([
             'id' => $id,
+            'c' => $clinicId,
             'species' => $speciesId,
             'name' => $name,
             'breed' => $breed,
@@ -126,10 +133,15 @@ final class PetRepository
         return $stmt->rowCount() > 0;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id, int $clinicId): bool
     {
-        $stmt = $this->db->prepare('DELETE FROM pets WHERE id = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt = $this->db->prepare(
+            'DELETE FROM pets
+             WHERE id = :id AND client_id IN (
+                 SELECT c.user_id FROM clients c JOIN users u ON u.id = c.user_id WHERE u.clinic_id = :c
+             )'
+        );
+        $stmt->execute(['id' => $id, 'c' => $clinicId]);
 
         return $stmt->rowCount() > 0;
     }
