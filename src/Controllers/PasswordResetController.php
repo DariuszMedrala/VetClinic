@@ -47,7 +47,7 @@ final class PasswordResetController extends Controller
             ], 'base')->status(422);
         }
 
-        $this->resets->request($email);
+        $this->resets->request($email, $request->baseUrl());
 
         return $this->view('auth/reset-request', [
             'title' => 'VetClinic — Reset hasła',

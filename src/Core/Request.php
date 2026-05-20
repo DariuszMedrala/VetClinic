@@ -85,4 +85,12 @@ final class Request
 
         return is_array($file) ? $file : null;
     }
+
+    public function baseUrl(): string
+    {
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? '') === '443';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+        return ($secure ? 'https' : 'http') . '://' . $host;
+    }
 }
