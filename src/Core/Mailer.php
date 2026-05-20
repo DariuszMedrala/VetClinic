@@ -13,6 +13,9 @@ final class Mailer
         private int $port,
         private string $fromEmail,
         private string $fromName,
+        private string $username = '',
+        private string $password = '',
+        private string $encryption = '',
     ) {
     }
 
@@ -23,12 +26,16 @@ final class Mailer
             (int) (getenv('MAIL_PORT') ?: 1025),
             getenv('MAIL_FROM') ?: 'no-reply@vetclinic.pl',
             getenv('MAIL_FROM_NAME') ?: 'VetClinic',
+            getenv('MAIL_USERNAME') ?: '',
+            getenv('MAIL_PASSWORD') ?: '',
+            strtolower((string) (getenv('MAIL_ENCRYPTION') ?: '')),
         );
     }
 
     public function sendHtml(string $to, string $subject, string $html): bool
     {
-        $socket = @fsockopen($this->host, $this->port, $errno, $errstr, 10);
+        $remote = ($this->encryption === 'ssl' ? 'ssl://' : '') . $this->host;
+        $socket = @fsockopen($remote, $this->port, $errno, $errstr, 10);
 
         if ($socket === false) {
             error_log("Mailer: brak połączenia z {$this->host}:{$this->port} ($errstr)");
@@ -36,11 +43,28 @@ final class Mailer
             return false;
         }
 
-        stream_set_timeout($socket, 10);
+        stream_set_timeout($socket, 15);
 
         try {
             $this->expect($socket, 220);
             $this->command($socket, 'EHLO vetclinic.local', 250);
+
+            if ($this->encryption === 'tls') {
+                $this->command($socket, 'STARTTLS', 220);
+
+                if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                    throw new RuntimeException('Nie udało się nawiązać połączenia TLS.');
+                }
+
+                $this->command($socket, 'EHLO vetclinic.local', 250);
+            }
+
+            if ($this->username !== '') {
+                $this->command($socket, 'AUTH LOGIN', 334);
+                $this->command($socket, base64_encode($this->username), 334);
+                $this->command($socket, base64_encode($this->password), 235);
+            }
+
             $this->command($socket, 'MAIL FROM:<' . $this->fromEmail . '>', 250);
             $this->command($socket, 'RCPT TO:<' . $to . '>', 250);
             $this->command($socket, 'DATA', 354);
