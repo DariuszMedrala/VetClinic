@@ -17,4 +17,11 @@ final class HomeController extends Controller
             'bodyClass' => 'lp',
         ], 'base');
     }
+
+    public function terms(Request $request, array $params): Response
+    {
+        return $this->view('pages/regulamin', [
+            'title' => 'VetClinic — Regulamin i polityka prywatności',
+        ], 'base');
+    }
 }
