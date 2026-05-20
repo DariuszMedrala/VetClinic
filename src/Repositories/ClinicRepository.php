@@ -21,6 +21,15 @@ final class ClinicRepository
         return $this->db->query('SELECT id, name, address FROM clinics ORDER BY name')->fetchAll();
     }
 
+    public function find(int $id): ?array
+    {
+        $stmt = $this->db->prepare('SELECT id, name, address FROM clinics WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row ?: null;
+    }
+
     public function exists(int $id): bool
     {
         $stmt = $this->db->prepare('SELECT 1 FROM clinics WHERE id = :id');

@@ -31,6 +31,12 @@ final class ClientRepository
         return $row ? Client::fromRow($row) : null;
     }
 
+    public function updatePhone(int $userId, ?string $phone): void
+    {
+        $stmt = $this->db->prepare('UPDATE clients SET phone = :phone WHERE user_id = :id');
+        $stmt->execute(['phone' => $phone, 'id' => $userId]);
+    }
+
     public function all(int $clinicId): array
     {
         $stmt = $this->db->prepare(

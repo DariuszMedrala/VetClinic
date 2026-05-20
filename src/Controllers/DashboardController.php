@@ -8,15 +8,18 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Services\ClientPortalService;
+use App\Services\ClinicService;
 
 final class DashboardController extends Controller
 {
     private ClientPortalService $portal;
+    private ClinicService $clinics;
 
     public function __construct()
     {
         parent::__construct();
         $this->portal = new ClientPortalService();
+        $this->clinics = new ClinicService();
     }
 
     public function index(Request $request, array $params): Response
@@ -29,13 +32,17 @@ final class DashboardController extends Controller
             return $this->redirect('/login');
         }
 
+        $clinic = $this->clinics->find((int) $this->auth->clinicId());
+
         return $this->view('portal/index', [
             'title' => 'VetClinic — Mój portal',
             'user' => $this->auth->user(),
+            'active' => 'dashboard',
             'client' => $data['client'],
+            'clinicName' => $clinic['name'] ?? '',
             'pets' => $data['pets'],
             'appointments' => $data['appointments'],
             'invoices' => $data['invoices'],
-        ], 'portal');
+        ], 'app');
     }
 }

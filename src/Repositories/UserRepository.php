@@ -38,6 +38,35 @@ final class UserRepository
         return (bool) $stmt->fetchColumn();
     }
 
+    public function emailExistsForOther(string $email, int $userId): bool
+    {
+        $stmt = $this->db->prepare('SELECT 1 FROM users WHERE email = :email AND id <> :id');
+        $stmt->execute(['email' => $email, 'id' => $userId]);
+
+        return (bool) $stmt->fetchColumn();
+    }
+
+    public function findById(int $id): ?User
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id, email, password_hash, first_name, last_name, role, clinic_id
+             FROM users WHERE id = :id'
+        );
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row ? User::fromRow($row) : null;
+    }
+
+    public function updateProfile(int $id, string $firstName, string $lastName, string $email): void
+    {
+        $stmt = $this->db->prepare(
+            'UPDATE users SET first_name = :first, last_name = :last, email = :email, updated_at = now()
+             WHERE id = :id'
+        );
+        $stmt->execute(['first' => $firstName, 'last' => $lastName, 'email' => $email, 'id' => $id]);
+    }
+
     public function create(string $email, string $passwordHash, string $firstName, string $lastName, string $role, int $clinicId): int
     {
         $stmt = $this->db->prepare(

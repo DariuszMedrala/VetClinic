@@ -7,6 +7,7 @@ $roleLabel = match ($user['role'] ?? '') {
 };
 $initials = strtoupper(mb_substr($user['name'] ?? 'VC', 0, 2));
 $active = $active ?? '';
+$isClient = ($user['role'] ?? '') === 'client';
 $navClass = static fn (string $key): string => 'nav-item' . ($active === $key ? ' nav-item--active' : '');
 $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active === $key ? ' bottom-nav__item--active' : '');
 ?>
@@ -32,6 +33,16 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
     </div>
 
     <nav class="sidebar__nav">
+<?php if ($isClient): ?>
+      <a class="<?= $navClass('dashboard') ?>" href="/dashboard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
+        Mój pulpit
+      </a>
+      <a class="<?= $navClass('profil') ?>" href="/profil">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        Edytuj profil
+      </a>
+<?php else: ?>
       <a class="<?= $navClass('pulpit') ?>" href="/pulpit">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
         Pulpit
@@ -48,6 +59,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle><path d="M6 9v6M18 9v6"></path></svg>
         Płatności
       </a>
+<?php endif; ?>
     </nav>
 
     <div class="sidebar__spacer"></div>
@@ -92,6 +104,16 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
   </div>
 
   <nav class="bottom-nav">
+<?php if ($isClient): ?>
+    <a class="<?= $tabClass('dashboard') ?>" href="/dashboard">
+      <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg></span>
+      Start
+    </a>
+    <a class="<?= $tabClass('profil') ?>" href="/profil">
+      <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></span>
+      Profil
+    </a>
+<?php else: ?>
     <a class="<?= $tabClass('pulpit') ?>" href="/pulpit">
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg></span>
       Start
@@ -108,6 +130,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle></svg></span>
       Płatności
     </a>
+<?php endif; ?>
   </nav>
 
 </body>

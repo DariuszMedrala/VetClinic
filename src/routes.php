@@ -10,6 +10,7 @@ use App\Controllers\HomeController;
 use App\Controllers\InvoiceController;
 use App\Controllers\PasswordResetController;
 use App\Controllers\PatientController;
+use App\Controllers\ProfileController;
 use App\Core\Router;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\RoleMiddleware;
@@ -32,6 +33,15 @@ $router->get('/reset-hasla/{token}', [PasswordResetController::class, 'showReset
 $router->post('/reset-hasla/{token}', [PasswordResetController::class, 'reset']);
 
 $router->get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+
+$router->get('/profil', [ProfileController::class, 'edit'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+
+$router->post('/profil', [ProfileController::class, 'update'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+
+$router->post('/profil/haslo', [ProfileController::class, 'updatePassword'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
 
 $router->get('/pulpit', [AppointmentController::class, 'index'])
