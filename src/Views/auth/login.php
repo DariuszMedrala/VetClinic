@@ -78,11 +78,6 @@
           </div>
         </div>
 
-        <label class="checkbox">
-          <input type="checkbox" name="zapamietaj">
-          Zapamiętaj mnie na 30 dni
-        </label>
-
         <button class="btn btn--primary btn--block btn--lg" type="submit">
           Zaloguj się do portalu
           <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
