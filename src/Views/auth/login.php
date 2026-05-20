@@ -65,7 +65,7 @@
         <div class="field">
           <div class="field__row">
             <label class="field__label" for="haslo">Hasło</label>
-            <a class="field__link" href="#">Nie pamiętasz hasła?</a>
+            <a class="field__link" href="/reset-hasla">Nie pamiętasz hasła?</a>
           </div>
           <div class="input-wrap">
             <span class="input-wrap__icon" aria-hidden="true">

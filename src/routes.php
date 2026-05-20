@@ -8,6 +8,7 @@ use App\Controllers\CalendarController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
 use App\Controllers\InvoiceController;
+use App\Controllers\PasswordResetController;
 use App\Controllers\PatientController;
 use App\Core\Router;
 use App\Middleware\AuthMiddleware;
@@ -22,6 +23,13 @@ $router->post('/login', [AuthController::class, 'login']);
 $router->get('/register', [AuthController::class, 'showRegister']);
 $router->post('/register', [AuthController::class, 'register']);
 $router->post('/logout', [AuthController::class, 'logout'])->middleware(new AuthMiddleware());
+
+$router->get('/regulamin', [HomeController::class, 'terms']);
+
+$router->get('/reset-hasla', [PasswordResetController::class, 'showRequest']);
+$router->post('/reset-hasla', [PasswordResetController::class, 'request']);
+$router->get('/reset-hasla/{token}', [PasswordResetController::class, 'showReset']);
+$router->post('/reset-hasla/{token}', [PasswordResetController::class, 'reset']);
 
 $router->get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));

@@ -72,4 +72,12 @@ final class UserRepository
         );
         $stmt->execute(['id' => $userId, 'phone' => $phone]);
     }
+
+    public function updatePassword(int $userId, string $passwordHash): void
+    {
+        $stmt = $this->db->prepare(
+            'UPDATE users SET password_hash = :hash, updated_at = now() WHERE id = :id'
+        );
+        $stmt->execute(['hash' => $passwordHash, 'id' => $userId]);
+    }
 }
