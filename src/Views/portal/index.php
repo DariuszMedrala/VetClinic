@@ -77,7 +77,7 @@
 <?php if ($appointments === []): ?>
         <p class="panel__empty">Brak zaplanowanych wizyt.</p>
 <?php else: ?>
-        <table class="schedule">
+        <table class="schedule schedule--lead">
           <thead><tr><th>Dzień</th><th>Godzina</th><th>Zwierzę</th><th>Lekarz</th><th>Status</th></tr></thead>
           <tbody>
 <?php foreach ($appointments as $a): ?>
@@ -119,7 +119,7 @@
 <?php if ($invoices === []): ?>
         <p class="panel__empty">Brak faktur.</p>
 <?php else: ?>
-        <table class="schedule">
+        <table class="schedule schedule--lead">
           <thead><tr><th>Numer</th><th>Wystawiono</th><th>Status</th><th>Suma</th></tr></thead>
           <tbody>
 <?php foreach ($invoices as $inv): ?>

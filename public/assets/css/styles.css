@@ -378,6 +378,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .schedule tbody td:first-child { padding-left: 30px; }
 .schedule tbody td:last-child  { padding-right: 30px; text-align: right; }
+.schedule--lead { table-layout: fixed; }
+.schedule--lead thead th,
+.schedule--lead tbody td { text-align: center; }
+.schedule--lead thead th:first-child,
+.schedule--lead tbody td:first-child { text-align: left; padding-left: 30px; }
+.schedule--lead thead th:last-child,
+.schedule--lead tbody td:last-child { text-align: center; padding-right: 18px; }
+.schedule--lead .sched-time { justify-content: center; }
+.schedule--lead tbody td:first-child .sched-time { justify-content: flex-start; }
 
 .sched-time { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 600; color: var(--ink-700); }
 
