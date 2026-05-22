@@ -17,6 +17,10 @@ final class AppointmentRepository
     public const INVALID = 'invalid';
     public const CREATED = 'created';
     public const CONFLICT = 'conflict';
+    public const COMPLETED = 'completed';
+
+    private const VIEW_COLUMNS = 'appointment_id, starts_at, ends_at, status, reason,
+                vet_id, vet_name, room, pet_id, pet_name, species, client_name, client_phone';
 
     private PDO $db;
 
@@ -25,19 +29,79 @@ final class AppointmentRepository
         $this->db = Database::connection();
     }
 
-    public function forWeek(int $clinicId, string $from, string $to): array
+    public function upcomingForVet(int $vetId, int $limit = 30): array
     {
+        $stmt = $this->db->prepare(
+            'SELECT ' . self::VIEW_COLUMNS . "
+             FROM vw_vet_weekly_schedule
+             WHERE vet_id = :vet
+               AND status IN ('scheduled', 'confirmed', 'in_progress')
+               AND starts_at >= date_trunc('day', now())
+             ORDER BY starts_at
+             LIMIT :limit"
+        );
+        $stmt->bindValue(':vet', $vetId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return array_map(static fn (array $r): Appointment => Appointment::fromRow($r), $stmt->fetchAll());
+    }
+
+    public function toInvoiceForVet(int $vetId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT ' . self::VIEW_COLUMNS . "
+             FROM vw_vet_weekly_schedule v
+             WHERE v.vet_id = :vet AND v.status = 'completed'
+               AND NOT EXISTS (SELECT 1 FROM invoices i WHERE i.appointment_id = v.appointment_id)
+             ORDER BY v.starts_at DESC"
+        );
+        $stmt->execute(['vet' => $vetId]);
+
+        return array_map(static fn (array $r): Appointment => Appointment::fromRow($r), $stmt->fetchAll());
+    }
+
+    public function markCompleted(int $id, int $vetId): string
+    {
+        $stmt = $this->db->prepare('SELECT status FROM appointments WHERE id = :id AND vet_id = :vet');
+        $stmt->execute(['id' => $id, 'vet' => $vetId]);
+        $status = $stmt->fetchColumn();
+
+        if ($status === false) {
+            return self::NOT_FOUND;
+        }
+
+        if (!in_array($status, ['scheduled', 'confirmed', 'in_progress'], true)) {
+            return self::INVALID;
+        }
+
+        $update = $this->db->prepare("UPDATE appointments SET status = 'completed' WHERE id = :id");
+        $update->execute(['id' => $id]);
+
+        return self::COMPLETED;
+    }
+
+    public function forWeek(int $clinicId, string $from, string $to, ?int $vetId = null): array
+    {
+        $params = ['clinic' => $clinicId, 'from' => $from, 'to' => $to];
+        $vetFilter = '';
+
+        if ($vetId !== null) {
+            $vetFilter = ' AND vet_id = :vet';
+            $params['vet'] = $vetId;
+        }
+
         $stmt = $this->db->prepare(
             "SELECT appointment_id, starts_at, ends_at, status, reason,
                     vet_id, vet_name, room, pet_id, pet_name, species,
-                    client_name, client_phone
+                    client_name, client_phone, breed, notes
              FROM vw_vet_weekly_schedule
              WHERE clinic_id = :clinic
                AND status <> 'cancelled'
-               AND starts_at >= :from AND starts_at < :to
+               AND starts_at >= :from AND starts_at < :to" . $vetFilter . "
              ORDER BY starts_at"
         );
-        $stmt->execute(['clinic' => $clinicId, 'from' => $from, 'to' => $to]);
+        $stmt->execute($params);
 
         return array_map(
             static fn (array $row): Appointment => Appointment::fromRow($row),

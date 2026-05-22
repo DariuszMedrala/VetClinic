@@ -25,6 +25,10 @@ final class AppointmentController extends Controller
 
     public function index(Request $request, array $params): Response
     {
+        if ($this->auth->role() === 'vet') {
+            return $this->vetDashboard();
+        }
+
         $clinicId = (int) $this->auth->clinicId();
 
         return $this->view('staff/pulpit', [
@@ -34,6 +38,31 @@ final class AppointmentController extends Controller
             'appointments' => $this->appointments->upcoming($clinicId),
             'stats' => $this->stats->forDashboard($clinicId),
         ], 'app');
+    }
+
+    private function vetDashboard(): Response
+    {
+        $vetId = (int) $this->auth->id();
+
+        return $this->view('staff/pulpit-lekarz', [
+            'title' => 'VetClinic — Pulpit',
+            'user' => $this->auth->user(),
+            'active' => 'pulpit',
+            'today' => $this->stats->appointmentsTodayForVet($vetId),
+            'upcoming' => $this->appointments->upcomingForVet($vetId),
+            'toInvoice' => $this->appointments->toInvoiceForVet($vetId),
+        ], 'app');
+    }
+
+    public function complete(Request $request, array $params): Response
+    {
+        if (!Csrf::validate($request->input('_csrf'))) {
+            return $this->json(['ok' => false, 'message' => 'Nieprawidłowy token CSRF.'], 419);
+        }
+
+        $result = $this->appointments->complete((int) ($params['id'] ?? 0), (int) $this->auth->id());
+
+        return $this->json(['ok' => $result['ok'], 'message' => $result['message']], $result['status']);
     }
 
     public function cancel(Request $request, array $params): Response

@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Core\Database;
 use App\Models\Invoice;
 use PDO;
+use Throwable;
 
 final class InvoiceRepository
 {
@@ -67,6 +68,69 @@ final class InvoiceRepository
         $row = $stmt->fetch();
 
         return $row ? Invoice::fromRow($row) : null;
+    }
+
+    public function appointmentForInvoice(int $appointmentId, int $vetId): ?array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT appointment_id, starts_at, reason, pet_name, species, client_name
+             FROM vw_vet_weekly_schedule v
+             WHERE v.appointment_id = :id AND v.vet_id = :vet AND v.status = 'completed'
+               AND NOT EXISTS (SELECT 1 FROM invoices i WHERE i.appointment_id = :id)"
+        );
+        $stmt->execute(['id' => $appointmentId, 'vet' => $vetId]);
+        $row = $stmt->fetch();
+
+        return $row ?: null;
+    }
+
+    public function createForAppointment(int $appointmentId, array $items): int
+    {
+        $this->db->beginTransaction();
+
+        try {
+            $clear = $this->db->prepare('DELETE FROM appointment_procedures WHERE appointment_id = :id');
+            $clear->execute(['id' => $appointmentId]);
+
+            $year = date('Y');
+            $numberStmt = $this->db->prepare(
+                "SELECT 'FV-' || :year || '-' || lpad((count(*) + 1)::text, 4, '0')
+                 FROM invoices WHERE invoice_number LIKE :prefix"
+            );
+            $numberStmt->execute(['year' => $year, 'prefix' => 'FV-' . $year . '-%']);
+            $number = (string) $numberStmt->fetchColumn();
+
+            $invoice = $this->db->prepare(
+                "INSERT INTO invoices (appointment_id, invoice_number, status)
+                 VALUES (:appointment, :number, 'pending') RETURNING id"
+            );
+            $invoice->execute(['appointment' => $appointmentId, 'number' => $number]);
+            $invoiceId = (int) $invoice->fetchColumn();
+
+            $procedure = $this->db->prepare(
+                'INSERT INTO appointment_procedures (appointment_id, procedure_id, quantity, unit_price)
+                 VALUES (:appointment, :procedure, :quantity, :price)'
+            );
+
+            foreach ($items as $item) {
+                $procedure->execute([
+                    'appointment' => $appointmentId,
+                    'procedure' => $item['procedure_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['unit_price'],
+                ]);
+            }
+
+            $this->db->commit();
+
+            return $invoiceId;
+        } catch (Throwable $exception) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+
+            throw $exception;
+        }
     }
 
     public function lineItems(int $appointmentId): array

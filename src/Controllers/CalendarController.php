@@ -10,6 +10,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Services\AppointmentService;
 use App\Services\LookupService;
+use App\Services\VetAvailabilityService;
 use DateTimeImmutable;
 use Throwable;
 
@@ -19,12 +20,14 @@ final class CalendarController extends Controller
 
     private AppointmentService $appointments;
     private LookupService $lookups;
+    private VetAvailabilityService $availability;
 
     public function __construct()
     {
         parent::__construct();
         $this->appointments = new AppointmentService();
         $this->lookups = new LookupService();
+        $this->availability = new VetAvailabilityService();
     }
 
     public function index(Request $request, array $params): Response
@@ -45,10 +48,13 @@ final class CalendarController extends Controller
         }
 
         $clinicId = (int) $this->auth->clinicId();
+        $isVet = $this->auth->role() === 'vet';
+        $canCreate = $this->auth->role() === 'admin';
         $appointments = $this->appointments->forWeek(
             $clinicId,
             $monday->format('Y-m-d 00:00:00'),
-            $monday->modify('+7 days')->format('Y-m-d 00:00:00')
+            $monday->modify('+7 days')->format('Y-m-d 00:00:00'),
+            $isVet ? (int) $this->auth->id() : null
         );
 
         return $this->view('staff/kalendarz', [
@@ -62,8 +68,9 @@ final class CalendarController extends Controller
             'prevWeek' => $monday->modify('-7 days')->format('Y-m-d'),
             'nextWeek' => $monday->modify('+7 days')->format('Y-m-d'),
             'todayWeek' => (new DateTimeImmutable('today'))->modify('monday this week')->format('Y-m-d'),
-            'vets' => $this->lookups->vets($clinicId),
-            'pets' => $this->lookups->pets($clinicId),
+            'canCreate' => $canCreate,
+            'vets' => $canCreate ? $this->lookups->vets($clinicId) : [],
+            'pets' => $canCreate ? $this->lookups->pets($clinicId) : [],
             'defaultDate' => $today,
         ], 'app');
     }
@@ -95,6 +102,10 @@ final class CalendarController extends Controller
 
         $start = new DateTimeImmutable($date . ' ' . $time);
         $end = $start->modify("+$duration minutes");
+
+        if (!$this->availability->isAvailable($vetId, (int) $start->format('N'), $start->format('H:i'), $end->format('H:i'))) {
+            return $this->json(['ok' => false, 'message' => 'Lekarz nie jest dostępny w wybranym terminie — sprawdź jego grafik.'], 422);
+        }
 
         $result = $this->appointments->create(
             $petId,

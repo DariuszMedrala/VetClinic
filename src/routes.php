@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Controllers\AppointmentController;
 use App\Controllers\AuthController;
+use App\Controllers\AvailabilityController;
+use App\Controllers\BillingController;
 use App\Controllers\CalendarController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
@@ -36,13 +38,13 @@ $router->get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
 
 $router->get('/profil', [ProfileController::class, 'edit'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+    ->middleware(new AuthMiddleware());
 
 $router->post('/profil', [ProfileController::class, 'update'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+    ->middleware(new AuthMiddleware());
 
 $router->post('/profil/haslo', [ProfileController::class, 'updatePassword'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+    ->middleware(new AuthMiddleware());
 
 $router->get('/pulpit', [AppointmentController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
@@ -50,32 +52,47 @@ $router->get('/pulpit', [AppointmentController::class, 'index'])
 $router->get('/kalendarz', [CalendarController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
+$router->get('/dostepnosc', [AvailabilityController::class, 'edit'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
+
+$router->post('/dostepnosc', [AvailabilityController::class, 'save'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
+
 $router->post('/appointments', [CalendarController::class, 'store'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
 $router->post('/appointments/{id}/cancel', [AppointmentController::class, 'cancel'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
+$router->post('/appointments/{id}/zakoncz', [AppointmentController::class, 'complete'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
+
+$router->get('/faktury/wystaw/{id}', [BillingController::class, 'create'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
+
+$router->post('/faktury/wystaw/{id}', [BillingController::class, 'store'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
+
 $router->get('/pacjenci', [PatientController::class, 'index'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->get('/pacjenci/{id}', [PatientController::class, 'show'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->post('/pacjenci', [PatientController::class, 'store'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->post('/pacjenci/{id}/update', [PatientController::class, 'update'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->post('/pacjenci/{id}/delete', [PatientController::class, 'destroy'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->get('/platnosci', [InvoiceController::class, 'index'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->get('/platnosci/{id}', [InvoiceController::class, 'show'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->post('/platnosci/{id}/pay', [InvoiceController::class, 'pay'])
-    ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));

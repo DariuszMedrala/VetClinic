@@ -8,6 +8,7 @@ $roleLabel = match ($user['role'] ?? '') {
 $initials = strtoupper(mb_substr($user['name'] ?? 'VC', 0, 2));
 $active = $active ?? '';
 $isClient = ($user['role'] ?? '') === 'client';
+$isVet = ($user['role'] ?? '') === 'vet';
 $navClass = static fn (string $key): string => 'nav-item' . ($active === $key ? ' nav-item--active' : '');
 $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active === $key ? ' bottom-nav__item--active' : '');
 ?>
@@ -51,6 +52,7 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M3 9h18M8 2v4M16 2v4"></path></svg>
         Kalendarz
       </a>
+<?php if (!$isVet): ?>
       <a class="<?= $navClass('pacjenci') ?>" href="/pacjenci">
         <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="2"></circle><circle cx="10.5" cy="6" r="2"></circle><circle cx="15.5" cy="6" r="2"></circle><circle cx="19" cy="10.5" r="2"></circle><path d="M12.5 12c-2.2 0-4 1.7-4.7 3.4-.6 1.5-2 2.3-2 3.8 0 1.4 1.2 2.3 2.6 2.1 1.2-.2 2.6-.7 4.1-.7s2.9.5 4.1.7c1.4.2 2.6-.7 2.6-2.1 0-1.5-1.4-2.3-2-3.8C16.5 13.7 14.7 12 12.5 12z"></path></svg>
         Klienci i zwierzęta
@@ -58,6 +60,17 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
       <a class="<?= $navClass('platnosci') ?>" href="/platnosci">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle><path d="M6 9v6M18 9v6"></path></svg>
         Płatności
+      </a>
+<?php endif; ?>
+<?php if ($isVet): ?>
+      <a class="<?= $navClass('dostepnosc') ?>" href="/dostepnosc">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+        Dostępność
+      </a>
+<?php endif; ?>
+      <a class="<?= $navClass('profil') ?>" href="/profil">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        Edytuj profil
       </a>
 <?php endif; ?>
     </nav>
@@ -108,6 +121,23 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
     <a class="<?= $tabClass('dashboard') ?>" href="/dashboard">
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg></span>
       Start
+    </a>
+    <a class="<?= $tabClass('profil') ?>" href="/profil">
+      <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></span>
+      Profil
+    </a>
+<?php elseif ($isVet): ?>
+    <a class="<?= $tabClass('pulpit') ?>" href="/pulpit">
+      <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg></span>
+      Start
+    </a>
+    <a class="<?= $tabClass('kalendarz') ?>" href="/kalendarz">
+      <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M3 9h18M8 2v4M16 2v4"></path></svg></span>
+      Kalendarz
+    </a>
+    <a class="<?= $tabClass('dostepnosc') ?>" href="/dostepnosc">
+      <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+      Dostępność
     </a>
     <a class="<?= $tabClass('profil') ?>" href="/profil">
       <span class="bottom-nav__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></span>

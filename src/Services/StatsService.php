@@ -15,6 +15,11 @@ final class StatsService
         $this->stats = new StatsRepository();
     }
 
+    public function appointmentsTodayForVet(int $vetId): int
+    {
+        return $this->stats->appointmentsTodayForVet($vetId);
+    }
+
     public function forDashboard(int $clinicId): array
     {
         return [

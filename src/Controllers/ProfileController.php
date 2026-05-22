@@ -8,7 +8,6 @@ use App\Core\Controller;
 use App\Core\Csrf;
 use App\Core\Request;
 use App\Core\Response;
-use App\Models\Client;
 use App\Services\ProfileService;
 
 final class ProfileController extends Controller
@@ -23,13 +22,7 @@ final class ProfileController extends Controller
 
     public function edit(Request $request, array $params): Response
     {
-        $client = $this->profiles->get((int) $this->auth->id());
-
-        if ($client === null) {
-            return $this->redirect('/dashboard');
-        }
-
-        return $this->render($client, null, null);
+        return $this->renderFor($this->auth->role(), null, null);
     }
 
     public function update(Request $request, array $params): Response
@@ -39,32 +32,36 @@ final class ProfileController extends Controller
         }
 
         $userId = (int) $this->auth->id();
+        $role = (string) $this->auth->role();
         $firstName = trim((string) $request->input('imie', ''));
         $lastName = trim((string) $request->input('nazwisko', ''));
         $email = trim((string) $request->input('email', ''));
-        $phone = trim((string) $request->input('telefon', ''));
-
-        $error = null;
 
         if ($firstName === '' || $lastName === '') {
-            $error = 'Imię i nazwisko są wymagane.';
+            $result = ['ok' => false, 'message' => 'Imię i nazwisko są wymagane.'];
         } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            $error = 'Podaj poprawny adres e-mail.';
-        }
-
-        if ($error !== null) {
-            $result = ['ok' => false, 'message' => $error];
-        } else {
+            $result = ['ok' => false, 'message' => 'Podaj poprawny adres e-mail.'];
+        } elseif ($role === 'client') {
+            $phone = trim((string) $request->input('telefon', ''));
             $result = $this->profiles->updateData($userId, $firstName, $lastName, $email, $phone !== '' ? $phone : null);
+        } else {
+            $result = $this->profiles->updateStaffData($userId, $firstName, $lastName, $email);
 
-            if ($result['ok']) {
-                $user = $this->auth->user();
-                $user['name'] = $firstName . ' ' . $lastName;
-                $this->session->set('user', $user);
+            if ($result['ok'] && $role === 'vet') {
+                $title = trim((string) $request->input('tytul', '')) ?: 'Dr';
+                $room = trim((string) $request->input('gabinet', ''));
+                $spec = trim((string) $request->input('specjalizacja', ''));
+                $this->profiles->updateVetExtra($userId, $title, $room !== '' ? $room : null, $spec !== '' ? $spec : null);
             }
         }
 
-        return $this->render($this->profiles->get($userId), $result, null);
+        if ($result['ok']) {
+            $user = $this->auth->user();
+            $user['name'] = $firstName . ' ' . $lastName;
+            $this->session->set('user', $user);
+        }
+
+        return $this->renderFor($role, $result, null);
     }
 
     public function updatePassword(Request $request, array $params): Response
@@ -86,16 +83,43 @@ final class ProfileController extends Controller
             $result = $this->profiles->changePassword($userId, $current, $new);
         }
 
-        return $this->render($this->profiles->get($userId), null, $result);
+        return $this->renderFor((string) $this->auth->role(), null, $result);
     }
 
-    private function render(Client $client, ?array $profileMsg, ?array $passwordMsg): Response
+    private function renderFor(string $role, ?array $profileMsg, ?array $passwordMsg): Response
     {
-        return $this->view('portal/profil', [
+        $userId = (int) $this->auth->id();
+
+        if ($role === 'client') {
+            $client = $this->profiles->get($userId);
+
+            if ($client === null) {
+                return $this->redirect('/login');
+            }
+
+            return $this->view('portal/profil', [
+                'title' => 'VetClinic — Edytuj profil',
+                'user' => $this->auth->user(),
+                'active' => 'profil',
+                'client' => $client,
+                'profileMsg' => $profileMsg,
+                'passwordMsg' => $passwordMsg,
+            ], 'app');
+        }
+
+        $account = $this->profiles->staffUser($userId);
+
+        if ($account === null) {
+            return $this->redirect('/login');
+        }
+
+        return $this->view('staff/profil', [
             'title' => 'VetClinic — Edytuj profil',
             'user' => $this->auth->user(),
             'active' => 'profil',
-            'client' => $client,
+            'account' => $account,
+            'vet' => $role === 'vet' ? $this->profiles->vetExtra($userId) : null,
+            'isVet' => $role === 'vet',
             'profileMsg' => $profileMsg,
             'passwordMsg' => $passwordMsg,
         ], 'app');

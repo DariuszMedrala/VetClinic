@@ -37,6 +37,17 @@ final class StatsRepository
         );
     }
 
+    public function appointmentsTodayForVet(int $vetId): int
+    {
+        $stmt = $this->db->prepare(
+            "SELECT count(*) FROM appointments
+             WHERE vet_id = :vet AND starts_at::date = CURRENT_DATE AND status <> 'cancelled'"
+        );
+        $stmt->execute(['vet' => $vetId]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
     public function overdueVaccinations(int $clinicId): int
     {
         return $this->count(
