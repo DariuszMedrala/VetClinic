@@ -35,9 +35,9 @@ $attrs = static function ($a): string {
         <div class="panel__head">
           <h2 class="panel__title">Tydzień <?= e($weekLabel) ?></h2>
           <span class="cal-nav">
-            <a class="btn btn--soft btn--sm" href="/kalendarz?week=<?= e($prevWeek) ?>">← Poprzedni</a>
-            <a class="btn btn--soft btn--sm" href="/kalendarz?week=<?= e($todayWeek) ?>">Dziś</a>
-            <a class="btn btn--soft btn--sm" href="/kalendarz?week=<?= e($nextWeek) ?>">Następny →</a>
+            <a class="btn btn--soft btn--sm" href="/calendar?week=<?= e($prevWeek) ?>">← Poprzedni</a>
+            <a class="btn btn--soft btn--sm" href="/calendar?week=<?= e($todayWeek) ?>">Dziś</a>
+            <a class="btn btn--soft btn--sm" href="/calendar?week=<?= e($nextWeek) ?>">Następny →</a>
           </span>
         </div>
       </section>
@@ -209,4 +209,4 @@ $attrs = static function ($a): string {
 <?php endif; ?>
       </div>
 
-      <script src="/assets/js/kalendarz.js"></script>
+      <script src="/assets/js/calendar.js"></script>

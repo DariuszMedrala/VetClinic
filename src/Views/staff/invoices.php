@@ -21,7 +21,7 @@
           <tbody>
 <?php foreach ($invoices as $inv): ?>
             <tr>
-              <td><a class="field__link" href="/platnosci/<?= e((string) $inv->id) ?>"><?= e($inv->number) ?></a></td>
+              <td><a class="field__link" href="/invoices/<?= e((string) $inv->id) ?>"><?= e($inv->number) ?></a></td>
               <td><?= e($inv->petName) ?> (<?= e($inv->species) ?>)</td>
               <td><?= e($inv->clientName) ?></td>
               <td><?= e($inv->issuedAt->format('d.m.Y')) ?></td>
@@ -34,7 +34,7 @@
 
         <div class="sched-cards">
 <?php foreach ($invoices as $inv): ?>
-          <a class="sched-card" href="/platnosci/<?= e((string) $inv->id) ?>" style="text-decoration:none;">
+          <a class="sched-card" href="/invoices/<?= e((string) $inv->id) ?>" style="text-decoration:none;">
             <div class="sched-card__top">
               <div class="sched-card__time"><small><?= e($inv->number) ?></small><b><?= e($inv->totalLabel()) ?></b></div>
               <div class="sched-card__info">

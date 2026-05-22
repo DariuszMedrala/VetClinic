@@ -15,7 +15,7 @@
     </section>
 
     <section class="auth__panel">
-      <form class="auth__form" action="/reset-hasla" method="post">
+      <form class="auth__form" action="/reset-password" method="post">
         <input type="hidden" name="_csrf" value="<?= e(\App\Core\Csrf::token()) ?>">
 
         <div class="auth__mobile-head">

@@ -122,7 +122,7 @@ final class AuthController extends Controller
 
     private function homeFor(string $role): string
     {
-        return in_array($role, ['vet', 'admin'], true) ? '/pulpit' : '/dashboard';
+        return in_array($role, ['vet', 'admin'], true) ? '/dashboard' : '/portal';
     }
 
     private function validateRegistration(string $firstName, string $lastName, string $email, string $password, string $passwordConfirm, string $role, int $clinicId, string $clinicName, string $clinicAddress, bool $accepted): array

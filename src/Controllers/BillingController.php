@@ -26,7 +26,7 @@ final class BillingController extends Controller
         $appointment = $this->billing->invoiceableAppointment($appointmentId, (int) $this->auth->id());
 
         if ($appointment === null) {
-            return $this->redirect('/pulpit');
+            return $this->redirect('/dashboard');
         }
 
         return $this->render($appointment, null);
@@ -48,18 +48,18 @@ final class BillingController extends Controller
             $appointment = $this->billing->invoiceableAppointment($appointmentId, $vetId);
 
             if ($appointment === null) {
-                return $this->redirect('/pulpit');
+                return $this->redirect('/dashboard');
             }
 
             return $this->render($appointment, $result['message'])->status(422);
         }
 
-        return $this->redirect('/pulpit');
+        return $this->redirect('/dashboard');
     }
 
     private function render(array $appointment, ?string $error): Response
     {
-        return $this->view('staff/faktura-nowa', [
+        return $this->view('staff/invoice-new', [
             'title' => 'VetClinic — Nowa faktura',
             'user' => $this->auth->user(),
             'active' => 'pulpit',

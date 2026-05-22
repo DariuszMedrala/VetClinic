@@ -6,7 +6,7 @@ use DateTimeImmutable;
 $when = (new DateTimeImmutable((string) $appointment['starts_at']))->format('d.m.Y H:i');
 $apptId = (int) $appointment['appointment_id'];
 ?>
-      <p style="margin-bottom:18px;"><a class="field__link" href="/pulpit">← Wróć do pulpitu</a></p>
+      <p style="margin-bottom:18px;"><a class="field__link" href="/dashboard">← Wróć do pulpitu</a></p>
 
       <section style="margin-bottom:24px;">
         <h1 style="font-size:26px;font-weight:800;color:var(--ink-900);margin-bottom:4px;">Wystaw fakturę</h1>
@@ -28,7 +28,7 @@ $apptId = (int) $appointment['appointment_id'];
 <?php if ($error !== null): ?>
         <div class="details__alert" style="margin:0 30px 18px;"><?= e($error) ?></div>
 <?php endif; ?>
-        <form action="/faktury/wystaw/<?= $apptId ?>" method="post">
+        <form action="/invoices/new/<?= $apptId ?>" method="post">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
           <table class="schedule">
             <thead><tr><th>Zabieg</th><th>Opis</th><th>Cena jedn.</th><th>Ilość</th></tr></thead>

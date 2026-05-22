@@ -39,7 +39,7 @@ final class AvailabilityController extends Controller
 
     private function render(array $availability, ?array $message): Response
     {
-        return $this->view('staff/dostepnosc', [
+        return $this->view('staff/availability', [
             'title' => 'VetClinic — Dostępność',
             'user' => $this->auth->user(),
             'active' => 'dostepnosc',

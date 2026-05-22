@@ -97,7 +97,7 @@ final class ProfileController extends Controller
                 return $this->redirect('/login');
             }
 
-            return $this->view('portal/profil', [
+            return $this->view('portal/profile', [
                 'title' => 'VetClinic — Edytuj profil',
                 'user' => $this->auth->user(),
                 'active' => 'profil',
@@ -113,7 +113,7 @@ final class ProfileController extends Controller
             return $this->redirect('/login');
         }
 
-        return $this->view('staff/profil', [
+        return $this->view('staff/profile', [
             'title' => 'VetClinic — Edytuj profil',
             'user' => $this->auth->user(),
             'active' => 'profil',

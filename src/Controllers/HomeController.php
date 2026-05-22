@@ -20,7 +20,7 @@ final class HomeController extends Controller
 
     public function terms(Request $request, array $params): Response
     {
-        return $this->view('pages/regulamin', [
+        return $this->view('pages/terms', [
             'title' => 'VetClinic — Regulamin i polityka prywatności',
         ], 'base');
     }

@@ -13,7 +13,7 @@ $names = [1 => 'Poniedziałek', 2 => 'Wtorek', 3 => 'Środa', 4 => 'Czwartek', 5
 <?php if ($message !== null): ?>
         <div class="details__alert" style="margin:0 30px 18px;color:<?= $message['ok'] ? 'var(--teal-700)' : 'var(--danger-600)' ?>;"><?= e($message['message']) ?></div>
 <?php endif; ?>
-        <form action="/dostepnosc" method="post" style="padding:4px 30px 30px;">
+        <form action="/availability" method="post" style="padding:4px 30px 30px;">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
 
 <?php foreach ($names as $wd => $label):

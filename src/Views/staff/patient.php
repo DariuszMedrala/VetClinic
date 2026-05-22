@@ -20,7 +20,7 @@ foreach ($vaccinations as $v) {
     }
 }
 ?>
-      <p style="margin-bottom:18px;"><a class="field__link" href="/pacjenci">← Wróć do listy</a></p>
+      <p style="margin-bottom:18px;"><a class="field__link" href="/patients">← Wróć do listy</a></p>
 
       <div class="profile-grid" data-csrf="<?= e(Csrf::token()) ?>">
         <section class="panel profile-card">
@@ -165,4 +165,4 @@ foreach ($vaccinations as $v) {
 <?php endif; ?>
       </section>
 
-      <script src="/assets/js/pacjenci.js"></script>
+      <script src="/assets/js/patients.js"></script>

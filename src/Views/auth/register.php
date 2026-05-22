@@ -134,7 +134,7 @@
 
         <label class="checkbox">
           <input type="checkbox" name="regulamin" required>
-          Akceptuję <a class="field__link" href="/regulamin" target="_blank" style="display:inline">regulamin i&nbsp;politykę prywatności (RODO)</a>.
+          Akceptuję <a class="field__link" href="/terms" target="_blank" style="display:inline">regulamin i&nbsp;politykę prywatności (RODO)</a>.
         </label>
 
         <button class="btn btn--primary btn--block btn--lg" type="submit">

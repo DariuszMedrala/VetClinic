@@ -22,7 +22,7 @@ final class InvoiceController extends Controller
 
     public function index(Request $request, array $params): Response
     {
-        return $this->view('staff/platnosci', [
+        return $this->view('staff/invoices', [
             'title' => 'VetClinic — Płatności',
             'user' => $this->auth->user(),
             'active' => 'platnosci',
@@ -35,10 +35,10 @@ final class InvoiceController extends Controller
         $detail = $this->invoices->detail((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
 
         if ($detail === null) {
-            return $this->redirect('/platnosci');
+            return $this->redirect('/invoices');
         }
 
-        return $this->view('staff/faktura', [
+        return $this->view('staff/invoice', [
             'title' => 'VetClinic — Faktura',
             'user' => $this->auth->user(),
             'active' => 'platnosci',

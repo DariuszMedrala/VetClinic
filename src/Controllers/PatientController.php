@@ -28,7 +28,7 @@ final class PatientController extends Controller
 
     public function index(Request $request, array $params): Response
     {
-        return $this->view('staff/pacjenci', [
+        return $this->view('staff/patients', [
             'title' => 'VetClinic — Klienci i zwierzęta',
             'user' => $this->auth->user(),
             'active' => 'pacjenci',
@@ -42,10 +42,10 @@ final class PatientController extends Controller
         $card = $this->patients->petCard((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
 
         if ($card === null) {
-            return $this->redirect('/pacjenci');
+            return $this->redirect('/patients');
         }
 
-        return $this->view('staff/pacjent', [
+        return $this->view('staff/patient', [
             'title' => 'VetClinic — Karta pacjenta',
             'user' => $this->auth->user(),
             'active' => 'pacjenci',

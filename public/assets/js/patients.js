@@ -46,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const addForm = document.getElementById('add-pet-form');
   if (addForm) {
-    submitForm(addForm, '/pacjenci');
+    submitForm(addForm, '/patients');
   }
 
   const editForm = document.getElementById('edit-pet-form');
   if (editForm) {
-    submitForm(editForm, `/pacjenci/${editForm.getAttribute('data-id')}/update`);
+    submitForm(editForm, `/patients/${editForm.getAttribute('data-id')}/update`);
   }
 
   const toggle = document.getElementById('toggle-edit');
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       deleteButton.disabled = true;
 
       try {
-        const response = await fetch(`/pacjenci/${deleteButton.getAttribute('data-id')}/delete`, {
+        const response = await fetch(`/patients/${deleteButton.getAttribute('data-id')}/delete`, {
           method: 'POST',
           headers,
           body: JSON.stringify({ _csrf: csrf }),
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
 
         if (response.ok && data.ok) {
-          window.location = '/pacjenci';
+          window.location = '/patients';
           return;
         }
 

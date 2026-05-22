@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     submit.disabled = true;
 
     try {
-      const response = await fetch(`/platnosci/${form.getAttribute('data-id')}/pay`, {
+      const response = await fetch(`/invoices/${form.getAttribute('data-id')}/pay`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -76,7 +76,7 @@
               <td><span class="sched-time"><?= e($a->dateShort()) ?> <?= e($a->time()) ?></span></td>
               <td><?= e($a->petName) ?> (<?= e($a->species) ?>)</td>
               <td><?= e($a->reason) ?></td>
-              <td><a class="btn btn--outline-teal btn--sm" href="/faktury/wystaw/<?= e((string) $a->id) ?>">Wystaw fakturę</a></td>
+              <td><a class="btn btn--outline-teal btn--sm" href="/invoices/new/<?= e((string) $a->id) ?>">Wystaw fakturę</a></td>
             </tr>
 <?php endforeach; ?>
           </tbody>
@@ -84,4 +84,4 @@
 <?php endif; ?>
       </section>
 
-      <script src="/assets/js/pulpit-lekarz.js"></script>
+      <script src="/assets/js/vet-dashboard.js"></script>

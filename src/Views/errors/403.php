@@ -8,6 +8,6 @@
     </div>
     <h2 class="auth__title">Brak dostępu</h2>
     <p class="auth__subtitle">Twoja rola nie pozwala na otwarcie tej strony. Skontaktuj się z administratorem, jeśli uważasz, że to pomyłka.</p>
-    <a class="btn btn--primary btn--block btn--lg" href="/dashboard">Wróć do pulpitu</a>
+    <a class="btn btn--primary btn--block btn--lg" href="/">Wróć na stronę główną</a>
   </section>
 </main>

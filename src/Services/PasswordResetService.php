@@ -37,7 +37,7 @@ final class PasswordResetService
 
         $this->resets->create($user->id, hash('sha256', $token), $expires);
 
-        $link = $baseUrl . '/reset-hasla/' . $token;
+        $link = $baseUrl . '/reset-password/' . $token;
         $this->mailer->sendHtml($email, 'Reset hasła w VetClinic', $this->emailHtml($user->firstName, $link));
     }
 

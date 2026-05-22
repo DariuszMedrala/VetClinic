@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     button.disabled = true;
 
     try {
-      const response = await fetch(`/appointments/${button.getAttribute('data-id')}/zakoncz`, {
+      const response = await fetch(`/appointments/${button.getAttribute('data-id')}/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -31,7 +31,7 @@ final class AppointmentController extends Controller
 
         $clinicId = (int) $this->auth->clinicId();
 
-        return $this->view('staff/pulpit', [
+        return $this->view('staff/reception-dashboard', [
             'title' => 'VetClinic — Pulpit',
             'user' => $this->auth->user(),
             'active' => 'pulpit',
@@ -44,7 +44,7 @@ final class AppointmentController extends Controller
     {
         $vetId = (int) $this->auth->id();
 
-        return $this->view('staff/pulpit-lekarz', [
+        return $this->view('staff/vet-dashboard', [
             'title' => 'VetClinic — Pulpit',
             'user' => $this->auth->user(),
             'active' => 'pulpit',

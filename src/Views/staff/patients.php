@@ -109,7 +109,7 @@ use App\Core\Csrf;
 <?php else: ?>
           <div style="display:flex;flex-wrap:wrap;gap:10px;">
 <?php foreach ($group['pets'] as $pet): ?>
-            <a class="patient" href="/pacjenci/<?= e((string) $pet->id) ?>" style="text-decoration:none;border:1px solid var(--line-strong);border-radius:var(--r-md);padding:8px 14px;color:var(--ink-700);">
+            <a class="patient" href="/patients/<?= e((string) $pet->id) ?>" style="text-decoration:none;border:1px solid var(--line-strong);border-radius:var(--r-md);padding:8px 14px;color:var(--ink-700);">
               <span class="patient__name"><?= e($pet->name) ?> · <?= e($pet->speciesName) ?>, <?= e($pet->ageLabel()) ?></span>
             </a>
 <?php endforeach; ?>
@@ -119,4 +119,4 @@ use App\Core\Csrf;
 <?php endforeach; ?>
       </section>
 
-      <script src="/assets/js/pacjenci.js"></script>
+      <script src="/assets/js/patients.js"></script>

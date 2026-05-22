@@ -2,7 +2,7 @@
 use App\Core\Csrf;
 use App\Models\Invoice;
 ?>
-      <p style="margin-bottom:18px;"><a class="field__link" href="/platnosci">← Wróć do faktur</a></p>
+      <p style="margin-bottom:18px;"><a class="field__link" href="/invoices">← Wróć do faktur</a></p>
 
       <div class="billing-head">
         <h1 class="billing-head__title">Faktura <?= e($invoice->number) ?></h1>
@@ -93,4 +93,4 @@ use App\Models\Invoice;
         </aside>
       </div>
 
-      <script src="/assets/js/platnosci.js"></script>
+      <script src="/assets/js/payments.js"></script>

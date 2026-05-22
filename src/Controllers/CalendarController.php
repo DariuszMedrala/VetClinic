@@ -57,7 +57,7 @@ final class CalendarController extends Controller
             $isVet ? (int) $this->auth->id() : null
         );
 
-        return $this->view('staff/kalendarz', [
+        return $this->view('staff/calendar', [
             'title' => 'VetClinic — Kalendarz',
             'user' => $this->auth->user(),
             'active' => 'kalendarz',

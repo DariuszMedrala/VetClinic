@@ -27,35 +27,35 @@ $router->get('/register', [AuthController::class, 'showRegister']);
 $router->post('/register', [AuthController::class, 'register']);
 $router->post('/logout', [AuthController::class, 'logout'])->middleware(new AuthMiddleware());
 
-$router->get('/regulamin', [HomeController::class, 'terms']);
+$router->get('/terms', [HomeController::class, 'terms']);
 
-$router->get('/reset-hasla', [PasswordResetController::class, 'showRequest']);
-$router->post('/reset-hasla', [PasswordResetController::class, 'request']);
-$router->get('/reset-hasla/{token}', [PasswordResetController::class, 'showReset']);
-$router->post('/reset-hasla/{token}', [PasswordResetController::class, 'reset']);
+$router->get('/reset-password', [PasswordResetController::class, 'showRequest']);
+$router->post('/reset-password', [PasswordResetController::class, 'request']);
+$router->get('/reset-password/{token}', [PasswordResetController::class, 'showReset']);
+$router->post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
 
-$router->get('/dashboard', [DashboardController::class, 'index'])
+$router->get('/portal', [DashboardController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
 
-$router->get('/profil', [ProfileController::class, 'edit'])
+$router->get('/profile', [ProfileController::class, 'edit'])
     ->middleware(new AuthMiddleware());
 
-$router->post('/profil', [ProfileController::class, 'update'])
+$router->post('/profile', [ProfileController::class, 'update'])
     ->middleware(new AuthMiddleware());
 
-$router->post('/profil/haslo', [ProfileController::class, 'updatePassword'])
+$router->post('/profile/password', [ProfileController::class, 'updatePassword'])
     ->middleware(new AuthMiddleware());
 
-$router->get('/pulpit', [AppointmentController::class, 'index'])
+$router->get('/dashboard', [AppointmentController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
-$router->get('/kalendarz', [CalendarController::class, 'index'])
+$router->get('/calendar', [CalendarController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
-$router->get('/dostepnosc', [AvailabilityController::class, 'edit'])
+$router->get('/availability', [AvailabilityController::class, 'edit'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 
-$router->post('/dostepnosc', [AvailabilityController::class, 'save'])
+$router->post('/availability', [AvailabilityController::class, 'save'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 
 $router->post('/appointments', [CalendarController::class, 'store'])
@@ -64,35 +64,35 @@ $router->post('/appointments', [CalendarController::class, 'store'])
 $router->post('/appointments/{id}/cancel', [AppointmentController::class, 'cancel'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
-$router->post('/appointments/{id}/zakoncz', [AppointmentController::class, 'complete'])
+$router->post('/appointments/{id}/complete', [AppointmentController::class, 'complete'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 
-$router->get('/faktury/wystaw/{id}', [BillingController::class, 'create'])
+$router->get('/invoices/new/{id}', [BillingController::class, 'create'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 
-$router->post('/faktury/wystaw/{id}', [BillingController::class, 'store'])
+$router->post('/invoices/new/{id}', [BillingController::class, 'store'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 
-$router->get('/pacjenci', [PatientController::class, 'index'])
+$router->get('/patients', [PatientController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->get('/pacjenci/{id}', [PatientController::class, 'show'])
+$router->get('/patients/{id}', [PatientController::class, 'show'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->post('/pacjenci', [PatientController::class, 'store'])
+$router->post('/patients', [PatientController::class, 'store'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->post('/pacjenci/{id}/update', [PatientController::class, 'update'])
+$router->post('/patients/{id}/update', [PatientController::class, 'update'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->post('/pacjenci/{id}/delete', [PatientController::class, 'destroy'])
+$router->post('/patients/{id}/delete', [PatientController::class, 'destroy'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->get('/platnosci', [InvoiceController::class, 'index'])
+$router->get('/invoices', [InvoiceController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->get('/platnosci/{id}', [InvoiceController::class, 'show'])
+$router->get('/invoices/{id}', [InvoiceController::class, 'show'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
-$router->post('/platnosci/{id}/pay', [InvoiceController::class, 'pay'])
+$router->post('/invoices/{id}/pay', [InvoiceController::class, 'pay'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));

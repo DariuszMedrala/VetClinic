@@ -15,7 +15,7 @@
     </section>
 
     <section class="auth__panel">
-      <form class="auth__form" action="/reset-hasla/<?= e($token) ?>" method="post">
+      <form class="auth__form" action="/reset-password/<?= e($token) ?>" method="post">
         <input type="hidden" name="_csrf" value="<?= e(\App\Core\Csrf::token()) ?>">
 
         <div class="auth__mobile-head">
@@ -32,7 +32,7 @@
 <?php elseif ($invalid): ?>
         <h2 class="auth__title">Link nieaktywny</h2>
         <p class="auth__subtitle">Ten link do zmiany hasła jest nieprawidłowy lub wygasł.</p>
-        <a class="btn btn--primary btn--block btn--lg" href="/reset-hasla">Poproś o nowy link</a>
+        <a class="btn btn--primary btn--block btn--lg" href="/reset-password">Poproś o nowy link</a>
 <?php else: ?>
         <h2 class="auth__title">Nowe hasło</h2>
         <p class="auth__subtitle">Wprowadź i potwierdź nowe hasło do swojego konta.</p>

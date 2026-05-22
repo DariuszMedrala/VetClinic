@@ -12,36 +12,53 @@ $banner = static function (?array $msg): string {
 ?>
       <section style="margin-bottom:24px;">
         <h1 style="font-size:26px;font-weight:800;color:var(--ink-900);margin-bottom:4px;">Edytuj profil</h1>
-        <p style="color:var(--ink-500);">Zaktualizuj swoje dane kontaktowe i hasło.</p>
+        <p style="color:var(--ink-500);">Zaktualizuj swoje dane<?= $isVet ? ', dane zawodowe' : '' ?> i hasło.</p>
       </section>
 
       <section class="panel" style="margin-bottom:22px;">
         <div class="panel__head"><h2 class="panel__title">Dane osobowe</h2></div>
         <?= $banner($profileMsg) ?>
-        <form action="/profil" method="post" style="padding:4px 30px 30px;">
+        <form action="/profile" method="post" style="padding:4px 30px 30px;">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
 
           <div class="field-2">
             <div class="field">
               <div class="field__row"><label class="field__label" for="imie">Imię</label></div>
-              <div class="input-wrap"><input class="input" type="text" id="imie" name="imie" maxlength="100" value="<?= e($client->firstName) ?>" required></div>
+              <div class="input-wrap"><input class="input" type="text" id="imie" name="imie" maxlength="100" value="<?= e($account->firstName) ?>" required></div>
             </div>
             <div class="field">
               <div class="field__row"><label class="field__label" for="nazwisko">Nazwisko</label></div>
-              <div class="input-wrap"><input class="input" type="text" id="nazwisko" name="nazwisko" maxlength="100" value="<?= e($client->lastName) ?>" required></div>
+              <div class="input-wrap"><input class="input" type="text" id="nazwisko" name="nazwisko" maxlength="100" value="<?= e($account->lastName) ?>" required></div>
             </div>
           </div>
 
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="email">Adres e-mail</label></div>
+            <div class="input-wrap"><input class="input" type="email" id="email" name="email" value="<?= e($account->email) ?>" required></div>
+          </div>
+
+<?php if ($isVet): ?>
           <div class="field-2">
             <div class="field">
-              <div class="field__row"><label class="field__label" for="email">Adres e-mail</label></div>
-              <div class="input-wrap"><input class="input" type="email" id="email" name="email" value="<?= e($client->email) ?>" required></div>
+              <div class="field__row"><label class="field__label" for="tytul">Tytuł</label></div>
+              <div class="input-wrap"><input class="input" type="text" id="tytul" name="tytul" maxlength="20" value="<?= e($vet['title']) ?>"></div>
             </div>
             <div class="field">
-              <div class="field__row"><label class="field__label" for="telefon">Telefon</label></div>
-              <div class="input-wrap"><input class="input" type="text" id="telefon" name="telefon" maxlength="20" placeholder="np. 600100200" value="<?= e($client->phone ?? '') ?>"></div>
+              <div class="field__row"><label class="field__label" for="gabinet">Gabinet</label></div>
+              <div class="input-wrap"><input class="input" type="text" id="gabinet" name="gabinet" maxlength="50" value="<?= e($vet['room'] ?? '') ?>"></div>
             </div>
           </div>
+          <div class="field-2">
+            <div class="field">
+              <div class="field__row"><label class="field__label" for="specjalizacja">Specjalizacja</label></div>
+              <div class="input-wrap"><input class="input" type="text" id="specjalizacja" name="specjalizacja" maxlength="100" value="<?= e($vet['specialization'] ?? '') ?>"></div>
+            </div>
+            <div class="field">
+              <div class="field__row"><label class="field__label">Numer licencji</label></div>
+              <div class="input-wrap" style="background:var(--surface-2);"><input class="input" type="text" value="<?= e($vet['license_number']) ?>" disabled></div>
+            </div>
+          </div>
+<?php endif; ?>
 
           <button class="btn btn--primary btn--lg" type="submit">Zapisz dane</button>
         </form>
@@ -50,7 +67,7 @@ $banner = static function (?array $msg): string {
       <section class="panel">
         <div class="panel__head"><h2 class="panel__title">Zmiana hasła</h2></div>
         <?= $banner($passwordMsg) ?>
-        <form action="/profil/haslo" method="post" style="padding:4px 30px 30px;">
+        <form action="/profile/password" method="post" style="padding:4px 30px 30px;">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
 
           <div class="field">

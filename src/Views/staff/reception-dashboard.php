@@ -98,4 +98,4 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
 <?php endif; ?>
       </section>
 
-      <script src="/assets/js/pulpit.js"></script>
+      <script src="/assets/js/dashboard.js"></script>
