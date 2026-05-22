@@ -14,7 +14,9 @@ SELECT
     cu.id AS client_id,
     cu.first_name || ' ' || cu.last_name AS client_name,
     c.phone AS client_phone,
-    vu.clinic_id AS clinic_id
+    vu.clinic_id AS clinic_id,
+    p.breed AS breed,
+    a.notes AS notes
 FROM appointments a
 JOIN vet_profiles vp ON vp.user_id = a.vet_id
 JOIN users vu ON vu.id = vp.user_id

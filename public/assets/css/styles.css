@@ -653,10 +653,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .cal-layout {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr;
   gap: 24px;
   align-items: start;
 }
+.cal-layout--open { grid-template-columns: 1fr 380px; }
+.cal-layout .details { display: none; }
+.cal-layout--open .details { display: block; }
 
 .calendar {
   background: var(--surface);
@@ -719,6 +722,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 .event--teal { background: var(--teal-600); }
 .event--gold { background: var(--gold-600); }
 .event--red  { background: var(--danger-50); color: var(--danger-600); border: 1px solid #f0b6ba; }
+
+.calendar .event,
+.sched-card[data-pet] { cursor: pointer; }
 
 /* Panel szczegółów wizyty */
 .details {
@@ -1153,6 +1159,15 @@ ul { margin: 0; padding: 0; list-style: none; }
   .calendar { display: none; }                       /* na mobile pokazujemy listę dnia */
   .cal-toolbar { display: none; }                    /* zastąpiony paskiem dni */
   .details { display: none; }                        /* szczegóły wbudowane w oś czasu */
+  .cal-layout--open .details {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    border-radius: 0;
+    border: none;
+    overflow-y: auto;
+  }
   .cal-mobile { display: block; }
 
   /* Płatności -> jedna kolumna */

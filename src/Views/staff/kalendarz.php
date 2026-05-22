@@ -6,6 +6,30 @@ $eventColor = static fn (string $status): string => match ($status) {
     'in_progress' => 'event--gold',
     default => 'event--blue',
 };
+$canCreate = $canCreate ?? false;
+
+$attrs = static function ($a): string {
+    $pairs = [
+        'data-pet' => $a->petName,
+        'data-species' => $a->species,
+        'data-breed' => $a->breed ?? '',
+        'data-owner' => $a->clientName,
+        'data-phone' => $a->clientPhone ?? '',
+        'data-date' => $a->startsAt->format('d.m.Y'),
+        'data-time' => $a->startsAt->format('H:i') . ' – ' . $a->endsAt->format('H:i'),
+        'data-vet' => $a->vetName,
+        'data-room' => $a->room ?? '',
+        'data-reason' => $a->reason,
+        'data-status' => $a->statusLabel(),
+        'data-notes' => $a->notes ?? '',
+    ];
+    $out = '';
+    foreach ($pairs as $key => $value) {
+        $out .= ' ' . $key . '="' . e((string) $value) . '"';
+    }
+
+    return $out;
+};
 ?>
       <section class="panel">
         <div class="panel__head">
@@ -18,6 +42,7 @@ $eventColor = static fn (string $status): string => match ($status) {
         </div>
       </section>
 
+<?php if ($canCreate): ?>
       <section class="panel">
         <div class="panel__head">
           <h2 class="panel__title">Nowa wizyta</h2>
@@ -91,7 +116,9 @@ $eventColor = static fn (string $status): string => match ($status) {
           <button class="btn btn--primary btn--lg" type="submit">Dodaj wizytę</button>
         </form>
       </section>
+<?php endif; ?>
 
+      <div class="cal-layout" id="cal-layout">
       <div class="calendar">
         <div class="calendar__head">
           <div class="calendar__day-h"></div>
@@ -126,7 +153,7 @@ $eventColor = static fn (string $status): string => match ($status) {
         $style .= ";width:calc(100% / {$lay['lanes']});transform:translateX(calc(100% * {$lay['lane']}));margin-left:0;margin-right:0";
     }
 ?>
-          <div class="event <?= e($eventColor($a->status)) ?>" style="<?= e($style) ?>">
+          <div class="event <?= e($eventColor($a->status)) ?>" style="<?= e($style) ?>"<?= $attrs($a) ?>>
             <div class="event__title"><?= e($a->petName) ?> (<?= e($a->species) ?>)</div>
             <div class="event__sub"><?= e($a->time()) ?> · <?= e($a->vetName) ?></div>
           </div>
@@ -134,12 +161,38 @@ $eventColor = static fn (string $status): string => match ($status) {
         </div>
       </div>
 
+      <aside class="details" id="visit-panel">
+        <div class="details__head">
+          <h2 class="details__title">Szczegóły wizyty</h2>
+          <button class="details__close" type="button" id="visit-close" aria-label="Zamknij">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+        <div class="pet-card">
+          <span class="pet-card__avatar" style="background:#d4efe9;display:grid;place-items:center;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="#117a6d" aria-hidden="true"><circle cx="6" cy="10" r="2"></circle><circle cx="10.5" cy="6" r="2"></circle><circle cx="15.5" cy="6" r="2"></circle><circle cx="19" cy="10.5" r="2"></circle><path d="M12.5 12c-2.2 0-4 1.7-4.7 3.4-.6 1.5-2 2.3-2 3.8 0 1.4 1.2 2.3 2.6 2.1 1.2-.2 2.6-.7 4.1-.7s2.9.5 4.1.7c1.4.2 2.6-.7 2.6-2.1 0-1.5-1.4-2.3-2-3.8C16.5 13.7 14.7 12 12.5 12z"></path></svg>
+          </span>
+          <div>
+            <div class="pet-card__name" id="v-pet">—</div>
+            <div class="pet-card__meta" id="v-meta">—</div>
+          </div>
+        </div>
+        <div class="detail-block"><div class="detail-block__label">Właściciel</div><div class="detail-block__value" id="v-owner">—</div></div>
+        <div class="detail-block"><div class="detail-block__label">Telefon</div><div class="detail-block__value" id="v-phone">—</div></div>
+        <div class="detail-block"><div class="detail-block__label">Termin</div><div class="detail-block__value" id="v-when">—</div></div>
+        <div class="detail-block"><div class="detail-block__label">Lekarz</div><div class="detail-block__value" id="v-vet">—</div></div>
+        <div class="detail-block"><div class="detail-block__label">Status</div><div class="detail-block__value" id="v-status">—</div></div>
+        <div class="detail-block"><div class="detail-block__label">Powód</div><div class="detail-block__value" id="v-reason">—</div></div>
+        <div class="detail-block"><div class="detail-block__label">Notatki</div><div class="note-box" id="v-notes">—</div></div>
+      </aside>
+      </div>
+
       <div class="sched-cards">
 <?php if ($appointments === []): ?>
         <p class="panel__empty">Brak wizyt w tym tygodniu.</p>
 <?php else: ?>
 <?php foreach ($appointments as $a): ?>
-        <article class="sched-card">
+        <article class="sched-card"<?= $attrs($a) ?>>
           <div class="sched-card__top">
             <div class="sched-card__time"><small><?= e($a->weekdayShort()) ?> <?= e($a->dateShort()) ?></small><b><?= e($a->time()) ?></b></div>
             <div class="sched-card__info">

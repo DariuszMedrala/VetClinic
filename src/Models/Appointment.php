@@ -22,6 +22,8 @@ final class Appointment
         public readonly string $species,
         public readonly string $clientName,
         public readonly ?string $clientPhone,
+        public readonly ?string $breed,
+        public readonly ?string $notes,
     ) {
     }
 
@@ -41,6 +43,8 @@ final class Appointment
             (string) $row['species'],
             (string) $row['client_name'],
             $row['client_phone'] !== null ? (string) $row['client_phone'] : null,
+            isset($row['breed']) && $row['breed'] !== null ? (string) $row['breed'] : null,
+            isset($row['notes']) && $row['notes'] !== null ? (string) $row['notes'] : null,
         );
     }
 

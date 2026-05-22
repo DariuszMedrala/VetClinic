@@ -1,4 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const layout = document.getElementById('cal-layout');
+  const panel = document.getElementById('visit-panel');
+
+  if (layout && panel) {
+    const set = (id, value, fallback) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = value && value.length ? value : fallback;
+      }
+    };
+
+    const openVisit = (el) => {
+      const d = el.dataset;
+      set('v-pet', d.pet, '—');
+      set('v-meta', [d.species, d.breed].filter(Boolean).join(' · '), '—');
+      set('v-owner', d.owner, '—');
+      set('v-phone', d.phone, '—');
+      set('v-when', d.date + ', ' + d.time, '—');
+      set('v-vet', [d.vet, d.room].filter(Boolean).join(' · '), '—');
+      set('v-status', d.status, '—');
+      set('v-reason', d.reason, '—');
+      set('v-notes', d.notes, 'Brak notatek.');
+      layout.classList.add('cal-layout--open');
+    };
+
+    const closeVisit = () => layout.classList.remove('cal-layout--open');
+
+    document.addEventListener('click', (event) => {
+      const item = event.target.closest('.event[data-pet], .sched-card[data-pet]');
+      if (item) {
+        openVisit(item);
+      }
+    });
+
+    document.getElementById('visit-close').addEventListener('click', closeVisit);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeVisit();
+      }
+    });
+  }
+
   const form = document.getElementById('new-appointment-form');
   if (!form) {
     return;
@@ -41,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
       submit.disabled = false;
       showResult(data.message || 'Nie udało się dodać wizyty.', false);
     } catch (error) {
-      submit.disabled = false;
       showResult('Błąd połączenia. Spróbuj ponownie.', false);
+      submit.disabled = false;
     }
   });
 });
