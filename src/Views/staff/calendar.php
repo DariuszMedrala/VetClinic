@@ -141,21 +141,33 @@ $attrs = static function ($a): string {
 <?php foreach ($appointments as $a):
     $col = (int) $a->startsAt->format('N') + 1;
     $startHour = (int) $a->startsAt->format('G');
+    if ($startHour > 17) { continue; }
     $rowStart = $startHour - 7;
-    if ($rowStart > 10) { continue; }
-    if ($rowStart < 1) { $rowStart = 1; }
-    $rowEnd = (int) $a->endsAt->format('G') - 7 + ((int) $a->endsAt->format('i') > 0 ? 1 : 0);
-    if ($rowEnd <= $rowStart) { $rowEnd = $rowStart + 1; }
-    if ($rowEnd > 11) { $rowEnd = 11; }
+    $topMin = (int) $a->startsAt->format('i');
+    if ($rowStart < 1) { $rowStart = 1; $topMin = 0; }
+    $durationMin = (int) round(($a->endsAt->getTimestamp() - $a->startsAt->getTimestamp()) / 60);
+    $maxSpan = (11 - $rowStart) * 60;
+    $span = min($topMin + $durationMin, $maxSpan);
+    $heightMin = max(20, $span - $topMin);
+    $top = round($topMin / 60 * 64, 1);
+    $height = round($heightMin / 60 * 64, 1);
     $lay = $layout[$a->id] ?? ['lane' => 0, 'lanes' => 1];
-    $style = "grid-column:$col;grid-row:$rowStart/$rowEnd";
+    $style = "grid-column:$col;grid-row:$rowStart;align-self:start;margin-top:{$top}px;margin-bottom:0;height:{$height}px";
     if ($lay['lanes'] > 1) {
         $style .= ";width:calc(100% / {$lay['lanes']});transform:translateX(calc(100% * {$lay['lane']}));margin-left:0;margin-right:0";
     }
+    $fromTo = $a->startsAt->format('H:i') . '–' . $a->endsAt->format('H:i');
+    $tileTitle = $a->petName . ' (' . $a->species . '), ' . $fromTo;
+    if (!$isVet) {
+        $tileTitle .= ', ' . $a->vetName . (($a->room ?? '') !== '' ? ' · ' . $a->room : '');
+    }
 ?>
-          <div class="event <?= e($eventColor($a->status)) ?>" style="<?= e($style) ?>"<?= $attrs($a) ?>>
+          <div class="event <?= e($eventColor($a->status)) ?>" style="<?= e($style) ?>" title="<?= e($tileTitle) ?>"<?= $attrs($a) ?>>
             <div class="event__title"><?= e($a->petName) ?> (<?= e($a->species) ?>)</div>
-            <div class="event__sub"><?= e($a->time()) ?> · <?= e($a->vetName) ?></div>
+            <div class="event__sub"><?= e($fromTo) ?></div>
+<?php if (!$isVet): ?>
+            <div class="event__sub"><?= e($a->vetName) ?><?= ($a->room ?? '') !== '' ? ' · ' . e($a->room) : '' ?></div>
+<?php endif; ?>
           </div>
 <?php endforeach; ?>
         </div>
@@ -180,7 +192,9 @@ $attrs = static function ($a): string {
         <div class="detail-block"><div class="detail-block__label">Właściciel</div><div class="detail-block__value" id="v-owner">—</div></div>
         <div class="detail-block"><div class="detail-block__label">Telefon</div><div class="detail-block__value" id="v-phone">—</div></div>
         <div class="detail-block"><div class="detail-block__label">Termin</div><div class="detail-block__value" id="v-when">—</div></div>
+<?php if (!$isVet): ?>
         <div class="detail-block"><div class="detail-block__label">Lekarz</div><div class="detail-block__value" id="v-vet">—</div></div>
+<?php endif; ?>
         <div class="detail-block"><div class="detail-block__label">Status</div><div class="detail-block__value" id="v-status">—</div></div>
         <div class="detail-block"><div class="detail-block__label">Powód</div><div class="detail-block__value" id="v-reason">—</div></div>
         <div class="detail-block"><div class="detail-block__label">Notatki</div><div class="note-box" id="v-notes">—</div></div>

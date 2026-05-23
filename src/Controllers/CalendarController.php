@@ -61,6 +61,7 @@ final class CalendarController extends Controller
             'title' => 'VetClinic — Kalendarz',
             'user' => $this->auth->user(),
             'active' => 'kalendarz',
+            'isVet' => $isVet,
             'days' => $days,
             'appointments' => $appointments,
             'layout' => $this->layout($appointments),
