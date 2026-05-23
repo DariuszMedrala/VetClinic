@@ -44,10 +44,11 @@ final class AppointmentService
         return $this->appointments->toInvoiceForVet($vetId);
     }
 
-    public function complete(int $id, int $vetId): array
+    public function complete(int $id, int $vetId, ?string $notes = null): array
     {
-        return match ($this->appointments->markCompleted($id, $vetId)) {
+        return match ($this->appointments->markCompleted($id, $vetId, $notes)) {
             AppointmentRepository::COMPLETED => ['ok' => true, 'status' => 200, 'message' => 'Wizyta oznaczona jako zakończona.'],
+            AppointmentRepository::TOO_EARLY => ['ok' => false, 'status' => 409, 'message' => 'Wizytę można zakończyć dopiero 15 minut po jej rozpoczęciu.'],
             AppointmentRepository::INVALID => ['ok' => false, 'status' => 409, 'message' => 'Tej wizyty nie można zakończyć.'],
             default => ['ok' => false, 'status' => 404, 'message' => 'Nie znaleziono wizyty.'],
         };

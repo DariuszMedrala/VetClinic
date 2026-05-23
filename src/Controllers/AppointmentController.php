@@ -60,7 +60,12 @@ final class AppointmentController extends Controller
             return $this->json(['ok' => false, 'message' => 'Nieprawidłowy token CSRF.'], 419);
         }
 
-        $result = $this->appointments->complete((int) ($params['id'] ?? 0), (int) $this->auth->id());
+        $notes = trim((string) $request->input('notes', ''));
+        $result = $this->appointments->complete(
+            (int) ($params['id'] ?? 0),
+            (int) $this->auth->id(),
+            $notes !== '' ? $notes : null
+        );
 
         return $this->json(['ok' => $result['ok'], 'message' => $result['message']], $result['status']);
     }

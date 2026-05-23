@@ -18,6 +18,7 @@ final class AppointmentRepository
     public const CREATED = 'created';
     public const CONFLICT = 'conflict';
     public const COMPLETED = 'completed';
+    public const TOO_EARLY = 'too_early';
 
     private const VIEW_COLUMNS = 'appointment_id, starts_at, ends_at, status, reason,
                 vet_id, vet_name, room, pet_id, pet_name, species, client_name, client_phone';
@@ -61,22 +62,31 @@ final class AppointmentRepository
         return array_map(static fn (array $r): Appointment => Appointment::fromRow($r), $stmt->fetchAll());
     }
 
-    public function markCompleted(int $id, int $vetId): string
+    public function markCompleted(int $id, int $vetId, ?string $notes = null): string
     {
-        $stmt = $this->db->prepare('SELECT status FROM appointments WHERE id = :id AND vet_id = :vet');
+        $stmt = $this->db->prepare(
+            "SELECT status, (starts_at + interval '15 minutes' <= now())::int AS can_complete
+             FROM appointments WHERE id = :id AND vet_id = :vet"
+        );
         $stmt->execute(['id' => $id, 'vet' => $vetId]);
-        $status = $stmt->fetchColumn();
+        $row = $stmt->fetch();
 
-        if ($status === false) {
+        if ($row === false) {
             return self::NOT_FOUND;
         }
 
-        if (!in_array($status, ['scheduled', 'confirmed', 'in_progress'], true)) {
+        if (!in_array($row['status'], ['scheduled', 'confirmed', 'in_progress'], true)) {
             return self::INVALID;
         }
 
-        $update = $this->db->prepare("UPDATE appointments SET status = 'completed' WHERE id = :id");
-        $update->execute(['id' => $id]);
+        if ((int) $row['can_complete'] === 0) {
+            return self::TOO_EARLY;
+        }
+
+        $update = $this->db->prepare(
+            "UPDATE appointments SET status = 'completed', notes = COALESCE(NULLIF(:notes, ''), notes) WHERE id = :id"
+        );
+        $update->execute(['id' => $id, 'notes' => $notes]);
 
         return self::COMPLETED;
     }
