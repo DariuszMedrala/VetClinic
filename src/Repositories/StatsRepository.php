@@ -41,7 +41,8 @@ final class StatsRepository
     {
         $stmt = $this->db->prepare(
             "SELECT count(*) FROM appointments
-             WHERE vet_id = :vet AND starts_at::date = CURRENT_DATE AND status <> 'cancelled'"
+             WHERE vet_id = :vet AND starts_at::date = CURRENT_DATE
+               AND status IN ('scheduled', 'confirmed', 'in_progress')"
         );
         $stmt->execute(['vet' => $vetId]);
 
