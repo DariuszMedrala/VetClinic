@@ -49,9 +49,15 @@ final class ProfileService
         return ['ok' => true, 'message' => 'Dane zostały zapisane.'];
     }
 
-    public function updateVetExtra(int $userId, string $title, ?string $room, ?string $specialization): void
+    public function updateVetExtra(int $userId, string $title, ?string $room, ?string $specialization, string $licenseNumber): array
     {
-        $this->vets->update($userId, $title, $room, $specialization);
+        if ($this->vets->licenseExistsForOther($licenseNumber, $userId)) {
+            return ['ok' => false, 'message' => 'Ten numer licencji jest już zajęty.'];
+        }
+
+        $this->vets->update($userId, $title, $room, $specialization, $licenseNumber);
+
+        return ['ok' => true, 'message' => 'Dane zostały zapisane.'];
     }
 
     public function updateData(int $userId, string $firstName, string $lastName, string $email, ?string $phone): array

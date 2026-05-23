@@ -54,8 +54,8 @@ $banner = static function (?array $msg): string {
               <div class="input-wrap"><input class="input" type="text" id="specjalizacja" name="specjalizacja" maxlength="100" value="<?= e($vet['specialization'] ?? '') ?>"></div>
             </div>
             <div class="field">
-              <div class="field__row"><label class="field__label">Numer licencji</label></div>
-              <div class="input-wrap" style="background:var(--surface-2);"><input class="input" type="text" value="<?= e($vet['license_number']) ?>" disabled></div>
+              <div class="field__row"><label class="field__label" for="numer_licencji">Numer licencji</label></div>
+              <div class="input-wrap"><input class="input" type="text" id="numer_licencji" name="numer_licencji" maxlength="50" value="<?= e($vet['license_number']) ?>" required></div>
             </div>
           </div>
 <?php endif; ?>

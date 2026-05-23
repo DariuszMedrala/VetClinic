@@ -45,13 +45,19 @@ final class ProfileController extends Controller
             $phone = trim((string) $request->input('telefon', ''));
             $result = $this->profiles->updateData($userId, $firstName, $lastName, $email, $phone !== '' ? $phone : null);
         } else {
-            $result = $this->profiles->updateStaffData($userId, $firstName, $lastName, $email);
+            $license = $role === 'vet' ? trim((string) $request->input('numer_licencji', '')) : '';
 
-            if ($result['ok'] && $role === 'vet') {
-                $title = trim((string) $request->input('tytul', '')) ?: 'Dr';
-                $room = trim((string) $request->input('gabinet', ''));
-                $spec = trim((string) $request->input('specjalizacja', ''));
-                $this->profiles->updateVetExtra($userId, $title, $room !== '' ? $room : null, $spec !== '' ? $spec : null);
+            if ($role === 'vet' && $license === '') {
+                $result = ['ok' => false, 'message' => 'Numer licencji jest wymagany.'];
+            } else {
+                $result = $this->profiles->updateStaffData($userId, $firstName, $lastName, $email);
+
+                if ($result['ok'] && $role === 'vet') {
+                    $title = trim((string) $request->input('tytul', '')) ?: 'Dr';
+                    $room = trim((string) $request->input('gabinet', ''));
+                    $spec = trim((string) $request->input('specjalizacja', ''));
+                    $result = $this->profiles->updateVetExtra($userId, $title, $room !== '' ? $room : null, $spec !== '' ? $spec : null, $license);
+                }
             }
         }
 

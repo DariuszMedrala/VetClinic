@@ -27,11 +27,27 @@ final class VetProfileRepository
         return $row ?: ['title' => '', 'room' => '', 'specialization' => '', 'license_number' => ''];
     }
 
-    public function update(int $userId, string $title, ?string $room, ?string $specialization): void
+    public function update(int $userId, string $title, ?string $room, ?string $specialization, string $licenseNumber): void
     {
         $stmt = $this->db->prepare(
-            'UPDATE vet_profiles SET title = :title, room = :room, specialization = :spec WHERE user_id = :id'
+            'UPDATE vet_profiles SET title = :title, room = :room, specialization = :spec, license_number = :license WHERE user_id = :id'
         );
-        $stmt->execute(['title' => $title, 'room' => $room, 'spec' => $specialization, 'id' => $userId]);
+        $stmt->execute([
+            'title' => $title,
+            'room' => $room,
+            'spec' => $specialization,
+            'license' => $licenseNumber,
+            'id' => $userId,
+        ]);
+    }
+
+    public function licenseExistsForOther(string $licenseNumber, int $userId): bool
+    {
+        $stmt = $this->db->prepare(
+            'SELECT 1 FROM vet_profiles WHERE license_number = :license AND user_id <> :id'
+        );
+        $stmt->execute(['license' => $licenseNumber, 'id' => $userId]);
+
+        return $stmt->fetchColumn() !== false;
     }
 }
