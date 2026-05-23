@@ -165,7 +165,7 @@ $attrs = static function ($a): string {
           <div class="event <?= e($eventColor($a->status)) ?>" style="<?= e($style) ?>" title="<?= e($tileTitle) ?>"<?= $attrs($a) ?>>
             <div class="event__title"><?= e($a->petName) ?> (<?= e($a->species) ?>)</div>
             <div class="event__sub"><?= e($fromTo) ?></div>
-<?php if (!$isVet): ?>
+<?php if (!$isVet && $durationMin >= 45): ?>
             <div class="event__sub"><?= e($a->vetName) ?><?= ($a->room ?? '') !== '' ? ' · ' . e($a->room) : '' ?></div>
 <?php endif; ?>
           </div>
