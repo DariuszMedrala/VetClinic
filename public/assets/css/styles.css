@@ -388,6 +388,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .schedule--lead .sched-time { justify-content: center; }
 .schedule--lead tbody td:first-child .sched-time { justify-content: flex-start; }
 
+.schedule--even { table-layout: fixed; }
+.schedule--even thead th,
+.schedule--even tbody td { text-align: center; }
+.schedule--even thead th:first-child,
+.schedule--even tbody td:first-child { padding-left: 18px; }
+.schedule--even thead th:last-child,
+.schedule--even tbody td:last-child { text-align: center; padding-right: 18px; }
+.schedule--even .sched-time { justify-content: center; }
+
 .sched-time { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 600; color: var(--ink-700); }
 
 .patient { display: flex; align-items: center; gap: 14px; }
@@ -1419,3 +1428,37 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 480px) {
   .lp-footer__grid { grid-template-columns: 1fr; }
 }
+
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(14, 27, 42, .45);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  display: none; place-items: center;
+  padding: 20px; z-index: 80;
+}
+.modal-backdrop--open { display: grid; animation: modal-fade .18s ease; }
+.modal {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 440px;
+  padding: 28px;
+  animation: modal-pop .2s ease;
+}
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(8px) scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+.modal__title { font-size: 20px; font-weight: 800; color: var(--ink-900); margin-bottom: 6px; }
+.modal__text { font-size: 14px; color: var(--ink-500); margin-bottom: 16px; }
+.modal__textarea {
+  width: 100%; min-height: 104px; resize: vertical;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font: inherit; font-size: 15px; color: var(--ink-900);
+}
+.modal__textarea:focus { outline: none; border-color: var(--teal-700); }
+.modal__actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
