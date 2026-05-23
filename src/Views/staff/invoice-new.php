@@ -1,7 +1,6 @@
 <?php
 use App\Core\Csrf;
 use App\Models\Invoice;
-use DateTimeImmutable;
 
 $when = (new DateTimeImmutable((string) $appointment['starts_at']))->format('d.m.Y H:i');
 $apptId = (int) $appointment['appointment_id'];
@@ -15,7 +14,7 @@ $apptId = (int) $appointment['appointment_id'];
 
       <section class="panel" style="margin-bottom:22px;">
         <div class="panel__head"><h2 class="panel__title">Wizyta</h2></div>
-        <div style="display:flex;flex-wrap:wrap;gap:32px;padding:4px 30px 24px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:4px 30px 24px;">
           <div><div style="color:var(--ink-400);font-size:12px;font-weight:700;">PACJENT</div><div style="font-weight:700;color:var(--ink-900);"><?= e($appointment['pet_name']) ?> (<?= e($appointment['species']) ?>)</div></div>
           <div><div style="color:var(--ink-400);font-size:12px;font-weight:700;">WŁAŚCICIEL</div><div style="font-weight:700;color:var(--ink-900);"><?= e($appointment['client_name']) ?></div></div>
           <div><div style="color:var(--ink-400);font-size:12px;font-weight:700;">TERMIN</div><div style="font-weight:700;color:var(--ink-900);"><?= e($when) ?></div></div>
