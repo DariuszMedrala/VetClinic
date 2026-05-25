@@ -76,6 +76,22 @@ final class PetRepository
         return $row ? Pet::fromRow($row) : null;
     }
 
+    public function findForClient(int $id, int $clientId): ?Pet
+    {
+        $stmt = $this->db->prepare(
+            'SELECT ' . self::COLUMNS . '
+             FROM pets p
+             JOIN species s ON s.id = p.species_id
+             JOIN clients c ON c.user_id = p.client_id
+             JOIN users cu ON cu.id = c.user_id
+             WHERE p.id = :id AND p.client_id = :client'
+        );
+        $stmt->execute(['id' => $id, 'client' => $clientId]);
+        $row = $stmt->fetch();
+
+        return $row ? Pet::fromRow($row) : null;
+    }
+
     public function vaccinations(int $petId): array
     {
         $stmt = $this->db->prepare(

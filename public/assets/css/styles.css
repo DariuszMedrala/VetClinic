@@ -1429,6 +1429,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   .lp-footer__grid { grid-template-columns: 1fr; }
 }
 
+.pet-link { transition: box-shadow .15s ease, transform .15s ease; }
+.pet-link:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
 .modal-backdrop {
   position: fixed; inset: 0;
   background: rgba(14, 27, 42, .45);

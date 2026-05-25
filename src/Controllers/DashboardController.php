@@ -45,4 +45,22 @@ final class DashboardController extends Controller
             'invoices' => $data['invoices'],
         ], 'app');
     }
+
+    public function pet(Request $request, array $params): Response
+    {
+        $card = $this->portal->petCard((int) ($params['id'] ?? 0), (int) $this->auth->id());
+
+        if ($card === null) {
+            return $this->redirect('/portal');
+        }
+
+        return $this->view('portal/pet', [
+            'title' => 'VetClinic — ' . $card['pet']->name,
+            'user' => $this->auth->user(),
+            'active' => 'dashboard',
+            'pet' => $card['pet'],
+            'vaccinations' => $card['vaccinations'],
+            'history' => $card['history'],
+        ], 'app');
+    }
 }

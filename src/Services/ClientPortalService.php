@@ -24,6 +24,21 @@ final class ClientPortalService
         $this->invoices = new InvoiceRepository();
     }
 
+    public function petCard(int $petId, int $userId): ?array
+    {
+        $pet = $this->pets->findForClient($petId, $userId);
+
+        if ($pet === null) {
+            return null;
+        }
+
+        return [
+            'pet' => $pet,
+            'vaccinations' => $this->pets->vaccinations($petId),
+            'history' => $this->appointments->historyForPet($petId),
+        ];
+    }
+
     public function dashboard(int $userId): ?array
     {
         $client = $this->clients->find($userId);

@@ -48,7 +48,7 @@
 <?php else: ?>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;padding:4px 30px 28px;">
 <?php foreach ($pets as $pet): ?>
-          <article style="border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:#fff;box-shadow:var(--shadow-sm);">
+          <a class="pet-link" href="/portal/pets/<?= e((string) $pet->id) ?>" style="border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:#fff;box-shadow:var(--shadow-sm);display:block;text-decoration:none;color:inherit;">
 <?php if ($pet->photoPath !== null): ?>
             <img src="<?= e($pet->photoPath) ?>" alt="<?= e($pet->name) ?>" style="width:100%;height:150px;object-fit:cover;display:block;">
 <?php else: ?>
@@ -63,7 +63,7 @@
                 <span class="badge badge--waiting"><?= e($pet->weightLabel()) ?></span>
               </div>
             </div>
-          </article>
+          </a>
 <?php endforeach; ?>
         </div>
 <?php endif; ?>

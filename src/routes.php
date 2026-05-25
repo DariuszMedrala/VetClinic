@@ -37,6 +37,9 @@ $router->post('/reset-password/{token}', [PasswordResetController::class, 'reset
 $router->get('/portal', [DashboardController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
 
+$router->get('/portal/pets/{id}', [DashboardController::class, 'pet'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+
 $router->get('/profile', [ProfileController::class, 'edit'])
     ->middleware(new AuthMiddleware());
 
