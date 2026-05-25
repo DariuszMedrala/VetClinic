@@ -1,6 +1,5 @@
 <?php
 use App\Core\Csrf;
-use DateTimeImmutable;
 
 $fmtDate = static fn (?string $d): string => $d ? (new DateTimeImmutable($d))->format('d.m.Y') : '—';
 $vaxBadge = static fn (string $s): array => $s === 'overdue' ? ['Zaległe', 'badge--overdue'] : ['Aktualne', 'badge--uptodate'];
