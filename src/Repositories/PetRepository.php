@@ -105,6 +105,19 @@ final class PetRepository
         return $stmt->fetchAll();
     }
 
+    public function overdueVaccinations(int $clinicId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT pet_id, pet_name, species, owner_name, vaccine_name, expires_at
+             FROM vw_pet_vaccination_status
+             WHERE clinic_id = :c AND status = 'overdue'
+             ORDER BY expires_at"
+        );
+        $stmt->execute(['c' => $clinicId]);
+
+        return $stmt->fetchAll();
+    }
+
     public function create(int $clientId, int $speciesId, string $name, ?string $breed, string $sex, ?string $birthDate, ?string $weightKg, ?string $photoPath): int
     {
         $stmt = $this->db->prepare(

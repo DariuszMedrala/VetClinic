@@ -9,18 +9,21 @@ use App\Core\Csrf;
 use App\Core\Request;
 use App\Core\Response;
 use App\Services\AppointmentService;
+use App\Services\ClinicService;
 use App\Services\StatsService;
 
 final class AppointmentController extends Controller
 {
     private AppointmentService $appointments;
     private StatsService $stats;
+    private ClinicService $clinics;
 
     public function __construct()
     {
         parent::__construct();
         $this->appointments = new AppointmentService();
         $this->stats = new StatsService();
+        $this->clinics = new ClinicService();
     }
 
     public function index(Request $request, array $params): Response
@@ -35,6 +38,7 @@ final class AppointmentController extends Controller
             'title' => 'VetClinic — Pulpit',
             'user' => $this->auth->user(),
             'active' => 'pulpit',
+            'clinic' => $this->clinics->find($clinicId),
             'appointments' => $this->appointments->upcoming($clinicId),
             'stats' => $this->stats->forDashboard($clinicId),
         ], 'app');

@@ -36,6 +36,11 @@ final class PatientService
         return $result;
     }
 
+    public function overdueVaccinations(int $clinicId): array
+    {
+        return $this->pets->overdueVaccinations($clinicId);
+    }
+
     public function petCard(int $id, int $clinicId): ?array
     {
         $pet = $this->pets->find($id, $clinicId);
