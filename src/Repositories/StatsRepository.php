@@ -21,7 +21,8 @@ final class StatsRepository
         return $this->count(
             "SELECT count(*) FROM appointments a
              JOIN users vu ON vu.id = a.vet_id
-             WHERE vu.clinic_id = :c AND a.starts_at::date = CURRENT_DATE AND a.status <> 'cancelled'",
+             WHERE vu.clinic_id = :c AND a.starts_at::date = CURRENT_DATE
+               AND a.status IN ('scheduled', 'confirmed', 'in_progress')",
             $clinicId
         );
     }
