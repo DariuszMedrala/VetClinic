@@ -3,6 +3,15 @@ use App\Core\Csrf;
 
 $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="1.7"></circle><circle cx="10.5" cy="6.5" r="1.7"></circle><circle cx="15.5" cy="6.5" r="1.7"></circle><circle cx="19" cy="10.5" r="1.7"></circle><path d="M12.5 12c-2 0-3.6 1.5-4.2 3-.5 1.3-1.8 2-1.8 3.4 0 1.2 1 2 2.3 1.8 1-.2 2.3-.6 3.7-.6s2.7.4 3.7.6c1.3.2 2.3-.6 2.3-1.8 0-1.4-1.3-2.1-1.8-3.4-.6-1.5-2.2-3-4.2-3z"></path></svg>';
 ?>
+<?php if (($clinic['name'] ?? '') !== ''): ?>
+      <section style="margin-bottom:24px;">
+        <h1 style="font-size:26px;font-weight:800;color:var(--ink-900);margin-bottom:4px;"><?= e($clinic['name']) ?></h1>
+        <p style="color:var(--ink-500);display:flex;align-items:center;gap:6px;">
+          <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+          <?= e($clinic['address']) ?>
+        </p>
+      </section>
+<?php endif; ?>
       <section class="stat-grid">
         <article class="stat-card">
           <span class="stat-card__icon">
@@ -24,7 +33,7 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
           </div>
         </article>
 
-        <article class="alert">
+        <a class="alert" href="/alerts">
           <span class="alert__icon">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3 2 20h20L12 3z"></path><path d="M12 9v5M12 17.5v.2"></path></svg>
           </span>
@@ -32,7 +41,7 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
             <p class="alert__title">Alerty systemowe</p>
             <p class="alert__text"><?= e((string) $stats['overdueVaccinations']) ?> zwierząt ma zaległe szczepienia!</p>
           </div>
-        </article>
+        </a>
       </section>
 
       <section class="panel" data-csrf="<?= e(Csrf::token()) ?>">
@@ -98,4 +107,15 @@ $paw = '<svg class="icon icon--sm" viewBox="0 0 24 24" fill="currentColor"><circ
 <?php endif; ?>
       </section>
 
-      <script src="/assets/js/dashboard.js"></script>
+      <div class="modal-backdrop" id="cancel-modal">
+        <div class="modal">
+          <h3 class="modal__title">Anuluj wizytę</h3>
+          <p class="modal__text">Czy na pewno chcesz anulować tę wizytę? Tej operacji nie można cofnąć.</p>
+          <div class="modal__actions">
+            <button class="btn btn--soft" type="button" id="cancel-back">Wróć</button>
+            <button class="btn btn--danger" type="button" id="cancel-confirm">Anuluj wizytę</button>
+          </div>
+        </div>
+      </div>
+
+      <script src="<?= e(asset('/assets/js/dashboard.js')) ?>"></script>

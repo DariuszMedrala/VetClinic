@@ -1432,6 +1432,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 .pet-link { transition: box-shadow .15s ease, transform .15s ease; }
 .pet-link:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
+.alert[href] { text-decoration: none; cursor: pointer; transition: box-shadow .15s ease; }
+.alert[href]:hover { box-shadow: var(--shadow-sm); }
+
 .modal-backdrop {
   position: fixed; inset: 0;
   background: rgba(14, 27, 42, .45);
