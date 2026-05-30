@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const vetNav = document.querySelector('.js-vet-nav');
+  if (vetNav) {
+    vetNav.addEventListener('change', () => {
+      const week = vetNav.getAttribute('data-week') || '';
+      window.location = '/appointments/new?vet=' + encodeURIComponent(vetNav.value) + '&week=' + encodeURIComponent(week);
+    });
+  }
+
   const layout = document.getElementById('cal-layout');
   const panel = document.getElementById('visit-panel');
 

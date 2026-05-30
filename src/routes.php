@@ -57,6 +57,9 @@ $router->get('/dashboard', [AppointmentController::class, 'index'])
 $router->get('/calendar', [CalendarController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet', 'admin'));
 
+$router->get('/appointments/new', [CalendarController::class, 'register'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
 $router->get('/availability', [AvailabilityController::class, 'edit'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 

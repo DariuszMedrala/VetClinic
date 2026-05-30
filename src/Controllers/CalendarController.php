@@ -49,7 +49,6 @@ final class CalendarController extends Controller
 
         $clinicId = (int) $this->auth->clinicId();
         $isVet = $this->auth->role() === 'vet';
-        $canCreate = $this->auth->role() === 'admin';
         $appointments = $this->appointments->forWeek(
             $clinicId,
             $monday->format('Y-m-d 00:00:00'),
@@ -69,10 +68,56 @@ final class CalendarController extends Controller
             'prevWeek' => $monday->modify('-7 days')->format('Y-m-d'),
             'nextWeek' => $monday->modify('+7 days')->format('Y-m-d'),
             'todayWeek' => (new DateTimeImmutable('today'))->modify('monday this week')->format('Y-m-d'),
-            'canCreate' => $canCreate,
-            'vets' => $canCreate ? $this->lookups->vets($clinicId) : [],
-            'pets' => $canCreate ? $this->lookups->pets($clinicId) : [],
-            'reasons' => $canCreate ? $this->lookups->reasons($clinicId) : [],
+        ], 'app');
+    }
+
+    public function register(Request $request, array $params): Response
+    {
+        $monday = $this->mondayOf($request->query('week'));
+        $sunday = $monday->modify('+6 days');
+        $today = (new DateTimeImmutable('today'))->format('Y-m-d');
+
+        $days = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = $monday->modify("+$i days");
+            $days[] = [
+                'date' => $day->format('Y-m-d'),
+                'dow' => self::DOW[(int) $day->format('N')],
+                'dom' => $day->format('j'),
+                'isToday' => false,
+            ];
+        }
+
+        $clinicId = (int) $this->auth->clinicId();
+        $selectedVet = (int) $request->query('vet');
+        $hasVet = $selectedVet > 0 && $this->lookups->vetInClinic($selectedVet, $clinicId);
+
+        $appointments = $hasVet
+            ? $this->appointments->forWeek(
+                $clinicId,
+                $monday->format('Y-m-d 00:00:00'),
+                $monday->modify('+7 days')->format('Y-m-d 00:00:00'),
+                $selectedVet
+            )
+            : [];
+
+        return $this->view('staff/register', [
+            'title' => 'VetClinic — Zarejestruj wizytę',
+            'user' => $this->auth->user(),
+            'active' => 'rejestracja',
+            'days' => $days,
+            'appointments' => $appointments,
+            'layout' => $this->layout($appointments),
+            'availability' => $hasVet ? $this->availability->forVet($selectedVet) : [],
+            'selectedVet' => $hasVet ? $selectedVet : 0,
+            'weekLabel' => $monday->format('d.m') . ' – ' . $sunday->format('d.m.Y'),
+            'currentWeek' => $monday->format('Y-m-d'),
+            'prevWeek' => $monday->modify('-7 days')->format('Y-m-d'),
+            'nextWeek' => $monday->modify('+7 days')->format('Y-m-d'),
+            'todayWeek' => (new DateTimeImmutable('today'))->modify('monday this week')->format('Y-m-d'),
+            'vets' => $this->lookups->vets($clinicId),
+            'pets' => $this->lookups->pets($clinicId),
+            'reasons' => $this->lookups->reasons($clinicId),
             'defaultDate' => $today,
         ], 'app');
     }
