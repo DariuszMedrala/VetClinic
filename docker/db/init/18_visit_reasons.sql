@@ -1,0 +1,8 @@
+CREATE TABLE visit_reasons (
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    clinic_id  BIGINT NOT NULL REFERENCES clinics (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    name       VARCHAR(150) NOT NULL,
+    is_active  BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (clinic_id, name)
+);
