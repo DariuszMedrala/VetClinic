@@ -106,7 +106,12 @@ $attrs = static function ($a): string {
             <div class="field">
               <div class="field__row"><label class="field__label" for="reason">Powód</label></div>
               <div class="input-wrap">
-                <input class="input" type="text" id="reason" name="reason" placeholder="np. Szczepienie" maxlength="255" required>
+                <select class="input" id="reason" name="reason" required>
+                  <option value="">— wybierz —</option>
+<?php foreach ($reasons as $r): ?>
+                  <option value="<?= e($r['name']) ?>"><?= e($r['name']) ?></option>
+<?php endforeach; ?>
+                </select>
               </div>
             </div>
           </div>

@@ -72,6 +72,7 @@ final class CalendarController extends Controller
             'canCreate' => $canCreate,
             'vets' => $canCreate ? $this->lookups->vets($clinicId) : [],
             'pets' => $canCreate ? $this->lookups->pets($clinicId) : [],
+            'reasons' => $canCreate ? $this->lookups->reasons($clinicId) : [],
             'defaultDate' => $today,
         ], 'app');
     }
@@ -99,6 +100,10 @@ final class CalendarController extends Controller
 
         if (!$this->lookups->petInClinic($petId, $clinicId) || !$this->lookups->vetInClinic($vetId, $clinicId)) {
             return $this->json(['ok' => false, 'message' => 'Wybrany pacjent lub lekarz nie należy do Twojej kliniki.'], 422);
+        }
+
+        if (!$this->lookups->reasonInClinic($reason, $clinicId)) {
+            return $this->json(['ok' => false, 'message' => 'Wybierz powód wizyty z listy kliniki.'], 422);
         }
 
         $start = new DateTimeImmutable($date . ' ' . $time);
