@@ -42,7 +42,7 @@ final class BillingController extends Controller
         $vetId = (int) $this->auth->id();
         $quantities = $request->input('qty', []);
 
-        $result = $this->billing->create($appointmentId, $vetId, is_array($quantities) ? $quantities : []);
+        $result = $this->billing->create($appointmentId, $vetId, (int) $this->auth->clinicId(), is_array($quantities) ? $quantities : []);
 
         if (!$result['ok']) {
             $appointment = $this->billing->invoiceableAppointment($appointmentId, $vetId);
@@ -64,7 +64,7 @@ final class BillingController extends Controller
             'user' => $this->auth->user(),
             'active' => 'pulpit',
             'appointment' => $appointment,
-            'procedures' => $this->billing->procedures(),
+            'procedures' => $this->billing->procedures((int) $this->auth->clinicId()),
             'error' => $error,
         ], 'app');
     }

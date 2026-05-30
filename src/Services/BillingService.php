@@ -23,18 +23,18 @@ final class BillingService
         return $this->invoices->appointmentForInvoice($appointmentId, $vetId);
     }
 
-    public function procedures(): array
+    public function procedures(int $clinicId): array
     {
-        return $this->procedures->all();
+        return $this->procedures->all($clinicId);
     }
 
-    public function create(int $appointmentId, int $vetId, array $quantities): array
+    public function create(int $appointmentId, int $vetId, int $clinicId, array $quantities): array
     {
         if ($this->invoices->appointmentForInvoice($appointmentId, $vetId) === null) {
             return ['ok' => false, 'message' => 'Tej wizyty nie można już zafakturować.'];
         }
 
-        $prices = $this->procedures->priceMap();
+        $prices = $this->procedures->priceMap($clinicId);
         $items = [];
 
         foreach ($quantities as $procedureId => $quantity) {
