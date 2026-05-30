@@ -693,7 +693,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .calendar__dow { color: var(--ink-500); font-weight: 700; letter-spacing: .04em; }
 .calendar__dom { font-size: 20px; font-weight: 800; color: var(--ink-900); }
 .calendar__day-h--today .calendar__dow,
-.calendar__day-h--today .calendar__dom { color: var(--teal-700); }
+.calendar__day-h--today .calendar__dom { color: var(--gold-600); }
 
 .calendar__body {
   position: relative;
@@ -713,7 +713,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-top: 1px solid var(--line);
   border-left: 1px solid var(--line);
 }
-.calendar__col-today { background: var(--teal-50); }
+.calendar__col-today { background: #fdf4cf; }
 
 .event {
   border-radius: var(--r-sm);
@@ -730,6 +730,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .event--blue { background: #6fa8e8; }
 .event--teal { background: var(--teal-600); }
 .event--gold { background: var(--gold-600); }
+
+.cal-avail {
+  background: var(--teal-50);
+  border: 1px solid var(--teal-100);
+  border-radius: 6px;
+  margin: 0 2px;
+  z-index: 1;
+  pointer-events: none;
+}
 .event--red  { background: var(--danger-50); color: var(--danger-600); border: 1px solid #f0b6ba; }
 
 .calendar .event,
