@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\AlertController;
 use App\Controllers\AppointmentController;
+use App\Controllers\CatalogController;
 use App\Controllers\AuthController;
 use App\Controllers\AvailabilityController;
 use App\Controllers\BillingController;
@@ -78,6 +79,15 @@ $router->post('/invoices/new/{id}', [BillingController::class, 'store'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('vet'));
 
 $router->get('/alerts', [AlertController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->get('/catalog', [CatalogController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->post('/catalog/{type}', [CatalogController::class, 'add'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->post('/catalog/{type}/{id}/delete', [CatalogController::class, 'remove'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->get('/patients', [PatientController::class, 'index'])

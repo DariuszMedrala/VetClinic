@@ -65,6 +65,10 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3z"></path><path d="M12 9v5M12 17.5v.2"></path></svg>
         Alerty
       </a>
+      <a class="<?= $navClass('katalog') ?>" href="/catalog">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h16"></path><circle cx="4" cy="5" r="0.5" fill="currentColor"></circle></svg>
+        Katalog
+      </a>
 <?php endif; ?>
 <?php if ($isVet): ?>
       <a class="<?= $navClass('dostepnosc') ?>" href="/availability">
