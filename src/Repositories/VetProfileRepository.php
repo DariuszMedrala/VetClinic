@@ -16,6 +16,21 @@ final class VetProfileRepository
         $this->db = Database::connection();
     }
 
+    public function listForClinic(int $clinicId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT u.id, u.first_name, u.last_name, u.email,
+                    vp.title, vp.room, vp.specialization, vp.license_number
+             FROM vet_profiles vp
+             JOIN users u ON u.id = vp.user_id
+             WHERE u.clinic_id = :c AND u.is_active = TRUE
+             ORDER BY u.last_name, u.first_name"
+        );
+        $stmt->execute(['c' => $clinicId]);
+
+        return $stmt->fetchAll();
+    }
+
     public function find(int $userId): array
     {
         $stmt = $this->db->prepare(

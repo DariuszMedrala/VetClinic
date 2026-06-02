@@ -102,6 +102,28 @@ final class UserRepository
         $stmt->execute(['id' => $userId, 'phone' => $phone]);
     }
 
+    public function deactivateVet(int $vetId, int $clinicId): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE users SET is_active = FALSE, updated_at = now()
+             WHERE id = :id AND clinic_id = :c AND role = 'vet' AND is_active = TRUE"
+        );
+        $stmt->execute(['id' => $vetId, 'c' => $clinicId]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public function deactivateClient(int $clientId, int $clinicId): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE users SET is_active = FALSE, updated_at = now()
+             WHERE id = :id AND clinic_id = :c AND role = 'client' AND is_active = TRUE"
+        );
+        $stmt->execute(['id' => $clientId, 'c' => $clinicId]);
+
+        return $stmt->rowCount() > 0;
+    }
+
     public function updatePassword(int $userId, string $passwordHash): void
     {
         $stmt = $this->db->prepare(

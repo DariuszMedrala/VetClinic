@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     'Accept': 'application/json',
   };
 
+  const csrf = () => {
+    const container = document.querySelector('[data-csrf]');
+    return container ? container.getAttribute('data-csrf') : '';
+  };
+
   const showResult = (form, message, ok) => {
     const result = form.querySelector('.js-result');
     if (!result) {
@@ -44,6 +49,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const setupDeleteModal = ({ modalId, backId, confirmId, trigger, url, onSuccess }) => {
+    const modal = document.getElementById(modalId);
+    if (!modal) {
+      return;
+    }
+    const confirmButton = document.getElementById(confirmId);
+    let pendingId = null;
+
+    const close = () => {
+      modal.classList.remove('modal-backdrop--open');
+      pendingId = null;
+    };
+
+    document.querySelectorAll(trigger).forEach((button) => {
+      button.addEventListener('click', () => {
+        pendingId = button.getAttribute('data-id');
+        confirmButton.disabled = false;
+        modal.classList.add('modal-backdrop--open');
+      });
+    });
+
+    document.getElementById(backId).addEventListener('click', close);
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        close();
+      }
+    });
+
+    confirmButton.addEventListener('click', async () => {
+      if (pendingId === null) {
+        return;
+      }
+      confirmButton.disabled = true;
+
+      try {
+        const response = await fetch(url(pendingId), {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ _csrf: csrf() }),
+        });
+        const data = await response.json();
+
+        if (response.ok && data.ok) {
+          onSuccess();
+          return;
+        }
+
+        close();
+        window.alert(data.message || 'Nie udało się usunąć.');
+      } catch (error) {
+        close();
+        window.alert('Błąd połączenia. Spróbuj ponownie.');
+      }
+    });
+  };
+
   const addForm = document.getElementById('add-pet-form');
   if (addForm) {
     submitForm(addForm, '/patients');
@@ -62,36 +123,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const deleteButton = document.querySelector('.js-delete-pet');
-  if (deleteButton) {
-    deleteButton.addEventListener('click', async () => {
-      if (!window.confirm('Usunąć zwierzę wraz z jego wizytami i szczepieniami?')) {
-        return;
-      }
+  setupDeleteModal({
+    modalId: 'vet-del-modal',
+    backId: 'vet-del-back',
+    confirmId: 'vet-del-confirm',
+    trigger: '.js-del-vet',
+    url: (id) => `/patients/vets/${id}/delete`,
+    onSuccess: () => window.location.reload(),
+  });
 
-      const container = document.querySelector('[data-csrf]');
-      const csrf = container ? container.getAttribute('data-csrf') : '';
-      deleteButton.disabled = true;
+  setupDeleteModal({
+    modalId: 'client-del-modal',
+    backId: 'client-del-back',
+    confirmId: 'client-del-confirm',
+    trigger: '.js-del-client',
+    url: (id) => `/patients/clients/${id}/delete`,
+    onSuccess: () => window.location.reload(),
+  });
 
-      try {
-        const response = await fetch(`/patients/${deleteButton.getAttribute('data-id')}/delete`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ _csrf: csrf }),
-        });
-        const data = await response.json();
-
-        if (response.ok && data.ok) {
-          window.location = '/patients';
-          return;
-        }
-
-        deleteButton.disabled = false;
-        window.alert(data.message || 'Nie udało się usunąć.');
-      } catch (error) {
-        deleteButton.disabled = false;
-        window.alert('Błąd połączenia. Spróbuj ponownie.');
-      }
-    });
-  }
+  setupDeleteModal({
+    modalId: 'pet-del-modal',
+    backId: 'pet-del-back',
+    confirmId: 'pet-del-confirm',
+    trigger: '.js-delete-pet',
+    url: (id) => `/patients/${id}/delete`,
+    onSuccess: () => { window.location = '/patients'; },
+  });
 });

@@ -33,8 +33,39 @@ final class PatientController extends Controller
             'user' => $this->auth->user(),
             'active' => 'pacjenci',
             'groups' => $this->patients->clientsWithPets((int) $this->auth->clinicId()),
+            'vets' => $this->patients->vets((int) $this->auth->clinicId()),
             'species' => $this->lookups->species(),
         ], 'app');
+    }
+
+    public function deleteVet(Request $request, array $params): Response
+    {
+        if (!Csrf::validate($request->input('_csrf'))) {
+            return $this->json(['ok' => false, 'message' => 'Nieprawidłowy token CSRF.'], 419);
+        }
+
+        $deactivated = $this->patients->deactivateVet((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
+
+        if (!$deactivated) {
+            return $this->json(['ok' => false, 'message' => 'Nie znaleziono lekarza.'], 404);
+        }
+
+        return $this->json(['ok' => true, 'message' => 'Lekarz został usunięty.'], 200);
+    }
+
+    public function deleteClient(Request $request, array $params): Response
+    {
+        if (!Csrf::validate($request->input('_csrf'))) {
+            return $this->json(['ok' => false, 'message' => 'Nieprawidłowy token CSRF.'], 419);
+        }
+
+        $deactivated = $this->patients->deactivateClient((int) ($params['id'] ?? 0), (int) $this->auth->clinicId());
+
+        if (!$deactivated) {
+            return $this->json(['ok' => false, 'message' => 'Nie znaleziono klienta.'], 404);
+        }
+
+        return $this->json(['ok' => true, 'message' => 'Klient został usunięty.'], 200);
     }
 
     public function show(Request $request, array $params): Response

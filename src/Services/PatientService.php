@@ -7,18 +7,39 @@ namespace App\Services;
 use App\Repositories\AppointmentRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\PetRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\VetProfileRepository;
 
 final class PatientService
 {
     private ClientRepository $clients;
     private PetRepository $pets;
     private AppointmentRepository $appointments;
+    private VetProfileRepository $vets;
+    private UserRepository $users;
 
     public function __construct()
     {
         $this->clients = new ClientRepository();
         $this->pets = new PetRepository();
         $this->appointments = new AppointmentRepository();
+        $this->vets = new VetProfileRepository();
+        $this->users = new UserRepository();
+    }
+
+    public function vets(int $clinicId): array
+    {
+        return $this->vets->listForClinic($clinicId);
+    }
+
+    public function deactivateVet(int $vetId, int $clinicId): bool
+    {
+        return $this->users->deactivateVet($vetId, $clinicId);
+    }
+
+    public function deactivateClient(int $clientId, int $clinicId): bool
+    {
+        return $this->users->deactivateClient($clientId, $clinicId);
     }
 
     public function clientsWithPets(int $clinicId): array

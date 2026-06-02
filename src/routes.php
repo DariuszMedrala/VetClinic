@@ -108,6 +108,12 @@ $router->post('/patients/{id}/update', [PatientController::class, 'update'])
 $router->post('/patients/{id}/delete', [PatientController::class, 'destroy'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
+$router->post('/patients/vets/{id}/delete', [PatientController::class, 'deleteVet'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->post('/patients/clients/{id}/delete', [PatientController::class, 'deleteClient'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
 $router->get('/invoices', [InvoiceController::class, 'index'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
