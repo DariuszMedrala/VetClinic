@@ -164,4 +164,15 @@ foreach ($vaccinations as $v) {
 <?php endif; ?>
       </section>
 
-      <script src="/assets/js/patients.js"></script>
+      <div class="modal-backdrop" id="pet-del-modal">
+        <div class="modal">
+          <h3 class="modal__title">Usuń zwierzę</h3>
+          <p class="modal__text">Czy na pewno chcesz usunąć to zwierzę wraz z jego wizytami i szczepieniami? Tej operacji nie można cofnąć.</p>
+          <div class="modal__actions">
+            <button class="btn btn--soft" type="button" id="pet-del-back">Wróć</button>
+            <button class="btn btn--danger" type="button" id="pet-del-confirm">Usuń</button>
+          </div>
+        </div>
+      </div>
+
+      <script src="<?= e(asset('/assets/js/patients.js')) ?>"></script>
