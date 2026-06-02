@@ -8,16 +8,19 @@ use App\Core\Controller;
 use App\Core\Csrf;
 use App\Core\Request;
 use App\Core\Response;
+use App\Services\ClinicService;
 use App\Services\ProfileService;
 
 final class ProfileController extends Controller
 {
     private ProfileService $profiles;
+    private ClinicService $clinics;
 
     public function __construct()
     {
         parent::__construct();
         $this->profiles = new ProfileService();
+        $this->clinics = new ClinicService();
     }
 
     public function edit(Request $request, array $params): Response
@@ -57,6 +60,15 @@ final class ProfileController extends Controller
                     $room = trim((string) $request->input('gabinet', ''));
                     $spec = trim((string) $request->input('specjalizacja', ''));
                     $result = $this->profiles->updateVetExtra($userId, $title, $room !== '' ? $room : null, $spec !== '' ? $spec : null, $license);
+                }
+
+                if ($result['ok'] && $role === 'admin') {
+                    $result = $this->clinics->update(
+                        (int) $this->auth->clinicId(),
+                        trim((string) $request->input('klinika_nazwa', '')),
+                        trim((string) $request->input('klinika_adres', '')),
+                        trim((string) $request->input('klinika_haslo', ''))
+                    );
                 }
             }
         }
@@ -125,6 +137,7 @@ final class ProfileController extends Controller
             'active' => 'profil',
             'account' => $account,
             'vet' => $role === 'vet' ? $this->profiles->vetExtra($userId) : null,
+            'clinic' => $role === 'admin' ? $this->clinics->find((int) $this->auth->clinicId()) : null,
             'isVet' => $role === 'vet',
             'profileMsg' => $profileMsg,
             'passwordMsg' => $passwordMsg,

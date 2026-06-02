@@ -37,7 +37,7 @@ final class AuthService
         return $this->users->emailExists($email);
     }
 
-    public function register(string $firstName, string $lastName, string $email, string $password, string $formRole, ?int $clinicId, ?string $clinicName, ?string $clinicAddress): User
+    public function register(string $firstName, string $lastName, string $email, string $password, string $formRole, ?int $clinicId, ?string $clinicName, ?string $clinicAddress, string $joinCode): User
     {
         $role = match ($formRole) {
             'lekarz' => 'vet',
@@ -51,7 +51,7 @@ final class AuthService
 
         try {
             if ($role === 'admin') {
-                $clinic = $this->clinics->create((string) $clinicName, (string) $clinicAddress);
+                $clinic = $this->clinics->create((string) $clinicName, (string) $clinicAddress, $joinCode);
             } else {
                 $clinic = (int) $clinicId;
             }

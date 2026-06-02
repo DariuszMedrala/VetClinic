@@ -115,6 +115,12 @@
               </select>
             </div>
           </div>
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="klinika_haslo">Hasło dołączeniowe kliniki</label></div>
+            <div class="input-wrap">
+              <input class="input" type="text" id="klinika_haslo" name="klinika_haslo" maxlength="60" placeholder="Otrzymane od recepcji">
+            </div>
+          </div>
         </div>
 
         <div id="clinic-new" style="<?= $role === 'recepcja' ? '' : 'display:none' ?>">
@@ -128,6 +134,12 @@
             <div class="field__row"><label class="field__label" for="klinika_adres">Adres kliniki</label></div>
             <div class="input-wrap">
               <input class="input" type="text" id="klinika_adres" name="klinika_adres" maxlength="255" placeholder="np. ul. Główna 1, Warszawa" value="<?= e($old['klinika_adres'] ?? '') ?>">
+            </div>
+          </div>
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="klinika_haslo_new">Hasło dołączeniowe (dla lekarzy i klientów)</label></div>
+            <div class="input-wrap">
+              <input class="input" type="text" id="klinika_haslo_new" name="klinika_haslo_new" maxlength="60" placeholder="Ustal hasło, które podadzą przy rejestracji">
             </div>
           </div>
         </div>

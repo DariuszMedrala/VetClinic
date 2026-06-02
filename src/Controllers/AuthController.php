@@ -79,9 +79,10 @@ final class AuthController extends Controller
         $clinicId = (int) $request->input('klinika_id', 0);
         $clinicName = trim((string) $request->input('klinika_nazwa', ''));
         $clinicAddress = trim((string) $request->input('klinika_adres', ''));
+        $joinCode = trim((string) $request->input($role === 'recepcja' ? 'klinika_haslo_new' : 'klinika_haslo', ''));
         $accepted = $request->input('regulamin') !== null;
 
-        $errors = $this->validateRegistration($firstName, $lastName, $email, $password, $passwordConfirm, $role, $clinicId, $clinicName, $clinicAddress, $accepted);
+        $errors = $this->validateRegistration($firstName, $lastName, $email, $password, $passwordConfirm, $role, $clinicId, $clinicName, $clinicAddress, $joinCode, $accepted);
 
         if ($errors !== []) {
             return $this->view('auth/register', [
@@ -92,7 +93,7 @@ final class AuthController extends Controller
             ], 'base')->status(422);
         }
 
-        $user = $this->authService->register($firstName, $lastName, $email, $password, $role, $clinicId, $clinicName, $clinicAddress);
+        $user = $this->authService->register($firstName, $lastName, $email, $password, $role, $clinicId, $clinicName, $clinicAddress, $joinCode);
 
         $this->storeSession($user);
 
@@ -125,7 +126,7 @@ final class AuthController extends Controller
         return in_array($role, ['vet', 'admin'], true) ? '/dashboard' : '/portal';
     }
 
-    private function validateRegistration(string $firstName, string $lastName, string $email, string $password, string $passwordConfirm, string $role, int $clinicId, string $clinicName, string $clinicAddress, bool $accepted): array
+    private function validateRegistration(string $firstName, string $lastName, string $email, string $password, string $passwordConfirm, string $role, int $clinicId, string $clinicName, string $clinicAddress, string $joinCode, bool $accepted): array
     {
         $errors = [];
 
@@ -151,8 +152,13 @@ final class AuthController extends Controller
             if ($clinicName === '' || $clinicAddress === '') {
                 $errors[] = 'Podaj nazwę i adres kliniki.';
             }
+            if (strlen($joinCode) < 4) {
+                $errors[] = 'Ustaw hasło dołączeniowe kliniki (min. 4 znaki).';
+            }
         } elseif ($clinicId <= 0 || !$this->clinics->exists($clinicId)) {
             $errors[] = 'Wybierz klinikę z listy.';
+        } elseif (!$this->clinics->verifyJoinCode($clinicId, $joinCode)) {
+            $errors[] = 'Nieprawidłowe hasło dołączeniowe wybranej kliniki.';
         }
 
         if (!$accepted) {

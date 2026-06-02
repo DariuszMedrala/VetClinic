@@ -37,6 +37,23 @@ $banner = static function (?array $msg): string {
             <div class="input-wrap"><input class="input" type="email" id="email" name="email" value="<?= e($account->email) ?>" required></div>
           </div>
 
+<?php if (!$isVet): ?>
+          <div class="field-2">
+            <div class="field">
+              <div class="field__row"><label class="field__label" for="klinika_nazwa">Nazwa kliniki</label></div>
+              <div class="input-wrap"><input class="input" type="text" id="klinika_nazwa" name="klinika_nazwa" maxlength="150" value="<?= e($clinic['name'] ?? '') ?>" required></div>
+            </div>
+            <div class="field">
+              <div class="field__row"><label class="field__label" for="klinika_haslo">Hasło dołączeniowe</label></div>
+              <div class="input-wrap"><input class="input" type="text" id="klinika_haslo" name="klinika_haslo" maxlength="60" value="<?= e($clinic['join_code'] ?? '') ?>" required></div>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field__row"><label class="field__label" for="klinika_adres">Adres kliniki</label></div>
+            <div class="input-wrap"><input class="input" type="text" id="klinika_adres" name="klinika_adres" maxlength="255" value="<?= e($clinic['address'] ?? '') ?>" required></div>
+          </div>
+<?php endif; ?>
+
 <?php if ($isVet): ?>
           <div class="field-2">
             <div class="field">
