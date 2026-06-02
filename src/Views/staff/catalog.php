@@ -12,7 +12,7 @@ $banner = static function (?array $msg): string {
 };
 
 $delForm = static function (string $type, int $id): string {
-    return '<form method="post" action="/catalog/' . e($type) . '/' . $id . '/delete" style="display:inline;">'
+    return '<form method="post" action="/catalog/' . e($type) . '/' . $id . '/delete" class="js-del-form" style="display:inline;">'
         . '<input type="hidden" name="_csrf" value="' . e(Csrf::token()) . '">'
         . '<button class="btn btn--outline btn--sm" type="submit">Usuń</button></form>';
 };
@@ -116,3 +116,16 @@ $delForm = static function (string $type, int $id): string {
         </table>
 <?php endif; ?>
       </section>
+
+      <div class="modal-backdrop" id="catalog-del-modal">
+        <div class="modal">
+          <h3 class="modal__title">Usuń pozycję</h3>
+          <p class="modal__text">Czy na pewno chcesz usunąć tę pozycję z katalogu?</p>
+          <div class="modal__actions">
+            <button class="btn btn--soft" type="button" id="del-back">Wróć</button>
+            <button class="btn btn--danger" type="button" id="del-confirm">Usuń</button>
+          </div>
+        </div>
+      </div>
+
+      <script src="<?= e(asset('/assets/js/catalog.js')) ?>"></script>
