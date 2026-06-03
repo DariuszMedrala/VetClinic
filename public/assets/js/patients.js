@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
           headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
           body: new FormData(form),
         });
+
+        if (response.status === 413) {
+          submit.disabled = false;
+          showResult(form, 'Plik jest za duży — zdjęcie może mieć maksymalnie 5 MB.', false);
+          return;
+        }
+
         const data = await response.json();
 
         if (response.ok && data.ok) {
