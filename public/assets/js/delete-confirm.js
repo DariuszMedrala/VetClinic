@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('catalog-del-modal');
+  const modal = document.querySelector('.js-confirm-modal');
   if (!modal) {
     return;
   }
 
-  const backButton = document.getElementById('del-back');
-  const confirmButton = document.getElementById('del-confirm');
+  const back = modal.querySelector('.js-confirm-back');
+  const confirm = modal.querySelector('.js-confirm-ok');
   let pendingForm = null;
 
-  const closeModal = () => {
+  const close = () => {
     modal.classList.remove('modal-backdrop--open');
     pendingForm = null;
   };
@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  backButton.addEventListener('click', closeModal);
+  back.addEventListener('click', close);
   modal.addEventListener('click', (event) => {
     if (event.target === modal) {
-      closeModal();
+      close();
     }
   });
 
-  confirmButton.addEventListener('click', () => {
+  confirm.addEventListener('click', () => {
     if (pendingForm) {
       pendingForm.submit();
     }

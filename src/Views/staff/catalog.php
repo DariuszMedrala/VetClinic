@@ -117,15 +117,15 @@ $delForm = static function (string $type, int $id): string {
 <?php endif; ?>
       </section>
 
-      <div class="modal-backdrop" id="catalog-del-modal">
+      <div class="modal-backdrop js-confirm-modal" id="catalog-del-modal">
         <div class="modal">
           <h3 class="modal__title">Usuń pozycję</h3>
           <p class="modal__text">Czy na pewno chcesz usunąć tę pozycję z katalogu?</p>
           <div class="modal__actions">
-            <button class="btn btn--soft" type="button" id="del-back">Wróć</button>
-            <button class="btn btn--danger" type="button" id="del-confirm">Usuń</button>
+            <button class="btn btn--soft js-confirm-back" type="button">Wróć</button>
+            <button class="btn btn--danger js-confirm-ok" type="button">Usuń</button>
           </div>
         </div>
       </div>
 
-      <script src="<?= e(asset('/assets/js/catalog.js')) ?>"></script>
+      <script src="<?= e(asset('/assets/js/delete-confirm.js')) ?>"></script>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Controllers\AlertController;
 use App\Controllers\AppointmentController;
 use App\Controllers\CatalogController;
+use App\Controllers\LoyaltyController;
 use App\Controllers\AuthController;
 use App\Controllers\AvailabilityController;
 use App\Controllers\BillingController;
@@ -91,6 +92,18 @@ $router->post('/catalog/{type}', [CatalogController::class, 'add'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->post('/catalog/{type}/{id}/delete', [CatalogController::class, 'remove'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->get('/loyalty', [LoyaltyController::class, 'index'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->post('/loyalty/settings', [LoyaltyController::class, 'saveSettings'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->post('/loyalty/tiers', [LoyaltyController::class, 'addTier'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
+
+$router->post('/loyalty/tiers/{id}/delete', [LoyaltyController::class, 'deleteTier'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('admin'));
 
 $router->get('/patients', [PatientController::class, 'index'])
