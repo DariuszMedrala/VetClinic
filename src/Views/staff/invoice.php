@@ -10,7 +10,7 @@ use App\Models\Invoice;
           <span class="chip"><?= e($invoice->petName) ?> (<?= e($invoice->species) ?>)</span>
           <span class="dot-sep">•</span>
           <span class="billing-head__owner">Właściciel: <?= e($invoice->clientName) ?></span>
-<?php if ($invoice->loyaltyPoints >= 100): ?>
+<?php if ($invoice->hasDiscount()): ?>
           <span class="badge badge--loyalty">Klient lojalnościowy</span>
 <?php endif; ?>
           <span style="flex:1"></span>
@@ -49,7 +49,7 @@ use App\Models\Invoice;
             <h2 class="summary__title">Podsumowanie</h2>
             <div class="summary__row summary__row--muted"><span>Suma częściowa</span><span style="font-weight:800;color:var(--ink-900)"><?= e($invoice->subtotalLabel()) ?></span></div>
 <?php if ($invoice->hasDiscount()): ?>
-            <div class="summary__row summary__row--discount"><span>Rabat lojalnościowy (10%)</span><span><?= e($invoice->discountLabel()) ?></span></div>
+            <div class="summary__row summary__row--discount"><span>Rabat lojalnościowy (<?= e((string) $invoice->discountPercent()) ?>%)</span><span><?= e($invoice->discountLabel()) ?></span></div>
 <?php endif; ?>
             <div class="summary__total">
               <span class="summary__total-label">Razem</span>

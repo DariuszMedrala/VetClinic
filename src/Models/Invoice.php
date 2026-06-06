@@ -54,6 +54,15 @@ final class Invoice
         return (float) $this->total < (float) $this->subtotal;
     }
 
+    public function discountPercent(): int
+    {
+        if ((float) $this->subtotal <= 0) {
+            return 0;
+        }
+
+        return (int) round((1 - (float) $this->total / (float) $this->subtotal) * 100);
+    }
+
     public function statusLabel(): string
     {
         return match ($this->status) {
