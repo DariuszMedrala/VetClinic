@@ -5,7 +5,10 @@ $roleLabel = match ($user['role'] ?? '') {
     'client' => 'Klient',
     default => '',
 };
-$initials = strtoupper(mb_substr($user['name'] ?? 'VC', 0, 2));
+$nameParts = preg_split('/\s+/', trim((string) ($user['name'] ?? '')), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+$first = $nameParts[0] ?? '';
+$last = count($nameParts) > 1 ? $nameParts[count($nameParts) - 1] : '';
+$initials = mb_strtoupper(mb_substr($first, 0, 1) . mb_substr($last, 0, 1)) ?: 'VC';
 $active = $active ?? '';
 $isClient = ($user['role'] ?? '') === 'client';
 $isVet = ($user['role'] ?? '') === 'vet';
