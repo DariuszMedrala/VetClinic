@@ -9,17 +9,20 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Services\ClientPortalService;
 use App\Services\ClinicService;
+use App\Services\LoyaltyService;
 
 final class DashboardController extends Controller
 {
     private ClientPortalService $portal;
     private ClinicService $clinics;
+    private LoyaltyService $loyalty;
 
     public function __construct()
     {
         parent::__construct();
         $this->portal = new ClientPortalService();
         $this->clinics = new ClinicService();
+        $this->loyalty = new LoyaltyService();
     }
 
     public function index(Request $request, array $params): Response
@@ -32,7 +35,8 @@ final class DashboardController extends Controller
             return $this->redirect('/login');
         }
 
-        $clinic = $this->clinics->find((int) $this->auth->clinicId());
+        $clinicId = (int) $this->auth->clinicId();
+        $clinic = $this->clinics->find($clinicId);
 
         return $this->view('portal/index', [
             'title' => 'VetClinic — Mój portal',
@@ -40,6 +44,7 @@ final class DashboardController extends Controller
             'active' => 'dashboard',
             'client' => $data['client'],
             'clinicName' => $clinic['name'] ?? '',
+            'loyaltyDiscount' => $this->loyalty->discountForPoints($clinicId, $data['client']->loyaltyPoints),
             'pets' => $data['pets'],
             'appointments' => $data['appointments'],
             'invoices' => $data['invoices'],

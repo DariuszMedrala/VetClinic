@@ -34,6 +34,9 @@
           <div class="stat-card__body">
             <span class="stat-card__label">Punkty lojalnościowe</span>
             <span class="stat-card__value stat-card__value--teal"><?= e((string) $client->loyaltyPoints) ?></span>
+<?php if (($loyaltyDiscount ?? 0) > 0): ?>
+            <span style="color:var(--teal-700);font-size:13px;font-weight:700;">Twój rabat: <?= e((string) (int) $loyaltyDiscount) ?>% na faktury</span>
+<?php endif; ?>
           </div>
         </article>
       </section>
