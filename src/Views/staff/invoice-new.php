@@ -53,7 +53,7 @@ $apptId = (int) $appointment['appointment_id'];
                 <select class="input" id="vaccine_type_id" name="vaccine_type_id">
                   <option value="">— brak —</option>
 <?php foreach ($vaccines as $v): ?>
-                  <option value="<?= e((string) $v['id']) ?>"><?= e($v['name']) ?></option>
+                  <option value="<?= e((string) $v['id']) ?>"><?= e($v['name']) ?> — <?= e(Invoice::money((string) $v['price'])) ?></option>
 <?php endforeach; ?>
                 </select>
               </div>

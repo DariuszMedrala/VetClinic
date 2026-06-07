@@ -57,14 +57,26 @@ final class BillingService
             }
         }
 
+        $vaccine = $vaccineTypeId !== null && $vaccineTypeId > 0
+            ? $this->vaccines->find($vaccineTypeId, $clinicId)
+            : null;
+
+        if ($vaccine !== null) {
+            $items[] = [
+                'vaccine_type_id' => (int) $vaccine['id'],
+                'quantity' => 1,
+                'unit_price' => (string) $vaccine['price'],
+            ];
+        }
+
         if ($items === []) {
-            return ['ok' => false, 'message' => 'Dodaj przynajmniej jedną pozycję (ilość większa od zera).'];
+            return ['ok' => false, 'message' => 'Dodaj przynajmniej jedną pozycję (zabieg lub szczepionkę).'];
         }
 
         $invoiceId = $this->invoices->createForAppointment($appointmentId, $items);
 
-        if ($vaccineTypeId !== null && $vaccineTypeId > 0) {
-            $this->appointments->recordVaccination($appointmentId, $vaccineTypeId, $vetId);
+        if ($vaccine !== null) {
+            $this->appointments->recordVaccination($appointmentId, (int) $vaccine['id'], $vetId);
         }
 
         return ['ok' => true, 'invoiceId' => $invoiceId, 'message' => 'Faktura została wystawiona.'];

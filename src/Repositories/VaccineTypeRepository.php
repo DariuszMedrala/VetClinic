@@ -27,6 +27,18 @@ final class VaccineTypeRepository
         return $stmt->fetchAll();
     }
 
+    public function find(int $id, int $clinicId): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id, name, price, validity_months FROM vaccine_types
+             WHERE id = :id AND clinic_id = :c AND is_active = TRUE'
+        );
+        $stmt->execute(['id' => $id, 'c' => $clinicId]);
+        $row = $stmt->fetch();
+
+        return $row ?: null;
+    }
+
     public function create(int $clinicId, string $name, string $price, int $validityMonths): void
     {
         $stmt = $this->db->prepare(

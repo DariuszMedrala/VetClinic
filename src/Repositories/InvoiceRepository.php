@@ -107,15 +107,16 @@ final class InvoiceRepository
             $invoice->execute(['appointment' => $appointmentId, 'number' => $number]);
             $invoiceId = (int) $invoice->fetchColumn();
 
-            $procedure = $this->db->prepare(
-                'INSERT INTO appointment_procedures (appointment_id, procedure_id, quantity, unit_price)
-                 VALUES (:appointment, :procedure, :quantity, :price)'
+            $line = $this->db->prepare(
+                'INSERT INTO appointment_procedures (appointment_id, procedure_id, vaccine_type_id, quantity, unit_price)
+                 VALUES (:appointment, :procedure, :vaccine, :quantity, :price)'
             );
 
             foreach ($items as $item) {
-                $procedure->execute([
+                $line->execute([
                     'appointment' => $appointmentId,
-                    'procedure' => $item['procedure_id'],
+                    'procedure' => $item['procedure_id'] ?? null,
+                    'vaccine' => $item['vaccine_type_id'] ?? null,
                     'quantity' => $item['quantity'],
                     'price' => $item['unit_price'],
                 ]);
@@ -136,12 +137,15 @@ final class InvoiceRepository
     public function lineItems(int $appointmentId): array
     {
         $stmt = $this->db->prepare(
-            'SELECT pr.name, pr.description, ap.quantity, ap.unit_price,
+            "SELECT COALESCE(pr.name, vt.name) AS name,
+                    COALESCE(pr.description, 'Szczepienie') AS description,
+                    ap.quantity, ap.unit_price,
                     ap.unit_price * ap.quantity AS line_total
              FROM appointment_procedures ap
-             JOIN procedures pr ON pr.id = ap.procedure_id
+             LEFT JOIN procedures pr ON pr.id = ap.procedure_id
+             LEFT JOIN vaccine_types vt ON vt.id = ap.vaccine_type_id
              WHERE ap.appointment_id = :id
-             ORDER BY pr.name'
+             ORDER BY name"
         );
         $stmt->execute(['id' => $appointmentId]);
 
