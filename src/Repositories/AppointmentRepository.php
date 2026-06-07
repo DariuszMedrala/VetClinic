@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Core\Database;
 use App\Models\Appointment;
+use DateTimeImmutable;
 use PDO;
 use PDOException;
 use Throwable;
@@ -182,6 +183,60 @@ final class AppointmentRepository
             }
 
             throw $exception;
+        }
+    }
+
+    public function recordVaccination(int $appointmentId, int $vaccineTypeId, int $vetId): void
+    {
+        $stmt = $this->db->prepare(
+            'SELECT a.pet_id, a.starts_at::date AS administered_at, vt.name, vt.validity_months
+             FROM appointments a
+             JOIN pets p ON p.id = a.pet_id
+             JOIN users u ON u.id = p.client_id
+             JOIN vaccine_types vt ON vt.id = :vaccine AND vt.clinic_id = u.clinic_id AND vt.is_active = TRUE
+             WHERE a.id = :id'
+        );
+        $stmt->execute(['vaccine' => $vaccineTypeId, 'id' => $appointmentId]);
+        $row = $stmt->fetch();
+
+        if ($row === false) {
+            return;
+        }
+
+        $administeredAt = (string) $row['administered_at'];
+        $expiresAt = (new DateTimeImmutable($administeredAt))
+            ->modify('+' . (int) $row['validity_months'] . ' months')
+            ->format('Y-m-d');
+
+        $update = $this->db->prepare(
+            'UPDATE vaccinations
+             SET administered_at = :a, expires_at = :e, administered_by = :vet, external_clinic = NULL
+             WHERE id = (
+                 SELECT id FROM vaccinations
+                 WHERE pet_id = :pet AND vaccine_name = :name
+                 ORDER BY administered_at DESC LIMIT 1
+             )'
+        );
+        $update->execute([
+            'a' => $administeredAt,
+            'e' => $expiresAt,
+            'vet' => $vetId,
+            'pet' => (int) $row['pet_id'],
+            'name' => $row['name'],
+        ]);
+
+        if ($update->rowCount() === 0) {
+            $insert = $this->db->prepare(
+                'INSERT INTO vaccinations (pet_id, vaccine_name, administered_at, expires_at, administered_by)
+                 VALUES (:pet, :name, :a, :e, :vet)'
+            );
+            $insert->execute([
+                'pet' => (int) $row['pet_id'],
+                'name' => $row['name'],
+                'a' => $administeredAt,
+                'e' => $expiresAt,
+                'vet' => $vetId,
+            ]);
         }
     }
 

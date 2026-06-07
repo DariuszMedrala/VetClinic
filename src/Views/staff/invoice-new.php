@@ -46,6 +46,20 @@ $apptId = (int) $appointment['appointment_id'];
 <?php endforeach; ?>
             </tbody>
           </table>
+          <div style="padding:18px 30px 0;">
+            <div class="field" style="max-width:360px;margin:0;">
+              <div class="field__row"><label class="field__label" for="vaccine_type_id">Podana szczepionka (opcjonalnie)</label></div>
+              <div class="input-wrap">
+                <select class="input" id="vaccine_type_id" name="vaccine_type_id">
+                  <option value="">— brak —</option>
+<?php foreach ($vaccines as $v): ?>
+                  <option value="<?= e((string) $v['id']) ?>"><?= e($v['name']) ?></option>
+<?php endforeach; ?>
+                </select>
+              </div>
+              <p style="color:var(--ink-400);font-size:13px;margin-top:6px;">Jeśli wybierzesz, karta szczepień pacjenta zostanie zaktualizowana (nowa data podania i ważności, podał: Ty).</p>
+            </div>
+          </div>
           <div style="padding:24px 30px;">
             <button class="btn btn--primary btn--lg" type="submit">Wystaw fakturę</button>
           </div>
