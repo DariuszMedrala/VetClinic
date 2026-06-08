@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VetClinic — Błąd serwera</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="app">
+  <main class="auth" style="grid-template-columns:1fr;place-items:center;min-height:100vh;">
+    <section class="auth__panel" style="max-width:460px;text-align:center;">
+      <span class="brand-logo" aria-hidden="true" style="margin:0 auto 12px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="2"></circle><circle cx="10.5" cy="6" r="2"></circle><circle cx="15.5" cy="6" r="2"></circle><circle cx="19" cy="10.5" r="2"></circle><path d="M12.5 12c-2.2 0-4 1.7-4.7 3.4-.6 1.5-2 2.3-2 3.8 0 1.4 1.2 2.3 2.6 2.1 1.2-.2 2.6-.7 4.1-.7s2.9.5 4.1.7c1.4.2 2.6-.7 2.6-2.1 0-1.5-1.4-2.3-2-3.8C16.5 13.7 14.7 12 12.5 12z"></path></svg>
+      </span>
+      <h2 class="auth__title">Coś poszło nie tak</h2>
+      <p class="auth__subtitle">Wystąpił nieoczekiwany błąd serwera. Spróbuj ponownie za chwilę — jeśli problem się powtarza, skontaktuj się z administratorem.</p>
+      <a class="btn btn--primary btn--block btn--lg" href="/">Wróć na stronę główną</a>
+    </section>
+  </main>
+</body>
+</html>
