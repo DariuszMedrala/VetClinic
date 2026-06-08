@@ -106,13 +106,14 @@ final class AuthController extends Controller
             return (new Response())->status(419)->html('Nieprawidłowy token CSRF.');
         }
 
-        $this->session->remove('user');
+        $this->session->destroy();
 
         return $this->redirect('/');
     }
 
     private function storeSession(User $user): void
     {
+        $this->session->regenerate();
         $this->session->set('user', [
             'id' => $user->id,
             'name' => $user->fullName(),
