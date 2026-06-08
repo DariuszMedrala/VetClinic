@@ -86,6 +86,17 @@ final class Request
         return is_array($file) ? $file : null;
     }
 
+    public function ip(): string
+    {
+        $forwarded = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+
+        if ($forwarded !== '') {
+            return trim(explode(',', $forwarded)[0]);
+        }
+
+        return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    }
+
     public function baseUrl(): string
     {
         $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? '') === '443';

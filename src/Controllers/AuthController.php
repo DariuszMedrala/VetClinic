@@ -38,17 +38,29 @@ final class AuthController extends Controller
             return (new Response())->status(419)->html('Nieprawidłowy token CSRF.');
         }
 
+        $ip = $request->ip();
+
+        if ($this->authService->isLockedOut($ip)) {
+            return $this->view('auth/login', [
+                'title' => 'VetClinic — Logowanie',
+                'error' => 'Zbyt wiele nieudanych prób logowania. Odczekaj ' . $this->authService->lockoutMinutes() . ' minut i spróbuj ponownie.',
+            ], 'base')->status(429);
+        }
+
         $email = trim((string) $request->input('email', ''));
         $password = (string) $request->input('haslo', '');
         $user = $this->authService->attempt($email, $password);
 
         if ($user === null) {
+            $this->authService->recordFailedAttempt($ip);
+
             return $this->view('auth/login', [
                 'title' => 'VetClinic — Logowanie',
                 'error' => 'Nieprawidłowy e-mail lub hasło.',
             ], 'base')->status(401);
         }
 
+        $this->authService->clearAttempts($ip);
         $this->storeSession($user);
 
         return $this->redirect($this->homeFor($user->role));

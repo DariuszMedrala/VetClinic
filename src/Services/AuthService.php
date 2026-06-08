@@ -7,18 +7,44 @@ namespace App\Services;
 use App\Core\Database;
 use App\Models\User;
 use App\Repositories\ClinicRepository;
+use App\Repositories\LoginAttemptRepository;
 use App\Repositories\UserRepository;
 use Throwable;
 
 final class AuthService
 {
+    private const MAX_ATTEMPTS = 5;
+    private const WINDOW_MINUTES = 15;
+
     private UserRepository $users;
     private ClinicRepository $clinics;
+    private LoginAttemptRepository $attempts;
 
     public function __construct()
     {
         $this->users = new UserRepository();
         $this->clinics = new ClinicRepository();
+        $this->attempts = new LoginAttemptRepository();
+    }
+
+    public function isLockedOut(string $ip): bool
+    {
+        return $this->attempts->countRecent($ip, self::WINDOW_MINUTES) >= self::MAX_ATTEMPTS;
+    }
+
+    public function recordFailedAttempt(string $ip): void
+    {
+        $this->attempts->record($ip);
+    }
+
+    public function clearAttempts(string $ip): void
+    {
+        $this->attempts->clear($ip);
+    }
+
+    public function lockoutMinutes(): int
+    {
+        return self::WINDOW_MINUTES;
     }
 
     public function attempt(string $email, string $password): ?User
