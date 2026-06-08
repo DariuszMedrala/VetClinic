@@ -82,9 +82,23 @@ final class Appointment
         return in_array($this->status, ['scheduled', 'confirmed'], true);
     }
 
+    public function isConfirmable(): bool
+    {
+        return $this->status === 'scheduled' && new DateTimeImmutable() < $this->startsAt;
+    }
+
+    public function effectiveStatus(): string
+    {
+        if (in_array($this->status, ['scheduled', 'confirmed'], true) && new DateTimeImmutable() >= $this->startsAt) {
+            return 'in_progress';
+        }
+
+        return $this->status;
+    }
+
     public function statusLabel(): string
     {
-        return match ($this->status) {
+        return match ($this->effectiveStatus()) {
             'scheduled' => 'Zaplanowana',
             'confirmed' => 'Potwierdzona',
             'in_progress' => 'W trakcie',
@@ -96,7 +110,7 @@ final class Appointment
 
     public function badgeClass(): string
     {
-        return match ($this->status) {
+        return match ($this->effectiveStatus()) {
             'confirmed' => 'badge--confirmed',
             'in_progress' => 'badge--progress',
             'completed' => 'badge--uptodate',
