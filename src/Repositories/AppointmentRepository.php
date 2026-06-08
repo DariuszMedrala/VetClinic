@@ -161,6 +161,18 @@ final class AppointmentRepository
         return $stmt->fetchAll();
     }
 
+    public function confirmForClient(int $appointmentId, int $clientId): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE appointments SET status = 'confirmed'
+             WHERE id = :id AND status = 'scheduled'
+               AND pet_id IN (SELECT id FROM pets WHERE client_id = :client)"
+        );
+        $stmt->execute(['id' => $appointmentId, 'client' => $clientId]);
+
+        return $stmt->rowCount() > 0;
+    }
+
     public function create(int $petId, int $vetId, string $startsAt, string $endsAt, string $reason): string
     {
         try {

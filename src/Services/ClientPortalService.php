@@ -24,6 +24,11 @@ final class ClientPortalService
         $this->invoices = new InvoiceRepository();
     }
 
+    public function confirmAppointment(int $appointmentId, int $clientId): bool
+    {
+        return $this->appointments->confirmForClient($appointmentId, $clientId);
+    }
+
     public function petCard(int $petId, int $userId): ?array
     {
         $pet = $this->pets->findForClient($petId, $userId);

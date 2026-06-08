@@ -43,6 +43,9 @@ $router->get('/portal', [DashboardController::class, 'index'])
 $router->get('/portal/pets/{id}', [DashboardController::class, 'pet'])
     ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
 
+$router->post('/portal/appointments/{id}/confirm', [DashboardController::class, 'confirmAppointment'])
+    ->middleware(new AuthMiddleware(), new RoleMiddleware('client'));
+
 $router->get('/profile', [ProfileController::class, 'edit'])
     ->middleware(new AuthMiddleware());
 

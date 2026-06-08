@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Csrf;
 use App\Core\Request;
 use App\Core\Response;
 use App\Services\ClientPortalService;
@@ -49,6 +50,17 @@ final class DashboardController extends Controller
             'appointments' => $data['appointments'],
             'invoices' => $data['invoices'],
         ], 'app');
+    }
+
+    public function confirmAppointment(Request $request, array $params): Response
+    {
+        if (!Csrf::validate($request->input('_csrf'))) {
+            return (new Response())->status(419)->html('Nieprawidłowy token CSRF.');
+        }
+
+        $this->portal->confirmAppointment((int) ($params['id'] ?? 0), (int) $this->auth->id());
+
+        return $this->redirect('/portal');
     }
 
     public function pet(Request $request, array $params): Response

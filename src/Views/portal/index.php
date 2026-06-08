@@ -81,7 +81,7 @@
         <p class="panel__empty">Brak zaplanowanych wizyt.</p>
 <?php else: ?>
         <table class="schedule schedule--lead">
-          <thead><tr><th>Dzień</th><th>Godzina</th><th>Zwierzę</th><th>Lekarz</th><th>Status</th></tr></thead>
+          <thead><tr><th>Dzień</th><th>Godzina</th><th>Zwierzę</th><th>Lekarz</th><th>Status</th><th>Akcja</th></tr></thead>
           <tbody>
 <?php foreach ($appointments as $a): ?>
             <tr>
@@ -90,6 +90,16 @@
               <td><?= e($a->petName) ?> (<?= e($a->species) ?>)</td>
               <td><?= e($a->vetName) ?></td>
               <td><span class="badge <?= e($a->badgeClass()) ?>"><?= e($a->statusLabel()) ?></span></td>
+              <td>
+<?php if ($a->isConfirmable()): ?>
+                <form method="post" action="/portal/appointments/<?= e((string) $a->id) ?>/confirm" style="display:inline;">
+                  <input type="hidden" name="_csrf" value="<?= e(\App\Core\Csrf::token()) ?>">
+                  <button class="btn btn--primary btn--sm" type="submit">Potwierdź</button>
+                </form>
+<?php else: ?>
+                —
+<?php endif; ?>
+              </td>
             </tr>
 <?php endforeach; ?>
           </tbody>
@@ -106,6 +116,12 @@
                 </div>
                 <div class="sched-card__owner"><?= e($a->reason) ?></div>
                 <span class="sched-card__doc"><?= e($a->vetName) ?></span>
+<?php if ($a->isConfirmable()): ?>
+                <form method="post" action="/portal/appointments/<?= e((string) $a->id) ?>/confirm" style="margin-top:10px;">
+                  <input type="hidden" name="_csrf" value="<?= e(\App\Core\Csrf::token()) ?>">
+                  <button class="btn btn--primary btn--sm" type="submit">Potwierdź wizytę</button>
+                </form>
+<?php endif; ?>
               </div>
             </div>
           </article>
