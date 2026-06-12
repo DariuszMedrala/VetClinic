@@ -42,6 +42,7 @@
 <?php if ($upcoming === []): ?>
         <p class="panel__empty">Brak nadchodzących wizyt.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Dzień</th><th>Godzina</th><th>Pacjent</th><th>Właściciel</th><th>Status</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -58,6 +59,7 @@
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 
@@ -69,6 +71,7 @@
 <?php if ($toInvoice === []): ?>
         <p class="panel__empty">Brak zakończonych wizyt oczekujących na fakturę.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Data</th><th>Pacjent</th><th>Właściciel</th><th>Powód</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -83,6 +86,7 @@
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 

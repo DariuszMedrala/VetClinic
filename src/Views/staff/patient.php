@@ -125,6 +125,7 @@ foreach ($vaccinations as $v) {
 <?php if ($vaccinations === []): ?>
         <p class="panel__empty">Brak zarejestrowanych szczepień.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="vax-table">
           <thead><tr><th>Szczepionka</th><th>Data podania</th><th>Ważne do</th><th>Status</th><th>Podał</th></tr></thead>
           <tbody>
@@ -139,6 +140,7 @@ foreach ($vaccinations as $v) {
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 
@@ -147,6 +149,7 @@ foreach ($vaccinations as $v) {
 <?php if ($history === []): ?>
         <p class="panel__empty">Brak wizyt w historii.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="vax-table">
           <thead><tr><th>Data</th><th>Powód</th><th>Lekarz</th><th>Zabiegi</th><th>Status</th></tr></thead>
           <tbody>
@@ -161,6 +164,7 @@ foreach ($vaccinations as $v) {
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 

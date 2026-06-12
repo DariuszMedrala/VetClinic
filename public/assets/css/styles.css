@@ -604,8 +604,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .auth__security-badges {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 32px;
+  gap: 16px 32px;
   color: var(--ink-400);
   font-size: 15px;
   font-weight: 600;
@@ -1154,6 +1155,12 @@ ul { margin: 0; padding: 0; list-style: none; }
   .panel__title { font-size: 22px; }
   .schedule { display: none; }
   .sched-cards { display: block; padding: 4px 18px 8px; }
+
+  /* Tabele danych bez wersji kartowej: zostają widoczne i przewijane poziomo */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll .schedule,
+  .table-scroll .vax-table,
+  .table-scroll .invoice__table { display: table; min-width: 560px; }
 
   /* Logowanie -> jedna kolumna, panel marki ukryty */
   .auth { grid-template-columns: 1fr; }

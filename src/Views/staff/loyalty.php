@@ -58,6 +58,7 @@ $perAmount = rtrim(rtrim(number_format((float) $s['per_amount'], 2, '.', ''), '0
 <?php if ($loyalty['tiers'] === []): ?>
         <p class="panel__empty">Brak progów zniżek. Dodaj pierwszy powyżej.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Od punktów</th><th>Zniżka</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -75,6 +76,7 @@ $perAmount = rtrim(rtrim(number_format((float) $s['per_amount'], 2, '.', ''), '0
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 

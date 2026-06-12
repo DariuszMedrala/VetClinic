@@ -37,6 +37,7 @@ $delForm = static function (string $type, int $id): string {
 <?php if ($catalog['reasons'] === []): ?>
         <p class="panel__empty">Brak powodów wizyt. Dodaj pierwszy powyżej.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Nazwa</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -45,6 +46,7 @@ $delForm = static function (string $type, int $id): string {
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 
@@ -69,6 +71,7 @@ $delForm = static function (string $type, int $id): string {
 <?php if ($catalog['vaccines'] === []): ?>
         <p class="panel__empty">Brak szczepionek. Dodaj pierwszą powyżej.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Nazwa</th><th>Cena</th><th>Ważność</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -82,6 +85,7 @@ $delForm = static function (string $type, int $id): string {
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 
@@ -102,6 +106,7 @@ $delForm = static function (string $type, int $id): string {
 <?php if ($catalog['procedures'] === []): ?>
         <p class="panel__empty">Brak zabiegów. Dodaj pierwszy powyżej.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Nazwa</th><th>Cena</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -114,6 +119,7 @@ $delForm = static function (string $type, int $id): string {
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 

@@ -29,6 +29,7 @@ $apptId = (int) $appointment['appointment_id'];
 <?php endif; ?>
         <form action="/invoices/new/<?= $apptId ?>" method="post">
           <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
+          <div class="table-scroll">
           <table class="schedule">
             <thead><tr><th>Zabieg</th><th>Opis</th><th>Cena jedn.</th><th>Ilość</th></tr></thead>
             <tbody>
@@ -46,6 +47,7 @@ $apptId = (int) $appointment['appointment_id'];
 <?php endforeach; ?>
             </tbody>
           </table>
+          </div>
           <div style="padding:18px 30px 0;">
             <div class="field" style="max-width:360px;margin:0;">
               <div class="field__row"><label class="field__label" for="vaccine_type_id">Podana szczepionka (opcjonalnie)</label></div>

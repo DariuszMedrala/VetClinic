@@ -130,6 +130,7 @@ use App\Core\Csrf;
 <?php if ($vets === []): ?>
         <p class="panel__empty">Brak lekarzy w klinice.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Lekarz</th><th>E-mail</th><th>Specjalizacja</th><th>Gabinet</th><th>Nr licencji</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -145,6 +146,7 @@ use App\Core\Csrf;
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>
 

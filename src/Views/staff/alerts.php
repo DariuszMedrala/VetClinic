@@ -14,6 +14,7 @@ $fmtDate = static fn (?string $d): string => $d ? (new DateTimeImmutable($d))->f
 <?php if ($overdue === []): ?>
         <p class="panel__empty">Brak alertów — wszystkie szczepienia są aktualne.</p>
 <?php else: ?>
+        <div class="table-scroll">
         <table class="schedule schedule--even">
           <thead><tr><th>Pacjent</th><th>Właściciel</th><th>Szczepionka</th><th>Ważne do</th><th>Akcja</th></tr></thead>
           <tbody>
@@ -28,5 +29,6 @@ $fmtDate = static fn (?string $d): string => $d ? (new DateTimeImmutable($d))->f
 <?php endforeach; ?>
           </tbody>
         </table>
+        </div>
 <?php endif; ?>
       </section>

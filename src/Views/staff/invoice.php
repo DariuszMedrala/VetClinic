@@ -27,6 +27,7 @@ use App\Models\Invoice;
 <?php if ($items === []): ?>
           <p class="panel__empty">Brak pozycji na fakturze.</p>
 <?php else: ?>
+          <div class="table-scroll">
           <table class="invoice__table">
             <thead>
               <tr><th>Usługa / Produkt</th><th>Opis</th><th>Cena</th></tr>
@@ -41,6 +42,7 @@ use App\Models\Invoice;
 <?php endforeach; ?>
             </tbody>
           </table>
+          </div>
 <?php endif; ?>
         </section>
 
