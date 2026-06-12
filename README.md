@@ -382,13 +382,25 @@ erDiagram
 ## Zrzuty ekranu
 
 
+### Logowanie
 ![Logowanie](docs/img/login.png)
-![Logowanie - mobile](docs/img/login-mobile.png)
+
+### Pulpit recepcji
 ![Pulpit recepcji](docs/img/reception-dashboard.png)
-![Pulpit recepcji - mobile](docs/img/reception-dashboard-mobile.png)
+
+### Pulpit lekarza
 ![Pulpit lekarza](docs/img/vet-dashboard.png)
-![Pulpit lekarza - mobile](docs/img/vet-dashboard-mobile.png)
+
+### Portal klienta
 ![Portal klienta](docs/img/client-portal.png)
-![Portal klienta - mobile](docs/img/client-portal-mobile.png)
+
+### Widoki mobilne
+
+<p>
+  <img src="docs/img/login-mobile.png" width="200" alt="Logowanie — mobile">
+  <img src="docs/img/reception-dashboard-mobile.png" width="200" alt="Pulpit recepcji — mobile">
+  <img src="docs/img/vet-dashboard-mobile.png" width="200" alt="Pulpit lekarza — mobile">
+  <img src="docs/img/client-portal-mobile.png" width="200" alt="Portal klienta — mobile">
+</p>
 
 
