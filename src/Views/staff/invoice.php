@@ -35,9 +35,9 @@ use App\Models\Invoice;
             <tbody>
 <?php foreach ($items as $item): ?>
               <tr>
-                <td class="invoice__service"><?= e($item['name']) ?><?= (int) $item['quantity'] > 1 ? ' × ' . e((string) $item['quantity']) : '' ?></td>
-                <td class="invoice__desc"><?= e($item['description'] ?? '—') ?></td>
-                <td><?= e(Invoice::money((string) $item['line_total'])) ?></td>
+                <td class="invoice__service" data-label="Usługa / Produkt"><?= e($item['name']) ?><?= (int) $item['quantity'] > 1 ? ' × ' . e((string) $item['quantity']) : '' ?></td>
+                <td class="invoice__desc" data-label="Opis"><?= e($item['description'] ?? '—') ?></td>
+                <td data-label="Cena"><?= e(Invoice::money((string) $item['line_total'])) ?></td>
               </tr>
 <?php endforeach; ?>
             </tbody>

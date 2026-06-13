@@ -62,6 +62,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body { height: 100%; }
+body { overflow-x: clip; }
 
 body {
   margin: 0;
@@ -111,6 +112,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: #e9edf9;
   border-right: 1px solid var(--line);
 }
+
+.nav-backdrop { display: none; }
 
 .sidebar__brand {
   display: flex;
@@ -339,6 +342,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
   padding: 26px 30px 18px;
 }
 .panel__title { font-size: 24px; font-weight: 800; color: var(--ink-900); }
@@ -525,7 +530,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .auth__mobile-head { display: none; }
 
 /* Pola formularza */
-.field { margin-bottom: 24px; }
+.field { margin-bottom: 24px; min-width: 0; }
 .field__row {
   display: flex;
   align-items: baseline;
@@ -540,6 +545,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-md);
@@ -652,7 +658,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .seg__btn--active { background: var(--surface); color: var(--ink-900); box-shadow: var(--shadow-sm); }
 
-.cal-nav { display: flex; align-items: center; gap: 8px; }
+.cal-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .cal-nav__today {
   padding: 10px 20px;
   border-radius: var(--r-md);
@@ -1095,8 +1101,32 @@ ul { margin: 0; padding: 0; list-style: none; }
 
   /* Powłoka: chowamy sidebar i topbar, pokazujemy header + dolną nawigację */
   .app { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
   .topbar { display: none; }
+
+  /* Sidebar jako wysuwana szuflada z pełnym menu */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    width: 280px;
+    max-width: 84vw;
+    z-index: 70;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    border-right: none;
+  }
+  .sidebar--open { transform: translateX(0); }
+  .nav-backdrop {
+    display: block;
+    position: fixed; inset: 0;
+    background: rgba(14, 27, 42, .45);
+    z-index: 65;
+    opacity: 0; visibility: hidden;
+    transition: opacity .25s ease, visibility .25s ease;
+  }
+  .nav-backdrop--open { opacity: 1; visibility: visible; }
 
   .mobile-header {
     display: flex;
@@ -1112,7 +1142,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .mobile-header__brand { font-size: 22px; font-weight: 800; color: var(--teal-700); }
   .mobile-header__actions { display: flex; align-items: center; gap: 10px; }
   .mobile-header .user__avatar { width: 40px; height: 40px; }
-  .hamburger { border: none; background: transparent; color: var(--ink-700); padding: 4px; }
+  .hamburger { border: none; background: transparent; color: var(--ink-700); padding: 4px; display: inline-flex; align-items: center; }
 
   .content { padding: 18px 18px 96px; }
 
@@ -1156,16 +1186,47 @@ ul { margin: 0; padding: 0; list-style: none; }
   .schedule { display: none; }
   .sched-cards { display: block; padding: 4px 18px 8px; }
 
-  /* Tabele danych bez wersji kartowej: zostają widoczne i przewijane poziomo */
-  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Tabele danych: na mobile jako karty (etykieta: wartość) */
   .table-scroll .schedule,
   .table-scroll .vax-table,
-  .table-scroll .invoice__table { display: table; min-width: 560px; }
+  .table-scroll .invoice__table { display: block; min-width: 0; }
+  .table-scroll thead { display: none; }
+  .table-scroll tbody,
+  .table-scroll tr,
+  .table-scroll td { display: block; }
+  .table-scroll tr {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: #fff;
+    padding: 4px 16px;
+    margin-bottom: 12px;
+  }
+  .table-scroll td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: right;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    min-width: 0;
+  }
+  .table-scroll tr td:last-child { border-bottom: none; }
+  .table-scroll td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--ink-500);
+    font-size: 13px;
+    text-align: left;
+    flex: none;
+  }
 
   /* Logowanie -> jedna kolumna, panel marki ukryty */
-  .auth { grid-template-columns: 1fr; }
+  .auth { display: block; }
   .auth__brand { display: none; }
-  .auth__panel { padding: 40px 24px; align-items: flex-start; }
+  .auth__panel { padding: 40px 24px; align-items: flex-start; min-width: 0; }
+  .auth__form { max-width: 100%; min-width: 0; }
   .auth__mobile-head {
     display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
     margin-bottom: 30px;
@@ -1242,7 +1303,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ==========================================================================
    19. REJESTRACJA — elementy dodatkowe (reszta dziedziczy po .auth)
    ========================================================================== */
-.field-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 
 .role-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .role-option {
@@ -1267,6 +1328,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 480px) {
   .field-2 { grid-template-columns: 1fr; }
   .role-options { grid-template-columns: 1fr; }
+  .lp-nav__brand-name { display: none; }
 }
 
 /* ==========================================================================
@@ -1418,10 +1480,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* Landing — responsywność */
 @media (max-width: 980px) {
-  .lp-nav { padding: 14px 18px; }
+  .lp-nav { padding: 12px 14px; gap: 10px; }
   .lp-nav__links { display: none; }
-  .lp-nav__cta .btn--ghost { display: none; }
-  .lp-nav__burger { display: block; }
+  .lp-nav__burger { display: none; }
+  .lp-nav__brand-name { font-size: 19px; }
+  .lp-nav__brand .brand-logo { width: 34px; height: 34px; }
+  .lp-nav__cta { gap: 8px; flex: none; }
+  .lp-nav__cta .btn { padding: 8px 12px; font-size: 13px; white-space: nowrap; }
 
   .lp-hero { grid-template-columns: 1fr; gap: 32px; padding: 48px 18px 60px; text-align: center; }
   .lp-hero__title { font-size: 38px; }

@@ -49,12 +49,12 @@
 <?php foreach ($upcoming as $a): ?>
 <?php $canComplete = $now >= $a->startsAt->modify('+15 minutes'); ?>
             <tr data-row="<?= e((string) $a->id) ?>">
-              <td><span class="sched-time"><b><?= e($a->weekdayShort()) ?></b>&nbsp;<?= e($a->dateShort()) ?></span></td>
-              <td><span class="sched-time"><?= e($a->time()) ?></span></td>
-              <td><?= e($a->petName) ?> (<?= e($a->species) ?>)</td>
-              <td><?= e($a->clientName) ?></td>
-              <td><span class="badge <?= e($a->badgeClass()) ?>"><?= e($a->statusLabel()) ?></span></td>
-              <td><button class="btn btn--primary btn--sm js-complete" data-id="<?= e((string) $a->id) ?>" data-can-complete="<?= $canComplete ? '1' : '0' ?>">Zakończ</button></td>
+              <td data-label="Dzień"><span class="sched-time"><b><?= e($a->weekdayShort()) ?></b>&nbsp;<?= e($a->dateShort()) ?></span></td>
+              <td data-label="Godzina"><span class="sched-time"><?= e($a->time()) ?></span></td>
+              <td data-label="Pacjent"><?= e($a->petName) ?> (<?= e($a->species) ?>)</td>
+              <td data-label="Właściciel"><?= e($a->clientName) ?></td>
+              <td data-label="Status"><span class="badge <?= e($a->badgeClass()) ?>"><?= e($a->statusLabel()) ?></span></td>
+              <td data-label="Akcja"><button class="btn btn--primary btn--sm js-complete" data-id="<?= e((string) $a->id) ?>" data-can-complete="<?= $canComplete ? '1' : '0' ?>">Zakończ</button></td>
             </tr>
 <?php endforeach; ?>
           </tbody>
@@ -77,11 +77,11 @@
           <tbody>
 <?php foreach ($toInvoice as $a): ?>
             <tr>
-              <td><span class="sched-time"><?= e($a->dateShort()) ?> <?= e($a->time()) ?></span></td>
-              <td><?= e($a->petName) ?> (<?= e($a->species) ?>)</td>
-              <td><?= e($a->clientName) ?></td>
-              <td><?= e($a->reason) ?></td>
-              <td><a class="btn btn--primary btn--sm" href="/invoices/new/<?= e((string) $a->id) ?>">Wystaw fakturę</a></td>
+              <td data-label="Data"><span class="sched-time"><?= e($a->dateShort()) ?> <?= e($a->time()) ?></span></td>
+              <td data-label="Pacjent"><?= e($a->petName) ?> (<?= e($a->species) ?>)</td>
+              <td data-label="Właściciel"><?= e($a->clientName) ?></td>
+              <td data-label="Powód"><?= e($a->reason) ?></td>
+              <td data-label="Akcja"><a class="btn btn--primary btn--sm" href="/invoices/new/<?= e((string) $a->id) ?>">Wystaw fakturę</a></td>
             </tr>
 <?php endforeach; ?>
           </tbody>

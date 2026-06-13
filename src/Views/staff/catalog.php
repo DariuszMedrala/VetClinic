@@ -42,7 +42,7 @@ $delForm = static function (string $type, int $id): string {
           <thead><tr><th>Nazwa</th><th>Akcja</th></tr></thead>
           <tbody>
 <?php foreach ($catalog['reasons'] as $r): ?>
-            <tr><td><?= e($r['name']) ?></td><td><?= $delForm('reasons', (int) $r['id']) ?></td></tr>
+            <tr><td data-label="Nazwa"><?= e($r['name']) ?></td><td data-label="Akcja"><?= $delForm('reasons', (int) $r['id']) ?></td></tr>
 <?php endforeach; ?>
           </tbody>
         </table>
@@ -77,10 +77,10 @@ $delForm = static function (string $type, int $id): string {
           <tbody>
 <?php foreach ($catalog['vaccines'] as $v): ?>
             <tr>
-              <td><?= e($v['name']) ?></td>
-              <td><?= e(Invoice::money((string) $v['price'])) ?></td>
-              <td><?= e((string) $v['validity_months']) ?> mies.</td>
-              <td><?= $delForm('vaccines', (int) $v['id']) ?></td>
+              <td data-label="Nazwa"><?= e($v['name']) ?></td>
+              <td data-label="Cena"><?= e(Invoice::money((string) $v['price'])) ?></td>
+              <td data-label="Ważność"><?= e((string) $v['validity_months']) ?> mies.</td>
+              <td data-label="Akcja"><?= $delForm('vaccines', (int) $v['id']) ?></td>
             </tr>
 <?php endforeach; ?>
           </tbody>
@@ -112,9 +112,9 @@ $delForm = static function (string $type, int $id): string {
           <tbody>
 <?php foreach ($catalog['procedures'] as $p): ?>
             <tr>
-              <td><?= e($p['name']) ?></td>
-              <td><?= e(Invoice::money((string) $p['base_price'])) ?></td>
-              <td><?= $delForm('treatments', (int) $p['id']) ?></td>
+              <td data-label="Nazwa"><?= e($p['name']) ?></td>
+              <td data-label="Cena"><?= e(Invoice::money((string) $p['base_price'])) ?></td>
+              <td data-label="Akcja"><?= $delForm('treatments', (int) $p['id']) ?></td>
             </tr>
 <?php endforeach; ?>
           </tbody>

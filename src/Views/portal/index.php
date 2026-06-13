@@ -41,7 +41,7 @@
         </article>
       </section>
 
-      <section class="panel" id="zwierzeta">
+      <section class="panel" id="zwierzeta" style="margin-bottom:22px;">
         <div class="panel__head">
           <h2 class="panel__title">Moje zwierzęta</h2>
           <span class="panel__meta"><?= e((string) count($pets)) ?></span>
@@ -72,7 +72,7 @@
 <?php endif; ?>
       </section>
 
-      <section class="panel" id="wizyty">
+      <section class="panel" id="wizyty" style="margin-bottom:22px;">
         <div class="panel__head">
           <h2 class="panel__title">Nadchodzące wizyty</h2>
           <span class="panel__meta"><?= e((string) count($appointments)) ?></span>
@@ -154,14 +154,13 @@
         <div class="sched-cards">
 <?php foreach ($invoices as $inv): ?>
           <article class="sched-card">
-            <div class="sched-card__top">
-              <div class="sched-card__time"><small><?= e($inv->number) ?></small><b><?= e($inv->totalLabel()) ?></b></div>
-              <div class="sched-card__info">
-                <div class="sched-card__head">
-                  <span class="sched-card__name"><?= e($inv->issuedAt->format('d.m.Y')) ?></span>
-                  <span class="badge <?= e($inv->statusBadge()) ?>"><?= e($inv->statusLabel()) ?></span>
-                </div>
-              </div>
+            <div class="sched-card__head">
+              <span class="sched-card__name"><?= e($inv->number) ?></span>
+              <span class="badge <?= e($inv->statusBadge()) ?>"><?= e($inv->statusLabel()) ?></span>
+            </div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:10px;">
+              <span style="color:var(--ink-500);font-size:14px;">Wystawiono <?= e($inv->issuedAt->format('d.m.Y')) ?></span>
+              <b style="font-size:20px;color:var(--ink-900);"><?= e($inv->totalLabel()) ?></b>
             </div>
           </article>
 <?php endforeach; ?>

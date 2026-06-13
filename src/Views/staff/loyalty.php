@@ -64,9 +64,9 @@ $perAmount = rtrim(rtrim(number_format((float) $s['per_amount'], 2, '.', ''), '0
           <tbody>
 <?php foreach ($loyalty['tiers'] as $t): ?>
             <tr>
-              <td><?= e((string) (int) $t['min_points']) ?> pkt</td>
-              <td><?= e(rtrim(rtrim(number_format((float) $t['discount_percent'], 2, '.', ''), '0'), '.')) ?>%</td>
-              <td>
+              <td data-label="Od punktów"><?= e((string) (int) $t['min_points']) ?> pkt</td>
+              <td data-label="Zniżka"><?= e(rtrim(rtrim(number_format((float) $t['discount_percent'], 2, '.', ''), '0'), '.')) ?>%</td>
+              <td data-label="Akcja">
                 <form method="post" action="/loyalty/tiers/<?= e((string) $t['id']) ?>/delete" class="js-del-form" style="display:inline;">
                   <input type="hidden" name="_csrf" value="<?= e(Csrf::token()) ?>">
                   <button class="btn btn--outline btn--sm" type="submit">Usuń</button>

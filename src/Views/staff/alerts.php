@@ -20,11 +20,11 @@ $fmtDate = static fn (?string $d): string => $d ? (new DateTimeImmutable($d))->f
           <tbody>
 <?php foreach ($overdue as $row): ?>
             <tr>
-              <td><?= e($row['pet_name']) ?> (<?= e($row['species']) ?>)</td>
-              <td><?= e($row['owner_name']) ?></td>
-              <td><?= e($row['vaccine_name']) ?></td>
-              <td><span class="badge badge--overdue"><?= e($fmtDate($row['expires_at'])) ?></span></td>
-              <td><a class="btn btn--outline-teal btn--sm" href="/patients/<?= e((string) $row['pet_id']) ?>">Karta pacjenta</a></td>
+              <td data-label="Pacjent"><?= e($row['pet_name']) ?> (<?= e($row['species']) ?>)</td>
+              <td data-label="Właściciel"><?= e($row['owner_name']) ?></td>
+              <td data-label="Szczepionka"><?= e($row['vaccine_name']) ?></td>
+              <td data-label="Ważne do"><span class="badge badge--overdue"><?= e($fmtDate($row['expires_at'])) ?></span></td>
+              <td data-label="Akcja"><a class="btn btn--outline-teal btn--sm" href="/patients/<?= e((string) $row['pet_id']) ?>">Karta pacjenta</a></td>
             </tr>
 <?php endforeach; ?>
           </tbody>

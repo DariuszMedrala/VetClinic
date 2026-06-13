@@ -136,12 +136,12 @@ use App\Core\Csrf;
           <tbody>
 <?php foreach ($vets as $v): ?>
             <tr data-vet-row="<?= e((string) $v['id']) ?>">
-              <td><?= e(trim(($v['title'] ?? '') . ' ' . $v['first_name'] . ' ' . $v['last_name'])) ?></td>
-              <td><?= e($v['email']) ?></td>
-              <td><?= e($v['specialization'] ?? '—') ?></td>
-              <td><?= e($v['room'] ?? '—') ?></td>
-              <td><?= e($v['license_number']) ?></td>
-              <td><button class="btn btn--outline btn--sm js-del-vet" type="button" data-id="<?= e((string) $v['id']) ?>">Usuń</button></td>
+              <td data-label="Lekarz"><?= e(trim(($v['title'] ?? '') . ' ' . $v['first_name'] . ' ' . $v['last_name'])) ?></td>
+              <td data-label="E-mail"><?= e($v['email']) ?></td>
+              <td data-label="Specjalizacja"><?= e($v['specialization'] ?? '—') ?></td>
+              <td data-label="Gabinet"><?= e($v['room'] ?? '—') ?></td>
+              <td data-label="Nr licencji"><?= e($v['license_number']) ?></td>
+              <td data-label="Akcja"><button class="btn btn--outline btn--sm js-del-vet" type="button" data-id="<?= e((string) $v['id']) ?>">Usuń</button></td>
             </tr>
 <?php endforeach; ?>
           </tbody>

@@ -62,11 +62,11 @@ foreach ($vaccinations as $v) {
           <tbody>
 <?php foreach ($vaccinations as $v): [$label, $cls] = $vaxBadge($v['status']); ?>
             <tr>
-              <td><?= e($v['vaccine_name']) ?></td>
-              <td><?= e($fmtDate($v['administered_at'])) ?></td>
-              <td<?= $v['status'] === 'overdue' ? ' class="is-overdue"' : '' ?>><?= e($fmtDate($v['expires_at'])) ?></td>
-              <td><span class="badge <?= e($cls) ?>"><?= e($label) ?></span></td>
-              <td><?= e($v['administered_by'] ?? '—') ?></td>
+              <td data-label="Szczepionka"><?= e($v['vaccine_name']) ?></td>
+              <td data-label="Data podania"><?= e($fmtDate($v['administered_at'])) ?></td>
+              <td data-label="Ważne do"<?= $v['status'] === 'overdue' ? ' class="is-overdue"' : '' ?>><?= e($fmtDate($v['expires_at'])) ?></td>
+              <td data-label="Status"><span class="badge <?= e($cls) ?>"><?= e($label) ?></span></td>
+              <td data-label="Podał"><?= e($v['administered_by'] ?? '—') ?></td>
             </tr>
 <?php endforeach; ?>
           </tbody>
@@ -86,11 +86,11 @@ foreach ($vaccinations as $v) {
           <tbody>
 <?php foreach ($history as $h): [$label, $cls] = $apptBadge($h['status']); ?>
             <tr>
-              <td><?= e((new DateTimeImmutable($h['starts_at']))->format('d.m.Y H:i')) ?></td>
-              <td><?= e($h['reason']) ?></td>
-              <td><?= e($h['vet_name']) ?></td>
-              <td><?= e($h['procedures']) ?></td>
-              <td><span class="badge <?= e($cls) ?>"><?= e($label) ?></span></td>
+              <td data-label="Data"><?= e((new DateTimeImmutable($h['starts_at']))->format('d.m.Y H:i')) ?></td>
+              <td data-label="Powód"><?= e($h['reason']) ?></td>
+              <td data-label="Lekarz"><?= e($h['vet_name']) ?></td>
+              <td data-label="Zabiegi"><?= e($h['procedures']) ?></td>
+              <td data-label="Status"><span class="badge <?= e($cls) ?>"><?= e($label) ?></span></td>
             </tr>
 <?php endforeach; ?>
           </tbody>

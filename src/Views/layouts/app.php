@@ -28,7 +28,9 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
 </head>
 <body class="app">
 
-  <aside class="sidebar">
+  <div class="nav-backdrop" id="nav-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar__brand">
       <span class="brand-logo" aria-hidden="true">
         <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="10" r="2"></circle><circle cx="10.5" cy="6" r="2"></circle><circle cx="15.5" cy="6" r="2"></circle><circle cx="19" cy="10.5" r="2"></circle><path d="M12.5 12c-2.2 0-4 1.7-4.7 3.4-.6 1.5-2 2.3-2 3.8 0 1.4 1.2 2.3 2.6 2.1 1.2-.2 2.6-.7 4.1-.7s2.9.5 4.1.7c1.4.2 2.6-.7 2.6-2.1 0-1.5-1.4-2.3-2-3.8C16.5 13.7 14.7 12 12.5 12z"></path></svg>
@@ -123,6 +125,9 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
 
     <header class="mobile-header">
       <div class="mobile-header__left">
+        <button class="hamburger" type="button" id="nav-toggle" aria-label="Otwórz menu">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
         <span class="mobile-header__brand">VetClinic</span>
       </div>
       <div class="mobile-header__actions">
@@ -182,5 +187,6 @@ $tabClass = static fn (string $key): string => 'bottom-nav__item' . ($active ===
 <?php endif; ?>
   </nav>
 
+  <script src="<?= e(asset('/assets/js/nav.js')) ?>"></script>
 </body>
 </html>

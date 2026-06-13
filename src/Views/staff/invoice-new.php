@@ -35,10 +35,10 @@ $apptId = (int) $appointment['appointment_id'];
             <tbody>
 <?php foreach ($procedures as $proc): ?>
               <tr>
-                <td style="font-weight:600;color:var(--ink-900);"><?= e($proc['name']) ?></td>
-                <td style="color:var(--ink-500);font-size:14px;"><?= e($proc['description'] ?? '—') ?></td>
-                <td><?= e(Invoice::money((string) $proc['base_price'])) ?></td>
-                <td style="text-align:right;padding-right:30px;">
+                <td data-label="Zabieg" style="font-weight:600;color:var(--ink-900);"><?= e($proc['name']) ?></td>
+                <td data-label="Opis" style="color:var(--ink-500);font-size:14px;"><?= e($proc['description'] ?? '—') ?></td>
+                <td data-label="Cena jedn."><?= e(Invoice::money((string) $proc['base_price'])) ?></td>
+                <td data-label="Ilość" style="text-align:right;padding-right:30px;">
                   <div class="input-wrap" style="display:inline-flex;width:90px;padding:0 12px;">
                     <input class="input" type="number" name="qty[<?= e((string) $proc['id']) ?>]" min="0" max="99" value="0" style="padding:10px 0;text-align:center;">
                   </div>
