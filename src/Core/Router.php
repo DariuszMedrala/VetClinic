@@ -38,6 +38,10 @@ final class Router
 
     public function dispatch(Request $request): Response
     {
+        if (!in_array($request->method(), ['GET', 'POST'], true)) {
+            return ErrorPage::render(400, $request->wantsJson());
+        }
+
         foreach ($this->routes as $route) {
             if ($route->method !== $request->method()) {
                 continue;
@@ -58,7 +62,7 @@ final class Router
             }
         }
 
-        return (new Response())->status(404)->html('404 — Nie znaleziono strony');
+        return ErrorPage::render(404, $request->wantsJson());
     }
 
     private function run(Closure|array $handler, Request $request, array $params): Response
