@@ -17,6 +17,8 @@ System jest **wieloklinikowy (multi‑tenant)** — każda przychodnia ma odizol
 - [Baza danych](#baza-danych)
 - [Diagram ERD](#diagram-erd)
 - [Bezpieczeństwo](#bezpieczeństwo)
+- [Obsługa błędów](#obsługa-błędów)
+- [Testy](#testy)
 - [Struktura katalogów](#struktura-katalogów)
 - [Zrzuty ekranu](#zrzuty-ekranu)
 
@@ -349,6 +351,56 @@ erDiagram
 
 ---
 
+## Obsługa błędów
+
+Globalna, spójna obsługa błędów dla całej aplikacji — jeden styl strony dla wszystkich kodów:
+
+| Kod | Kiedy | Gdzie obsłużone |
+|---|---|---|
+| **400** Nieprawidłowe żądanie | nieobsługiwana metoda HTTP (np. `PUT`/`DELETE`) | `Router::dispatch` |
+| **403** Brak dostępu | rola użytkownika nie ma uprawnień do trasy | `RoleMiddleware` |
+| **404** Nie znaleziono | brak pasującej trasy | `Router::dispatch` |
+| **500** Błąd serwera | nieprzechwycony wyjątek | handler w `bootstrap.php` |
+
+- Stronę renderuje `App\Core\ErrorPage` (widok `src/Views/errors/error.php` w layoucie `base`), a stronę 500 — samodzielny `src/Views/errors/500.php` (niezależny od warstwy `View`, gdyby to ona zawiodła).
+- Dla żądań AJAX/JSON (nagłówek `Accept: application/json`) zamiast HTML zwracany jest **JSON** z tym samym kodem, np. `{"error":"Nie znaleziono strony"}`.
+- W trybie produkcyjnym (`APP_DEBUG=false`) wyjątek trafia tylko do logu, a użytkownik widzi stronę 500 bez stack trace; w trybie deweloperskim wyświetlany jest pełny ślad.
+
+---
+
+## Testy
+
+Projekt ma testy jednostkowe (**PHPUnit**) i integracyjne endpointów (**skrypt curl**). PHPUnit instaluje się jako zależność deweloperska (`require-dev`), poza własnym frameworkiem aplikacji.
+
+**Pakiety testów:**
+
+| Pakiet | Zakres | Wymaga bazy |
+|---|---|---|
+| `tests/Unit` | logika domenowa modeli `Invoice` i `Pet` (formatowanie kwot, rabaty, etykiety, polska odmiana wieku) | nie |
+| `tests/Integration` | usługa + repozytorium `LoyaltyService` na zaseedowanej bazie (progi rabatów, walidacja) | tak |
+| `tests/integration.sh` | endpointy HTTP: strony publiczne, kody błędów 400/404, ochrona tras (302), CSRF (419), zasoby statyczne | tak (uruchomiony stack) |
+
+**Uruchomienie (PHP jest tylko w kontenerze, więc przez Docker):**
+
+```bash
+# 1. Instalacja PHPUnit (jednorazowo, tworzy katalog vendor/)
+docker run --rm -v "$PWD":/app -w /app composer:2 install
+
+# 2. Testy jednostkowe (bez bazy)
+docker run --rm -v "$PWD":/app -w /app php:8.3-cli php vendor/bin/phpunit --testsuite Unit
+
+# 3. Testy integracyjne usług/repozytoriów (w kontenerze php, z dostępem do bazy)
+docker compose up -d
+docker compose run --rm --workdir /app php php vendor/bin/phpunit --testsuite Integration
+
+# 4. Testy integracyjne endpointów (stack musi działać)
+bash tests/integration.sh
+```
+
+Wynik (`--testdox`): **20 testów, 49 asercji — OK**; skrypt endpointów: **17/17 zaliczonych**.
+
+---
+
 ## Struktura katalogów
 
 ```
@@ -364,15 +416,22 @@ erDiagram
 │   ├── Repositories/        # dostęp do bazy (PDO)
 │   ├── Models/              # obiekty domenowe
 │   ├── Middleware/          # Auth, Role
-│   ├── Views/               # szablony + layouty
+│   ├── Views/               # szablony + layouty (w tym errors/ — strony 400/403/404/500)
 │   ├── routes.php           # definicje tras
 │   └── helpers.php          # e(), asset()
+├── tests/
+│   ├── Unit/                # testy jednostkowe PHPUnit (bez bazy)
+│   ├── Integration/         # testy usług/repozytoriów PHPUnit (z bazą)
+│   ├── bootstrap.php        # autoloader + helpers dla testów
+│   └── integration.sh       # testy endpointów (curl)
 ├── docker/
 │   ├── nginx/               # konfiguracja serwera WWW
 │   ├── php/                 # obraz PHP‑FPM
 │   └── db/init/             # skrypty inicjalizujące bazę (schemat + seed)
 ├── database/
 │   └── vetclinic_dump.sql   # eksport bazy
+├── composer.json            # zależność dev: phpunit/phpunit
+├── phpunit.xml              # konfiguracja PHPUnit (pakiety Unit + Integration)
 ├── docker-compose.yml
 └── .env.example
 ```
